@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<!-- saved from url=(0040)http://127.0.0.1:8080/accounts/register/ -->
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>註冊</title>
+</head>
+<body>
+<h1>註冊新帳號</h1>
+<form action="http://127.0.0.1:8080/accounts/register/" method="post">{% csrf_token %}
+    <p><label>會員編號:</label> <input type="text" name="accountName" maxlength="150" autocapitalize="none"
+                                   autocomplete="accountName" autofocus="" required="" id="accountName"
+                                   value="{{accountName}}">
+    </p>
+    <p><label>姓名:</label> <input type="text" name="username" maxlength="150" autocapitalize="none"
+                                 autocomplete="username" autofocus="" required="" id="username" value="{{username}}">
+    </p>
+    <p><label>身分證後四碼:</label> <input type="text" name="IDnumber" maxlength="150" autocapitalize="none"
+                                     autocomplete="IDnumber" autofocus="" required="" id="IDnumber"
+                                     value="{{IDnumber}}">
+    </p>
+    <p><label>性別:</label>
+        <input type="radio" id="男" name="gander" value="男" required {% if gander == "男" %} checked {% endif %}>
+        <label>男</label>
+        <input type="radio" id="女" name="gander" value="女" {% if gander == "女" %} checked {% endif %}>
+        <label>女</label><br>
+    </p>
+
+    <p><label>電話:</label> <input type="text" name="phone" autocomplete="none"
+                                 required="" id="phone" value="{{phone}}">
+    </p>
+    <p><label>職務:</label>
+        {% for ChainYenJobTitle in ChainYenJobTitles %}
+        <input type="radio" id="{{ ChainYenJobTitle.jobTitle }}" name="chainYenJobTitle"
+
+               value="{{ ChainYenJobTitle.id }}" required {% if chainYenJobTitle == ChainYenJobTitle.id %}
+               checked {% endif %}>
+        <label>{{ ChainYenJobTitle.jobTitle }}</label>
+        {% endfor %}
+    </p>
+    <p><label>獎銜:</label>
+        {% for award in amwayawards %}
+        <input type="radio" id="{{ award.amwayAward }}" name="amwayAward" value="{{ award.id }}"
+               required {% if amwayAward == award.id %} checked {% endif %}>
+        <label>{{ award.amwayAward }}</label>
+
+        {% endfor %}
+    </p>
+    <p><label>教室:</label>
+        {% for ChainYenClassInfo in ChainYenClassInfos %}
+        <input type="radio" id="{{ ChainYenClassInfo.ClassRoomName }}" name="ChainYenClass"
+               value="{{ ChainYenClassInfo.id }}" required
+               {% if ChainYenClass == ChainYenClassInfo.id %} checked {% endif %}>
+        <label>{{ ChainYenClassInfo.ClassRoomName }}</label>
+
+        {% endfor %}
+    </p>
+    <p><label>保母:</label> <input type="text" name="babysitter" autocomplete="none"
+                                 required="required" id="babysitter" value="{{babysitter}}">
+    </p>
+    <p><label>白金:</label> <input type="text" name="amwayDD" autocomplete="none"
+                                 required="required" id="amwayDD" value="{{amwayDD}}">
+    </p>
+
+    <p><label>鑽石:</label> <input type="text" name="amwayDiamond" autocomplete="none"
+                                 required="required" id="amwayDiamond" value="{{amwayDiamond}}">
+    </p>
+    <p><label>是否為愛馬小組:</label>
+        <input type="radio" id="是" name="EM" value="True" required {% if EM == "True" %} checked {% endif %}>
+        <label>是</label>
+        <input type="radio" id="否" name="EM" value="False" {% if EM == "False" %} checked {% endif %}>
+        <label>否</label><br>
+    </p>
+
+    <p></p>
+    <p><label for="id_password1">密碼:</label> <input type="password" name="password1" autocomplete="new-password"
+                                                    required="" id="id_password1"> <span class="helptext"></span>
+    </p>
+    <p></p>
+
+    <p><label for="id_password2">再次確認密碼:</label>
+        <input type="password" name="password2"
+               autocomplete="new-password" required=""
+               id="id_password2">
+    </p>
+    {% if passwordConfirm %}
+        <p style="color: red;">兩次輸入的密碼不一致</p>
+    {% endif %}
+    {% if regSuccess %}
+        <p style="color: red;">{{regSuccessnName}}註冊成功</p>
+    {% endif %}
+    <input type="submit" value="註冊">
+</form>
+
+</body>
+</html>

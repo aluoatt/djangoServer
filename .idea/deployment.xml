@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="Always" serverName="aluo@127.0.0.1:8000" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="aluo@127.0.0.1:8000">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath path="/server/login" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+      <paths name="aluo@127.0.0.1:8000 (1)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/aluo/djangoServer" local="$PROJECT_DIR$" />
+            <mapping local="" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="aluo@127.0.0.1:8000 (3)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/aluo/djangoServer" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
+</project>

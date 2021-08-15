@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+		<title>ChainYen System</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		{% load static %}
+		<link rel="stylesheet" href="{%static 'assets/css/main.css' %}" />
+<!--		<link rel="stylesheet" href="assets/css/main.css" />-->
+		<noscript><link rel="stylesheet" href="{%static 'assets/css/noscript.css' %}" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header" class="alt">
+						<a href="{% url 'home' %}" class="logo"><strong>ChainYen</strong> <span>System</span></a>
+
+					</header>
+
+
+				<!-- Banner -->
+					<section id="banner" class="major">
+						<div class="inner">
+							<header class="major">
+
+								<h1><br>群雁資料庫</h1>
+							</header>
+							<div class="content">
+                                <form action="" method="post">{% csrf_token %}
+                                    <label for="username">用戶名稱:</label>
+                                    <input type="text" name="username" value="" id="username"> <br/>
+									<label for="username">身分證後四碼:</label>
+									<input type="text" name="idnumber" value="" id="idnumber"> <br/>
+                                    <label for="password">用戶密碼:</label>
+                                    <input type="password" name="password" value="" id="password"> <br/>
+									{% if pwderror %}
+										 <p style="color: red;">輸入的資料有誤</p>
+									{% endif %}
+                                    <input type="submit" value="登入" class="button next scrolly"/>
+
+                                </form>
+
+							</div>
+							{% if perms.login.can_see_register %}
+								<a class="button scrolly" href="{% url 'register' %}">註冊</a>
+							{% endif %}
+						</div>
+					</section>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="{%static 'assets/js/jquery.min.js' %}"></script>
+			<script src="{%static 'assets/js/jquery.scrolly.min.js' %}"></script>
+			<script src="{%static 'assets/js/jquery.scrollex.min.js' %}"></script>
+			<script src="{%static 'assets/js/browser.min.js' %}"></script>
+			<script src="{%static 'assets/js/breakpoints.min.js' %}"></script>
+			<script src="{%static 'assets/js/util.js' %}"></script>
+			<script src="{%static 'assets/js/main.js' %}"></script>
+
+	</body>
+</html>
