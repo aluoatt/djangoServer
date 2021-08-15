@@ -32,7 +32,7 @@ class UserAccountChainYenInfo(models.Model):
     classRoom = models.ForeignKey("chainYenClassInfo",on_delete=models.CASCADE, verbose_name='教室')
     babysitter = models.CharField(max_length=20, verbose_name='保母')
 
-    accountStatus = models.CharField(max_length=20, verbose_name='狀態') #停權
+    accountStatus = models.CharField(max_length=4, verbose_name='狀態') #停權
     freezeDate = models.DateTimeField( verbose_name='停權到期日',null=True)
     point = models.CharField(max_length=20, verbose_name='點數')
 

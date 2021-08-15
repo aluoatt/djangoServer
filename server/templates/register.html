@@ -13,6 +13,19 @@
                                    autocomplete="accountName" autofocus="" required="" id="accountName"
                                    value="{{accountName}}">
     </p>
+    <p><label for="id_password1">密碼:</label> <input type="password" name="password1" autocomplete="new-password"
+                                                    required="" id="id_password1"> <span class="helptext"></span>
+    </p>
+    <p></p>
+
+    <p><label for="id_password2">再次確認密碼:</label>
+        <input type="password" name="password2"
+               autocomplete="new-password" required=""
+               id="id_password2">
+    </p>
+    {% if passwordConfirm %}
+        <p style="color: red;">兩次輸入的密碼不一致</p>
+    {% endif %}
     <p><label>姓名:</label> <input type="text" name="username" maxlength="150" autocapitalize="none"
                                  autocomplete="username" autofocus="" required="" id="username" value="{{username}}">
     </p>
@@ -30,6 +43,8 @@
     <p><label>電話:</label> <input type="text" name="phone" autocomplete="none"
                                  required="" id="phone" value="{{phone}}">
     </p>
+
+    <hr>
     <p><label>職務:</label>
         {% for ChainYenJobTitle in ChainYenJobTitles %}
         <input type="radio" id="{{ ChainYenJobTitle.jobTitle }}" name="chainYenJobTitle"
@@ -47,6 +62,13 @@
 
         {% endfor %}
     </p>
+    <p><label>白金:</label> <input type="text" name="amwayDD" autocomplete="none"
+                                 required="required" id="amwayDD" value="{{amwayDD}}">
+    </p>
+
+    <p><label>鑽石:</label> <input type="text" name="amwayDiamond" autocomplete="none"
+                                 required="required" id="amwayDiamond" value="{{amwayDiamond}}">
+    <hr>
     <p><label>教室:</label>
         {% for ChainYenClassInfo in ChainYenClassInfos %}
         <input type="radio" id="{{ ChainYenClassInfo.ClassRoomName }}" name="ChainYenClass"
@@ -56,37 +78,21 @@
 
         {% endfor %}
     </p>
-    <p><label>保母:</label> <input type="text" name="babysitter" autocomplete="none"
-                                 required="required" id="babysitter" value="{{babysitter}}">
-    </p>
-    <p><label>白金:</label> <input type="text" name="amwayDD" autocomplete="none"
-                                 required="required" id="amwayDD" value="{{amwayDD}}">
-    </p>
-
-    <p><label>鑽石:</label> <input type="text" name="amwayDiamond" autocomplete="none"
-                                 required="required" id="amwayDiamond" value="{{amwayDiamond}}">
-    </p>
     <p><label>是否為愛馬小組:</label>
         <input type="radio" id="是" name="EM" value="True" required {% if EM == "True" %} checked {% endif %}>
         <label>是</label>
         <input type="radio" id="否" name="EM" value="False" {% if EM == "False" %} checked {% endif %}>
         <label>否</label><br>
     </p>
+    <p><label>保母:</label> <input type="text" name="babysitter" autocomplete="none"
+                                 required="required" id="babysitter" value="{{babysitter}}">
+    </p>
+
+    </p>
+
 
     <p></p>
-    <p><label for="id_password1">密碼:</label> <input type="password" name="password1" autocomplete="new-password"
-                                                    required="" id="id_password1"> <span class="helptext"></span>
-    </p>
-    <p></p>
 
-    <p><label for="id_password2">再次確認密碼:</label>
-        <input type="password" name="password2"
-               autocomplete="new-password" required=""
-               id="id_password2">
-    </p>
-    {% if passwordConfirm %}
-        <p style="color: red;">兩次輸入的密碼不一致</p>
-    {% endif %}
     {% if regSuccess %}
         <p style="color: red;">{{regSuccessnName}}註冊成功</p>
     {% endif %}
