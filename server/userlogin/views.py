@@ -44,6 +44,7 @@ def register(request):
     id_password1 = ''
     id_password2 = ''
     EM = ''
+    e_mail=''
     passwordConfirm = False
     regSuccess = False
     if request.method == 'POST':
@@ -54,15 +55,15 @@ def register(request):
         gander = request.POST.get('gander', '')
         phone = request.POST.get('phone', '')
         chainYenJobTitle = int(request.POST.get('chainYenJobTitle', ''))
-        amwayAward = int(request.POST.get('amwayAward',''))
-        ChainYenClass = int(request.POST.get('ChainYenClass',''))
+        amwayAward = request.POST.get('amwayAward','')
+        ChainYenClass = request.POST.get('ChainYenClass','')
         babysitter = request.POST.get('babysitter', '')
         amwayDD = request.POST.get('amwayDD', '')
         amwayDiamond = request.POST.get('amwayDiamond', '')
         id_password1 = request.POST.get('password1', '')
         id_password2 = request.POST.get('password2', '')
         EM = request.POST.get('EM', '')
-
+        e_mail = request.POST.get('e_mail', '')
         if EM == "True":
             EM = True
         else:
@@ -84,10 +85,11 @@ def register(request):
                             password = id_password1,
                             is_superuser = 0,
                             is_staff =0,
-                            is_active=1)
+                            is_active=1,
+                            email=e_mail)
         r2 = UserAccountChainYenInfo(UserAccountInfo = r,
                                      jobTitle = chainYenJobTitleInfo.objects.get(id=chainYenJobTitle),
-                                     classRoom = chainYenClassInfo.objects.get(id=ChainYenClass),
+                                     classRoom = chainYenClassInfo.objects.get(classRoom=ChainYenClass),
                                      babysitter=babysitter,
                                      accountStatus="正常",
                                      freezeDate=None,
@@ -96,7 +98,7 @@ def register(request):
 
         r3 = UserAccountAmwayInfo(UserAccountInfo= r,
                                   amwayNumber=accountName,
-                                  amwayAward=amwayAwardInfo.objects.get(id=amwayAward),
+                                  amwayAward=amwayAwardInfo.objects.get(amwayAward=amwayAward),
                                   amwayDD=amwayDD,
                                   amwayDiamond=amwayDiamond)
 
@@ -119,6 +121,7 @@ def register(request):
         id_password1 = ''
         id_password2 = ''
         EM = ''
+        e_mail = ''
         regSuccess = True
         return render(request, 'register.html', locals())
 

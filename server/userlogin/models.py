@@ -19,6 +19,7 @@ class UserAccountInfo(AbstractUser):
     gender = models.CharField(max_length=4, verbose_name='性別')
     phone = models.CharField(max_length=50, verbose_name='電話')
 
+
 class UserAccountAmwayInfo(models.Model):
     UserAccountInfo = models.ForeignKey("UserAccountInfo",on_delete=models.CASCADE)
     amwayNumber = models.IntegerField()
@@ -30,7 +31,7 @@ class UserAccountChainYenInfo(models.Model):
     UserAccountInfo = models.ForeignKey("UserAccountInfo",on_delete=models.CASCADE)
     jobTitle = models.ForeignKey("chainYenJobTitleInfo",on_delete=models.CASCADE, verbose_name='職務')
     classRoom = models.ForeignKey("chainYenClassInfo",on_delete=models.CASCADE, verbose_name='教室')
-    babysitter = models.CharField(max_length=20, verbose_name='保母')
+    # babysitter = models.CharField(max_length=20, verbose_name='保母')
 
     accountStatus = models.CharField(max_length=4, verbose_name='狀態') #停權
     freezeDate = models.DateTimeField( verbose_name='停權到期日',null=True)
@@ -50,6 +51,13 @@ class chainYenClassInfo(models.Model):
     rank = models.IntegerField()
     ClassRoomName = models.CharField(max_length=20, verbose_name='教室名稱')
     ClassRoomCode = models.CharField(max_length=20, verbose_name='教室代碼')
+
+class registerDDandDimInfo(models.Model):
+    amwayAward = models.CharField(max_length=20, verbose_name='獎銜')#只有白金跟鑽石
+    amwayNumber = models.CharField(max_length=20, verbose_name='會員編號')
+    main = models.CharField(max_length=20, verbose_name='主直銷權')
+    sec = models.CharField(max_length=20, verbose_name='次直銷權')
+
 
 # from userlogin.models import amwayAwardInfo
 # r = amwayAwardInfo.objects.create(rank=0,amwayAward="暫無")

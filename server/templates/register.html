@@ -43,6 +43,9 @@
     <p><label>電話:</label> <input type="text" name="phone" autocomplete="none"
                                  required="" id="phone" value="{{phone}}">
     </p>
+    <p><label>e-mail:</label> <input type="text" name="e_mail" autocomplete="none"
+                                 required="" id="e_mail" value="{{e_mail}}">
+    </p>
 
     <hr>
     <p><label>職務:</label>
@@ -55,28 +58,27 @@
         {% endfor %}
     </p>
     <p><label>獎銜:</label>
-        {% for award in amwayawards %}
-        <input type="radio" id="{{ award.amwayAward }}" name="amwayAward" value="{{ award.id }}"
-               required {% if amwayAward == award.id %} checked {% endif %}>
-        <label>{{ award.amwayAward }}</label>
+        <select>
+            {% for award in amwayawards %}
+                <option {% if amwayAward == award.amwayAward %} checked {% endif %}>{{ award.amwayAward }}</option>
+            {% endfor %}
+        </select>
 
-        {% endfor %}
     </p>
-    <p><label>白金:</label> <input type="text" name="amwayDD" autocomplete="none"
+    <p><label>上手白金編號:</label> <input type="text" name="amwayDD" autocomplete="none"
                                  required="required" id="amwayDD" value="{{amwayDD}}">
     </p>
 
-    <p><label>鑽石:</label> <input type="text" name="amwayDiamond" autocomplete="none"
+    <p><label>上手鑽石:</label> <input type="text" name="amwayDiamond" autocomplete="none"
                                  required="required" id="amwayDiamond" value="{{amwayDiamond}}">
     <hr>
     <p><label>教室:</label>
+        <select>
         {% for ChainYenClassInfo in ChainYenClassInfos %}
-        <input type="radio" id="{{ ChainYenClassInfo.ClassRoomName }}" name="ChainYenClass"
-               value="{{ ChainYenClassInfo.id }}" required
-               {% if ChainYenClass == ChainYenClassInfo.id %} checked {% endif %}>
-        <label>{{ ChainYenClassInfo.ClassRoomName }}</label>
 
+            <option {% if ChainYenClass == ChainYenClassInfo.ClassRoomName %} checked {% endif %}>{{ ChainYenClassInfo.ClassRoomName }}</option>
         {% endfor %}
+        </select>
     </p>
     <p><label>是否為愛馬小組:</label>
         <input type="radio" id="是" name="EM" value="True" required {% if EM == "True" %} checked {% endif %}>
@@ -84,9 +86,9 @@
         <input type="radio" id="否" name="EM" value="False" {% if EM == "False" %} checked {% endif %}>
         <label>否</label><br>
     </p>
-    <p><label>保母:</label> <input type="text" name="babysitter" autocomplete="none"
-                                 required="required" id="babysitter" value="{{babysitter}}">
-    </p>
+<!--    <p><label>保母:</label> <input type="text" name="babysitter" autocomplete="none"-->
+<!--                                 required="required" id="babysitter" value="{{babysitter}}">-->
+<!--    </p>-->
 
     </p>
 
