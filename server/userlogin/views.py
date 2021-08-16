@@ -77,7 +77,6 @@ def register(request):
 
             passwordConfirm = True
             return render(request, 'register.html', locals())
-
         r = UserAccountInfo.objects.create_user(username = accountName+IDnumber,
                             user=username,
                             gender = gander,
@@ -87,6 +86,7 @@ def register(request):
                             is_staff =0,
                             is_active=1,
                             email=e_mail)
+
         r2 = UserAccountChainYenInfo(UserAccountInfo = r,
                                      jobTitle = chainYenJobTitleInfo.objects.get(id=chainYenJobTitle),
                                      classRoom = chainYenClassInfo.objects.get(classRoom=ChainYenClass),
