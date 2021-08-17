@@ -18,14 +18,14 @@ class UserAccountInfo(AbstractUser):
 
     gender = models.CharField(max_length=4, verbose_name='性別')
     phone = models.CharField(max_length=50, verbose_name='電話')
-
+    dataPermissionsLevel = models.IntegerField(verbose_name='資料權限等級')
 
 class UserAccountAmwayInfo(models.Model):
     UserAccountInfo = models.ForeignKey("UserAccountInfo",on_delete=models.CASCADE)
     amwayNumber = models.IntegerField()
     amwayAward = models.ForeignKey("amwayAwardInfo",on_delete=models.CASCADE, verbose_name='獎銜')
-    amwayDD = models.CharField(max_length=20, verbose_name='白金')
-    amwayDiamond = models.CharField(max_length=20, verbose_name='鑽石')
+    amwayDD = models.ForeignKey("registerDDandDimInfo",verbose_name='白金',on_delete=models.PROTECT)
+    # amwayDiamond = models.CharField(max_length=20, verbose_name='鑽石')
 
 class UserAccountChainYenInfo(models.Model):
     UserAccountInfo = models.ForeignKey("UserAccountInfo",on_delete=models.CASCADE)
@@ -54,9 +54,11 @@ class chainYenClassInfo(models.Model):
 
 class registerDDandDimInfo(models.Model):
     amwayAward = models.CharField(max_length=20, verbose_name='獎銜')#只有白金跟鑽石
-    amwayNumber = models.CharField(max_length=20, verbose_name='會員編號')
+    amwayNumber = models.IntegerField( verbose_name='會員編號')
+    amwayDiamond =models.CharField(max_length=20, verbose_name='上手鑽石')
     main = models.CharField(max_length=20, verbose_name='主直銷權')
-    sec = models.CharField(max_length=20, verbose_name='次直銷權')
+    sec = models.CharField(max_length=20, verbose_name='次直銷權',null=True)
+
 
 
 # from userlogin.models import amwayAwardInfo

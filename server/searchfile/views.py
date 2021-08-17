@@ -12,6 +12,7 @@ def home(request):
         UserAccountChainYen = UserAccountChainYenInfo.objects.get(UserAccountInfo=UserAccountInfo.objects.get(username=request.user))
         amwayMember = UserAccountAmwayInfo.objects.get(
             UserAccountInfo=UserAccountInfo.objects.get(username=request.user)).amwayNumber
+
         classRoomCode = UserAccountChainYen.classRoom.ClassRoomCode
         name = classRoomCode +  "_" + user
     except:

@@ -6,11 +6,14 @@
 -->
 <html>
 	<head>
-		<title>Landing - Forty by HTML5 UP</title>
+		<title>ChainYen System</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		{% load static %}
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
 		<link rel="stylesheet" href="{%static 'assets/css/main.css' %}" />
+
 		<noscript><link rel="stylesheet" href="{%static 'assets/css/noscript.css' %}" /></noscript>
 	</head>
 	<body class="is-preload">
@@ -90,17 +93,11 @@
 								</div>
 
 							</section>
+						{% for fileData in fileDatas%}
+							<section id="two"  class="spotlights">
 
-						<!-- Two -->
-							{% for fileData in fileDatas%}
-							<section id="two" class="spotlights">
-								<section>
-<!--									<a href="generic.html" class="image">-->
-<!--										<img src="images/pic08.jpg" alt="" data-position="center center" />-->
-<!--									</a>-->
-									<div class="content">
-										<div class="inner">
-											<header class="major">
+								<div class="inner"  >
+									<header class="major">
 												<h3>{{fileData.title}}</h3>
 											</header>
 											<p>{{fileData.describe}}</p>
@@ -110,24 +107,62 @@
 												#{{keywords.keyword}}
 											{% endfor %}
 											</p>
+
 											<ul class="actions">
-												<li><a href="generic.html" class="button">兌換觀看</a></li>
+												<li>
+													<button type="button" class="button" data-toggle="modal" data-target="#confirmViewFile" onclick="confirmViewFile({{ fileData.id }},'{{fileData.title}}',{{fileData.point}},{{userpoint}})">
+													  兌換觀看【{{fileData.point}}點】
+													</button>
+												</li>
 											</ul>
-										</div>
-									</div>
-								</section>
-							{% endfor %}
+								</div>
+
 							</section>
-
-
+						{% endfor %}
+						<!-- Two -->
 
 					</div>
-
+						{% if pageisNotNull %}
+						<div class="row">
+						 <div class="dataTables_paginate paging_simple_numbers pull-right inner">
+									<div class="text-center container">
+										<ul class="pagination ">
+										  {{ pagination.page_html|safe }}
+										</ul>
+									</div>
+						</div>
+							{% endif %}
+					</div>
 
 
 			</div>
 
+		<!-- Modal -->
+		<div class="modal fade" id="confirmViewFile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<h3 style="color: black" class="modal-title" id="fileCheckTitle"></h3>
+				<h3 style="color: black" class="modal-title" id="needPoint"></h3>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				  <span aria-hidden="true">&times;</span>
+				</button>
+			  </div>
+			  <div class="modal-body" id = "modal-boyd">
+				  <p style="color: black" id = "userpoint"></p>
+				  <label style="color: red" for="demo-copy">*兌換即同意不截圖、不錄音、不錄影、不外流</label>
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+				<button type="button" class="btn btn-primary">我同意並兌換</button>
+			  </div>
+			</div>
+		  </div>
+		</div>
+
+
 		<!-- Scripts -->
+
 			<script src="{%static 'assets/js/jquery.min.js' %}"></script>
 			<script src="{%static 'assets/js/jquery.scrolly.min.js' %}"></script>
 			<script src="{%static 'assets/js/jquery.scrollex.min.js' %}"></script>
@@ -135,6 +170,11 @@
 			<script src="{%static 'assets/js/breakpoints.min.js' %}"></script>
 			<script src="{%static 'assets/js/util.js' %}"></script>
 			<script src="{%static 'assets/js/main.js' %}"></script>
+
+			<script src="{%static 'assets/js/cyMain.js' %}"></script>
+			<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+			<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+			<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
 	</body>
 </html>

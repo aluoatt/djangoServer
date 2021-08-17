@@ -100,6 +100,7 @@ def register(request):
                                   amwayNumber=accountName,
                                   amwayAward=amwayAwardInfo.objects.get(amwayAward=amwayAward),
                                   amwayDD=amwayDD,
+
                                   amwayDiamond=amwayDiamond)
 
         r.save()
