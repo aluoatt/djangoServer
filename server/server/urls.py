@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from searchfile.views import home
 from django.conf.urls import url
-from NutriliteSearchPage.views import NutriliteSearchPage
+from NutriliteSearchPage.views import NutriliteSearchPage,viewFilePage
 from django .contrib.auth.decorators import login_required
 from userlogin.views import login,logout,register
 
@@ -38,7 +38,8 @@ urlpatterns += [
     path('accounts/login/', login, name='login'),
     path('accounts/logout/', logout, name='logout'),
     path('accounts/register/', register,name='register'),
-    path('NutriliteSearchPage/<str:selectTag>', login_required(NutriliteSearchPage), name='NutriliteSearchPage'),
+    path('filesearch/<str:topic>/<str:selectTag>', login_required(NutriliteSearchPage), name='NutriliteSearchPage'),
+    path('viewFilePage/<str:fileId>', login_required(viewFilePage), name='viewFilePage'),
     path('', login_required(home), name='home'),
 ]
 

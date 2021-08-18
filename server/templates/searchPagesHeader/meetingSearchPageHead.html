@@ -1,0 +1,60 @@
+<section id="one" style="background-color:steelblue;">
+
+    <div class="inner"  >
+        <header class="major">
+            <h2>總部會議/活動</h2>
+        </header>
+        <div class="row gtr-uniform">
+            <li >
+                {% if selectTag == "教室課程" %}
+                    <a href="#" class="primary" style="background-color:grey;">教室課程</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '總部會議' '教室課程' %}">教室課程</a>
+                {% endif %}
+            </li>
+            <li>
+                {% if selectTag == "基礎會議" %}
+                    <a href="#" class="primary" style="background-color:grey;">基礎會議</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '總部會議' '基礎會議' %}" >基礎會議</a>
+                {% endif %}
+            </li>
+
+            <li>
+
+                {% if selectTag == "菁英會議" %}
+                    <a href="#" class="primary" style="background-color:grey;">菁英會議</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '總部會議' '機能性營養' %}" >菁英會議</a>
+                {% endif %}
+
+            </li>
+
+            <li>
+                {% if selectTag == "老師有約" %}
+                    <a href="#" class="primary" style="background-color:grey;">老師有約</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '總部會議' '疾病' %}">老師有約</a>
+                {% endif %}
+
+            </li>
+            <li>
+                {% if selectTag == "每月之星" %}
+                    <a href="#" class="primary" style="background-color:grey;">每月之星</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '總部會議' '每月之星' %}">每月之星</a>
+                {% endif %}
+
+            </li>
+            <li >
+                {% if selectTag == "其他" %}
+                    <a href="#" class="primary" style="background-color:grey;">其他</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '總部會議' '其他' %}">其他</a>
+                {% endif %}
+
+            </li>
+        </div>
+    </div>
+
+</section>

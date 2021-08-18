@@ -1,0 +1,60 @@
+<section id="one" style="background-color:steelblue;">
+
+    <div class="inner"  >
+        <header class="major">
+            <h2>演講廳</h2>
+        </header>
+        <div class="row gtr-uniform">
+            <li >
+                {% if selectTag == "成功領導人" %}
+                    <a href="#" class="primary" style="background-color:grey;">成功領導人</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '演講廳' '成功領導人' %}">成功領導人</a>
+                {% endif %}
+            </li>
+            <li>
+                {% if selectTag == "公司創辦人" %}
+                    <a href="#" class="primary" style="background-color:grey;">公司創辦人</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '演講廳' '公司創辦人' %}" >公司創辦人</a>
+                {% endif %}
+            </li>
+
+            <li>
+
+                {% if selectTag == "名人講堂" %}
+                    <a href="#" class="primary" style="background-color:grey;">名人講堂</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '演講廳' '機能性營養' %}" >名人講堂</a>
+                {% endif %}
+
+            </li>
+
+            <li>
+                {% if selectTag == "公司介紹" %}
+                    <a href="#" class="primary" style="background-color:grey;">公司介紹</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '演講廳' '公司介紹' %}">公司介紹</a>
+                {% endif %}
+
+            </li>
+            <li>
+                {% if selectTag == "培訓資料" %}
+                    <a href="#" class="primary" style="background-color:grey;">培訓資料</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '演講廳' '紐崔萊農場' %}">培訓資料</a>
+                {% endif %}
+
+            </li>
+            <li >
+                {% if selectTag == "其他" %}
+                    <a href="#" class="primary" style="background-color:grey;">其他</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '演講廳' '其他' %}">其他</a>
+                {% endif %}
+
+            </li>
+        </div>
+    </div>
+
+</section>

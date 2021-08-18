@@ -1,0 +1,43 @@
+<section id="one" style="background-color:steelblue;">
+
+    <div class="inner"  >
+        <header class="major">
+            <h2>金鍋</h2>
+        </header>
+        <div class="row gtr-uniform">
+            <li >
+                {% if selectTag == "金鍋" %}
+                    <a href="#" class="primary" style="background-color:grey;">金鍋</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '金鍋' '金鍋' %}">金鍋</a>
+                {% endif %}
+            </li>
+            <li>
+                {% if selectTag == "不沾鍋" %}
+                    <a href="#" class="primary" style="background-color:grey;">不沾鍋</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '金鍋' '不沾鍋' %}" >不沾鍋</a>
+                {% endif %}
+            </li>
+
+            <li>
+
+                {% if selectTag == "食譜" %}
+                    <a href="#" class="primary" style="background-color:grey;">食譜</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '金鍋' '食譜' %}" >食譜</a>
+                {% endif %}
+
+            </li>
+            <li >
+                {% if selectTag == "其他" %}
+                    <a href="#" class="primary" style="background-color:grey;">其他</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '金鍋' '其他' %}">其他</a>
+                {% endif %}
+
+            </li>
+        </div>
+    </div>
+
+</section>

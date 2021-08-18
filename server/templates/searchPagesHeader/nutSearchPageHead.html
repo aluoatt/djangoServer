@@ -1,0 +1,60 @@
+<section id="one" style="background-color:steelblue;">
+
+    <div class="inner"  >
+        <header class="major">
+            <h2>營養</h2>
+        </header>
+        <div class="row gtr-uniform">
+            <li >
+                {% if selectTag == "基礎營養" %}
+                    <a href="#" class="primary" style="background-color:grey;">基礎營養</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '營養' '基礎營養' %}">基礎營養</a>
+                {% endif %}
+            </li>
+            <li>
+                {% if selectTag == "曲線管理" %}
+                    <a href="#" class="primary" style="background-color:grey;">曲線管理</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '營養' '曲線管理' %}" >曲線管理</a>
+                {% endif %}
+            </li>
+
+            <li>
+
+                {% if selectTag == "機能性營養" %}
+                    <a href="#" class="primary" style="background-color:grey;">機能性營養</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '營養' '機能性營養' %}" >機能性營養</a>
+                {% endif %}
+
+            </li>
+
+            <li>
+                {% if selectTag == "疾病" %}
+                    <a href="#" class="primary" style="background-color:grey;">疾病</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '營養' '疾病' %}">疾病</a>
+                {% endif %}
+
+            </li>
+            <li>
+                {% if selectTag == "紐崔萊農場" %}
+                    <a href="#" class="primary" style="background-color:grey;">紐崔萊農場</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '營養' '紐崔萊農場' %}">紐崔萊農場</a>
+                {% endif %}
+
+            </li>
+            <li >
+                {% if selectTag == "其他" %}
+                    <a href="#" class="primary" style="background-color:grey;">其他</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '營養' '其他' %}">其他</a>
+                {% endif %}
+
+            </li>
+        </div>
+    </div>
+
+</section>

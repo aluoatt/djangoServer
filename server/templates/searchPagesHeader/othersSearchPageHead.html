@@ -1,0 +1,60 @@
+<section id="one" style="background-color:steelblue;">
+
+    <div class="inner"  >
+        <header class="major">
+            <h2>其他</h2>
+        </header>
+        <div class="row gtr-uniform">
+            <li >
+                {% if selectTag == "AmwayHome" %}
+                    <a href="#" class="primary" style="background-color:grey;">AmwayHome</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '其他' 'AmwayHome' %}">AmwayHome</a>
+                {% endif %}
+            </li>
+            <li>
+                {% if selectTag == "G&H" %}
+                    <a href="#" class="primary" style="background-color:grey;">G&H</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '其他' 'G&H' %}" >G&H</a>
+                {% endif %}
+            </li>
+
+            <li>
+
+                {% if selectTag == "Satinique" %}
+                    <a href="#" class="primary" style="background-color:grey;">Satinique</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '其他' 'Satinique' %}" >Satinique</a>
+                {% endif %}
+
+            </li>
+
+            <li>
+                {% if selectTag == "Glister" %}
+                    <a href="#" class="primary" style="background-color:grey;">Glister</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '其他' 'Glister' %}">Glister</a>
+                {% endif %}
+
+            </li>
+            <li>
+                {% if selectTag == "XS系列" %}
+                    <a href="#" class="primary" style="background-color:grey;">XS系列</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '其他' 'XS系列' %}">XS系列</a>
+                {% endif %}
+
+            </li>
+            <li >
+                {% if selectTag == "其他" %}
+                    <a href="#" class="primary" style="background-color:grey;">其他</a>
+                {% else %}
+                    <a href="{% url 'NutriliteSearchPage' '其他' '其他' %}">其他</a>
+                {% endif %}
+
+            </li>
+        </div>
+    </div>
+
+</section>

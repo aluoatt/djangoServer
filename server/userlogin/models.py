@@ -35,9 +35,9 @@ class UserAccountChainYenInfo(models.Model):
 
     accountStatus = models.CharField(max_length=4, verbose_name='狀態') #停權
     freezeDate = models.DateTimeField( verbose_name='停權到期日',null=True)
-    point = models.CharField(max_length=20, verbose_name='點數')
+    point = models.IntegerField( verbose_name='點數')
 
-    EM  = models.BooleanField(verbose_name='愛馬')
+    EM = models.BooleanField(verbose_name='愛馬')
 
 class amwayAwardInfo(models.Model):
     rank = models.IntegerField()
@@ -53,7 +53,7 @@ class chainYenClassInfo(models.Model):
     ClassRoomCode = models.CharField(max_length=20, verbose_name='教室代碼')
 
 class registerDDandDimInfo(models.Model):
-    amwayAward = models.CharField(max_length=20, verbose_name='獎銜')#只有白金跟鑽石
+    amwayAward = models.ForeignKey("amwayAwardInfo", verbose_name='獎銜',on_delete=models.PROTECT)#只有白金跟鑽石
     amwayNumber = models.IntegerField( verbose_name='會員編號')
     amwayDiamond =models.CharField(max_length=20, verbose_name='上手鑽石')
     main = models.CharField(max_length=20, verbose_name='主直銷權')

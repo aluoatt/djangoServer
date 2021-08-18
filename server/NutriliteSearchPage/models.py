@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 # Create your models here.
 
 
@@ -43,6 +44,22 @@ class sourceFromInfo(models.Model):
 class fileDataKeywords(models.Model):
     fileDataInfoID = models.ForeignKey('fileDataInfo',verbose_name='對應的資料ID',on_delete=models.CASCADE)
     keyword = models.CharField(max_length=20, verbose_name='關鍵字名稱', null=True)
+
+#個人持有資料
+class personalFileData(models.Model):
+    fileDataID = models.ForeignKey('fileDataInfo',on_delete=models.CASCADE,verbose_name='對應的資料ID')
+    ownerAccount = models.ForeignKey('userlogin.UserAccountInfo',on_delete=models.CASCADE,verbose_name='對應的帳號')
+    exchangeDate = models.DateField(verbose_name='資料兌換日期',default=timezone.now)
+    expiryDate = models.DateField(verbose_name='資料兌換時效到期日',null=True)
+    costPoint = models.IntegerField(verbose_name='花費點數')
+    waterCreateReady = models.BooleanField(default=0,verbose_name='浮水印是否完成')
+    waterMarkPath =  models.CharField(max_length=200,verbose_name='浮水印檔案路徑', null=True)
+
+class personalExchangeFileLog(models.Model):
+    fileDataID = models.ForeignKey('fileDataInfo', on_delete=models.CASCADE, verbose_name='對應的資料ID')
+    ownerAccount = models.ForeignKey('userlogin.UserAccountInfo', on_delete=models.CASCADE, verbose_name='對應的帳號')
+    exchangeDate = models.DateField(verbose_name='資料兌換日期',default=timezone.now)
+    costPoint = models.IntegerField(verbose_name='花費點數')
 
 #建立主類別表內容
 # from NutriliteSearchPage.models import mainClassInfo

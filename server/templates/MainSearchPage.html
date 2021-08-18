@@ -33,66 +33,21 @@
 
 				<!-- Main -->
 					<div id="main">
-							<section id="one" style="background-color:steelblue;">
-
-								<div class="inner"  >
-									<header class="major">
-										<h2>營養</h2>
-									</header>
-									<div class="row gtr-uniform">
-										<li >
-											{% if selectTag == "基礎營養" %}
-												<a href="#" class="primary" style="background-color:grey;">基礎營養</a>
-											{% else %}
-												<a href="{% url 'NutriliteSearchPage' '基礎營養' %}">基礎營養</a>
-											{% endif %}
-										</li>
-										<li>
-											{% if selectTag == "曲線管理" %}
-												<a href="#" class="primary" style="background-color:grey;">曲線管理</a>
-											{% else %}
-												<a href="{% url 'NutriliteSearchPage' '曲線管理' %}" >曲線管理</a>
-											{% endif %}
-										</li>
-
-										<li>
-
-											{% if selectTag == "機能性營養" %}
-												<a href="#" class="primary" style="background-color:grey;">機能性營養</a>
-											{% else %}
-												<a href="{% url 'NutriliteSearchPage' '機能性營養' %}" >機能性營養</a>
-											{% endif %}
-
-										</li>
-
-										<li>
-											{% if selectTag == "疾病" %}
-												<a href="#" class="primary" style="background-color:grey;">疾病</a>
-											{% else %}
-												<a href="{% url 'NutriliteSearchPage' '疾病' %}">疾病</a>
-											{% endif %}
-
-										</li>
-										<li>
-											{% if selectTag == "紐崔萊農場" %}
-												<a href="#" class="primary" style="background-color:grey;">紐崔萊農場</a>
-											{% else %}
-												<a href="{% url 'NutriliteSearchPage' '紐崔萊農場' %}">紐崔萊農場</a>
-											{% endif %}
-
-										</li>
-										<li >
-											{% if selectTag == "其他" %}
-												<a href="#" class="primary" style="background-color:grey;">其他</a>
-											{% else %}
-												<a href="{% url 'NutriliteSearchPage' '其他' %}">其他</a>
-											{% endif %}
-
-										</li>
-									</div>
-								</div>
-
-							</section>
+						{% if topic == "營養" %}
+							{% include 'searchPagesHeader/nutSearchPageHead.html' %}
+						{% elif topic == "美容" %}
+							{% include 'searchPagesHeader/artistrySearchPageHead.html' %}
+						{%elif topic == "科技" %}
+							{% include 'searchPagesHeader/TechSearchPageHead.html' %}
+						{%elif topic == "金鍋" %}
+							{% include 'searchPagesHeader/QueenSearchPageHead.html' %}
+						{%elif topic == "其他" %}
+							{% include 'searchPagesHeader/othersSearchPageHead.html' %}
+						{%elif topic == "演講廳" %}
+							{% include 'searchPagesHeader/courseSearchPageHead.html' %}
+						{%elif topic == "總部會議" %}
+							{% include 'searchPagesHeader/meetingSearchPageHead.html' %}
+						{% endif %}
 						{% for fileData in fileDatas%}
 							<section id="two"  class="spotlights">
 
@@ -110,9 +65,16 @@
 
 											<ul class="actions">
 												<li>
-													<button type="button" class="button" data-toggle="modal" data-target="#confirmViewFile" onclick="confirmViewFile({{ fileData.id }},'{{fileData.title}}',{{fileData.point}},{{userpoint}})">
-													  兌換觀看【{{fileData.point}}點】
-													</button>
+
+													{% if userpoint >= fileData.point %}
+														<button type="button" class="button" data-toggle="modal" data-target="#confirmViewFile" onclick="confirmViewFile({{ fileData.id }},'{{fileData.title}}',{{fileData.point}},{{userpoint}})">
+														  兌換觀看【{{fileData.point}}點】
+														</button>
+													{% else %}
+														<button type="button" class="button" data-toggle="modal" data-target="#confirmViewFile" disabled>
+														  兌換觀看【{{fileData.point}}點】
+														</button>
+													{% endif %}
 												</li>
 											</ul>
 								</div>
@@ -153,8 +115,11 @@
 				  <label style="color: red" for="demo-copy">*兌換即同意不截圖、不錄音、不錄影、不外流</label>
 			  </div>
 			  <div class="modal-footer">
+			  	<form action="22" id="fileID" name="fileID" method="post">{% csrf_token %}
+					<input type="hidden" id="fileViewID">
+				</form>>
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-				<button type="button" class="btn btn-primary">我同意並兌換</button>
+				<button type="button" class="btn btn-primary" onclick="confirmViewFileSubmit()">我同意並兌換</button>
 			  </div>
 			</div>
 		  </div>

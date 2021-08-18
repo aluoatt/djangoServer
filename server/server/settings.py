@@ -26,7 +26,19 @@ SECRET_KEY = 'django-insecure-x%#0uep5b^^gqkfctv1=w6nasd$-j$eam*u*!#)7k-3dp)6t-4
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
+# celery
+CELERY_CACHE_BACKEND = 'celery'
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CACHES = {
+    'celery': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'celery_cache',
+    },
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'celery_cache',
+    }
+}
 
 # Application definition
 
@@ -37,10 +49,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #Add our new application
+    # Add our new application
     'searchfile',
     'NutriliteSearchPage',
-    'userlogin'
+    'userlogin',
+    # plug-in
+    'django_celery_results'
 ]
 
 MIDDLEWARE = [
