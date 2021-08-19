@@ -26,91 +26,38 @@
 					{% include 'baseMenu.html' %}
 
 				<!-- Main -->
+				{% if permission is False %}
+				<p>權限不足</p>
+				{% elif pointEnough is False %}
+				<p>點數不足</p>
+				{% else %}
 					<div id="main" class="alt">
 
 						<!-- One -->
 							<section id="one">
 								<div class="inner">
 									<header class="major">
-										<h1>Generic</h1>
+										<h2>{{targetFile.title}}</h2>
 									</header>
-									<span class="image main"><img src="images/pic11.jpg" alt="" /></span>
-									<p>Donec eget ex magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis. Praesent rutrum sem diam, vitae egestas enim auctor sit amet. Pellentesque leo mauris, consectetur id ipsum sit amet, fergiat. Pellentesque in mi eu massa lacinia malesuada et a elit. Donec urna ex, lacinia in purus ac, pretium pulvinar mauris. Curabitur sapien risus, commodo eget turpis at, elementum convallis elit. Pellentesque enim turpis, hendrerit.</p>
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dapibus rutrum facilisis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam tristique libero eu nibh porttitor fermentum. Nullam venenatis erat id vehicula viverra. Nunc ultrices eros ut ultricies condimentum. Mauris risus lacus, blandit sit amet venenatis non, bibendum vitae dolor. Nunc lorem mauris, fringilla in aliquam at, euismod in lectus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In non lorem sit amet elit placerat maximus. Pellentesque aliquam maximus risus, vel sed vehicula.</p>
-									<p>Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis. Praesent rutrum sem diam, vitae egestas enim auctor sit amet. Pellentesque leo mauris, consectetur id ipsum sit amet, fersapien risus, commodo eget turpis at, elementum convallis elit. Pellentesque enim turpis, hendrerit tristique lorem ipsum dolor.</p>
-								</div>
+									<p>{{targetFile.describe}}</p>
+									<input type="hidden" id="fileID" value = "{{targetFile.id}}">
+									<hr>
+									<p>關鍵字:
+										{% for keywords in targetFile.filedatakeywords_set.all %}
+												#{{keywords.keyword}}
+										{% endfor %}
+									</p>
+									<hr>
+									{% if targetFile.fileType == 1 %}
+									{% else %}
+									<div id="pdf-container"></div>
+									{% endif %}
+									</div>
 							</section>
 
 					</div>
+				{% endif %}
 
-				<!-- Contact -->
-					<section id="contact">
-						<div class="inner">
-							<section>
-								<form method="post" action="#">
-									<div class="fields">
-										<div class="field half">
-											<label for="name">Name</label>
-											<input type="text" name="name" id="name" />
-										</div>
-										<div class="field half">
-											<label for="email">Email</label>
-											<input type="text" name="email" id="email" />
-										</div>
-										<div class="field">
-											<label for="message">Message</label>
-											<textarea name="message" id="message" rows="6"></textarea>
-										</div>
-									</div>
-									<ul class="actions">
-										<li><input type="submit" value="Send Message" class="primary" /></li>
-										<li><input type="reset" value="Clear" /></li>
-									</ul>
-								</form>
-							</section>
-							<section class="split">
-								<section>
-									<div class="contact-method">
-										<span class="icon solid alt fa-envelope"></span>
-										<h3>Email</h3>
-										<a href="#">information@untitled.tld</a>
-									</div>
-								</section>
-								<section>
-									<div class="contact-method">
-										<span class="icon solid alt fa-phone"></span>
-										<h3>Phone</h3>
-										<span>(000) 000-0000 x12387</span>
-									</div>
-								</section>
-								<section>
-									<div class="contact-method">
-										<span class="icon solid alt fa-home"></span>
-										<h3>Address</h3>
-										<span>1234 Somewhere Road #5432<br />
-										Nashville, TN 00000<br />
-										United States of America</span>
-									</div>
-								</section>
-							</section>
-						</div>
-					</section>
-
-				<!-- Footer -->
-					<footer id="footer">
-						<div class="inner">
-							<ul class="icons">
-								<li><a href="#" class="icon brands alt fa-twitter"><span class="label">Twitter</span></a></li>
-								<li><a href="#" class="icon brands alt fa-facebook-f"><span class="label">Facebook</span></a></li>
-								<li><a href="#" class="icon brands alt fa-instagram"><span class="label">Instagram</span></a></li>
-								<li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
-								<li><a href="#" class="icon brands alt fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
-							</ul>
-							<ul class="copyright">
-								<li>&copy; Untitled</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li>
-							</ul>
-						</div>
-					</footer>
 
 			</div>
 
@@ -122,6 +69,78 @@
 			<script src="{%static 'assets/js/breakpoints.min.js' %}"></script>
 			<script src="{%static 'assets/js/util.js' %}"></script>
 			<script src="{%static 'assets/js/main.js' %}"></script>
+			<script src="{%static 'assets/js/viewPageAjax.js' %}"></script>
+			<script type="text/javascript" src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+    		<script type="text/javascript" src="https://mozilla.github.io/pdf.js/build/pdf.worker.js"></script>
+			<script>
+				$(document).ready(function() {
+				$.ajaxSetup({ cache: false }); // This part addresses an IE bug. without it, IE will only load the first number and will never refresh
+				var my_refresh = setInterval(function() {
+				let csrftoken = '{{ csrf_token }}'
+				var requestURL = "/returnPDF/" + document.getElementById("fileID").value;
+				var dataJSON = {};
+				// dataJSON["fileId"] = "iPhone";
+				// dataJSON["Company"] = "Apple";
 
+				$.ajax({
+						url: requestURL,
+						data: JSON.stringify(dataJSON),
+						headers:{'X-CSRFToken':csrftoken},
+						type: "POST",
+						// dataType: "json",
+						// contentType: "application/json;charset=utf-8",
+						success: function(returnData){
+							clearInterval(my_refresh)
+							if(returnData != "error"){
+								 btoa(unescape(encodeURIComponent(JSON.stringify(Object))))
+							pdfjsLib.getDocument(convertDataURIToBinary(returnData)).then(function(pdf) {
+								  for (var pageNum = 1; pageNum < pdf.numPages; ++pageNum) {
+									pdf.getPage(pageNum).then(function(page) {
+									  // you can now use *page* here
+
+									  var scale = 1.5;
+									  var viewport = page.getViewport(1);
+
+									  var canvas = document.createElement('canvas');
+									  var context = canvas.getContext('2d');
+									  canvas.height = viewport.height;
+									  canvas.width = viewport.width;
+
+									  var renderContext = {
+										canvasContext: context,
+										viewport: viewport
+									  };
+									  page.render(renderContext);
+
+									  document.getElementById('pdf-container').appendChild(canvas);
+									});
+								  }
+								})
+						}
+
+							},
+						error: function(xhr, ajaxOptions, thrownError){
+							console.log(xhr.status);
+							console.log(thrownError);
+						}
+					});
+
+				}, 3000); // the "1000"
+				});
+				var BASE64_MARKER = ';base64,';
+
+				function convertDataURIToBinary(dataURI) {
+				  var base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
+				  var base64 = dataURI.substring(base64Index);
+				  var raw = window.atob(base64);
+				  var rawLength = raw.length;
+				  var array = new Uint8Array(new ArrayBuffer(rawLength));
+
+				  for(var i = 0; i < rawLength; i++) {
+					array[i] = raw.charCodeAt(i);
+				  }
+				  return array;
+}
+			</script>
 	</body>
 </html>

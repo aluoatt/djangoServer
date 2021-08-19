@@ -53,7 +53,7 @@ class personalFileData(models.Model):
     expiryDate = models.DateField(verbose_name='資料兌換時效到期日',null=True)
     costPoint = models.IntegerField(verbose_name='花費點數')
     waterCreateReady = models.BooleanField(default=0,verbose_name='浮水印是否完成')
-    waterMarkPath =  models.CharField(max_length=200,verbose_name='浮水印檔案路徑', null=True)
+    waterMarkPath = models.CharField(max_length=200,verbose_name='浮水印檔案路徑', null=True)
 
 class personalExchangeFileLog(models.Model):
     fileDataID = models.ForeignKey('fileDataInfo', on_delete=models.CASCADE, verbose_name='對應的資料ID')
