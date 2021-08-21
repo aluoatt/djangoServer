@@ -13,6 +13,14 @@
 		<link rel="stylesheet" href="{%static 'assets/css/main.css' %}" />
 
 		<noscript><link rel="stylesheet" href="{%static 'assets/css/noscript.css' %}" /></noscript>
+		<style type="text/css">
+        html,body,#pdf_viewer{
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
 	</head>
 	<body class="is-preload">
 
@@ -50,9 +58,11 @@
 									<hr>
 									{% if targetFile.fileType == 1 %}
 									{% else %}
-									<div id="pdf-container"></div>
+
 									{% endif %}
+
 									</div>
+
 							</section>
 
 					</div>
@@ -60,6 +70,7 @@
 
 
 			</div>
+				<div id="pdf_viewer" ></div>
 
 		<!-- Scripts -->
 			<script src="{%static 'assets/js/jquery.min.js' %}"></script>
@@ -70,77 +81,111 @@
 			<script src="{%static 'assets/js/util.js' %}"></script>
 			<script src="{%static 'assets/js/main.js' %}"></script>
 			<script src="{%static 'assets/js/viewPageAjax.js' %}"></script>
-			<script type="text/javascript" src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
-    		<script type="text/javascript" src="https://mozilla.github.io/pdf.js/build/pdf.worker.js"></script>
+<!--			<script type="text/javascript" src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>-->
+<!--    		<script type="text/javascript" src="https://mozilla.github.io/pdf.js/build/pdf.worker.js"></script>-->
+			<script type="text/javascript" src="{%static 'assets/js/pdfobject.min.js'%}"></script>
+			<script type="text/javascript" src="{%static 'pdfjs-2.0/build/pdf.js'%}"></script>
+<!--			<script type="text/javascript" src="{%static 'assets/js/build/pdf.worker.js'%}"></script>-->
+
+
+
 			<script>
-				$(document).ready(function() {
-				$.ajaxSetup({ cache: false }); // This part addresses an IE bug. without it, IE will only load the first number and will never refresh
-				var my_refresh = setInterval(function() {
+
+				var t = 100
+				var my_refresh = setInterval(ajpdf, t); // the "1000"
+
+				function ajpdf() {
 				let csrftoken = '{{ csrf_token }}'
 				var requestURL = "/returnPDF/" + document.getElementById("fileID").value;
-				var dataJSON = {};
-				// dataJSON["fileId"] = "iPhone";
-				// dataJSON["Company"] = "Apple";
+				// var dataJSON = {};
 
 				$.ajax({
 						url: requestURL,
-						data: JSON.stringify(dataJSON),
+						// data: JSON.stringify(dataJSON),
 						headers:{'X-CSRFToken':csrftoken},
-						type: "POST",
+						type: "GET",
 						// dataType: "json",
 						// contentType: "application/json;charset=utf-8",
 						success: function(returnData){
-							clearInterval(my_refresh)
-							if(returnData != "error"){
-								 btoa(unescape(encodeURIComponent(JSON.stringify(Object))))
-							pdfjsLib.getDocument(convertDataURIToBinary(returnData)).then(function(pdf) {
-								  for (var pageNum = 1; pageNum < pdf.numPages; ++pageNum) {
-									pdf.getPage(pageNum).then(function(page) {
-									  // you can now use *page* here
 
-									  var scale = 1.5;
-									  var viewport = page.getViewport(1);
+							if(returnData != "error" && returnData != "not ready"){
+								if(PDFObject.supportsPDFs) {
+									var options = {
+										pdfOpenParams: {
+											pagemode: "thumbs",
+											toolbar: 0,
+											navpanes: 1,
+											statesbar: 1,
+											scrollbar: 1,
+											view: 'FitV'
+										}
+									}
+									PDFObject.embed("{% url 'returnPDF' targetFile.id %}", "#pdf_viewer", options);
+									clearInterval(my_refresh)
+								}else{
+									clearInterval(my_refresh)
+									pdfjsLib.GlobalWorkerOptions.workerSrc = "{% static 'pdfjs-2.0/build/pdf.worker.js' %}";
 
-									  var canvas = document.createElement('canvas');
-									  var context = canvas.getContext('2d');
-									  canvas.height = viewport.height;
-									  canvas.width = viewport.width;
+									pdfjsLib.getDocument("{% url 'returnPDF' targetFile.id %}").promise.then(function (pdf) {
+										for (var pageNum = 1; pageNum <= pdf.numPages; ++pageNum) {
+											pdf.getPage(pageNum).then(function (page) {
+												// you can now use *page* here
 
-									  var renderContext = {
-										canvasContext: context,
-										viewport: viewport
-									  };
-									  page.render(renderContext);
+												var scale = 0.7;
+												var viewport = page.getViewport({
+														  scale: scale, // 缩放的比例
+														  rotation: 360, // 旋转的角度
+														});
+												// page.rotatePages(180)
+												var canvas = document.createElement('canvas');
+												var context = canvas.getContext('2d');
+												canvas.height = viewport.viewBox[3]*scale;
+												canvas.width = viewport.viewBox[2]*scale;
+												console.log(viewport.rotation)
 
-									  document.getElementById('pdf-container').appendChild(canvas);
-									});
-								  }
-								})
-						}
 
-							},
+												var renderContext = {
+													canvasContext: context,
+													viewport: viewport
+												};
+												page.render(renderContext);
+												document.getElementById('pdf_viewer').appendChild(canvas);
+											});
+										}
+									})
+								}
+						}else{
+								if (t<3000){
+								clearInterval(my_refresh)
+								t = 3000
+								my_refresh = setInterval(ajpdf, t);
+								}
+								if (returnData == "not ready"){
+									document.getElementById("pdf_viewer").innerHTML = "正在產生檔案..請稍候";
+								}else{
+									document.getElementById("pdf_viewer").innerHTML = "發生錯誤";
+								}
+							}},
 						error: function(xhr, ajaxOptions, thrownError){
+							if (t<3000){
+								clearInterval(my_refresh)
+								t = 3000
+								my_refresh = setInterval(ajpdf, t);
+							}
+
 							console.log(xhr.status);
 							console.log(thrownError);
+
 						}
 					});
 
-				}, 3000); // the "1000"
+				}
+				$(document).ready(function() {
+				$.ajaxSetup({ cache: false }); // This part addresses an IE bug. without it, IE will only load the first number and will never refresh
+
+
 				});
-				var BASE64_MARKER = ';base64,';
 
-				function convertDataURIToBinary(dataURI) {
-				  var base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
-				  var base64 = dataURI.substring(base64Index);
-				  var raw = window.atob(base64);
-				  var rawLength = raw.length;
-				  var array = new Uint8Array(new ArrayBuffer(rawLength));
-
-				  for(var i = 0; i < rawLength; i++) {
-					array[i] = raw.charCodeAt(i);
-				  }
-				  return array;
-}
 			</script>
 	</body>
 </html>

@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 from django.shortcuts import render
 from NutriliteSearchPage.models import fileDataInfo,mainClassInfo,secClassInfo,personalFileData,personalExchangeFileLog
 from userlogin.models import UserAccountInfo,UserAccountChainYenInfo
@@ -96,7 +96,6 @@ def viewFilePage(request,fileId):
                 getFileDateProcess.delay(targetFile.id,targetFile.file,"超級使用者", "mp4")
     # 發請求
 
-
     return render(request, 'viewFilePage.html', locals())
 
 
@@ -114,6 +113,8 @@ def returnPDF(request, fileId):
     if resume.first().waterCreateReady == 0:
         return HttpResponse("not ready", content_type="text/plain")
     fsock = open(backaddress+'/'+resume.first().waterMarkPath, 'rb')
-    response = HttpResponse(fsock, content_type='application/pdf')
+    response = FileResponse(fsock, content_type='application/pdf',filename="pdf.pdf")
+    # response = HttpResponse(fsock)
+
 
     return response
