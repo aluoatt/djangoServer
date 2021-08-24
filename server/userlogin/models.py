@@ -7,6 +7,7 @@ class Server(models.Model):
     class Meta:
         permissions = (
             ("can_see_register", "can_see_register"),
+            ("seeManagerMenuButton","seeManagerMenuButton")
         )
 
 class UserAccountInfo(AbstractUser):

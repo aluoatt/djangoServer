@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'searchfile',
     'NutriliteSearchPage',
     'userlogin',
+    'personalInfoPage',
     # plug-in
     'django_celery_results'
 ]

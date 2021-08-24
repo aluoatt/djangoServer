@@ -19,7 +19,8 @@ backaddress = "/home/aluo/backEnd"
 def NutriliteSearchPage(request,topic,selectTag):
     selectTag = selectTag
     try:
-        dataPermissionsLevel = UserAccountInfo.objects.get(username=request.user).dataPermissionsLevel
+        userAcc = UserAccountInfo.objects.get(username=request.user)
+        dataPermissionsLevel = userAcc.dataPermissionsLevel
         userpoint = UserAccountChainYenInfo.objects.get(UserAccountInfo=UserAccountInfo.objects.get(username=request.user)).point
 
     except:
@@ -33,6 +34,9 @@ def NutriliteSearchPage(request,topic,selectTag):
                                            secClass = secClassInfo.objects.get(secClassName=selectTag).id,
                                            visible = 1,
                                            permissionsLevel__lte = dataPermissionsLevel).order_by('occurrenceDate')
+
+    ownFileList = [k.fileDataID.id for k in personalFileData.objects.filter(ownerAccount = userAcc)]
+
     # 總頁數
     page_count = fileDatas.count()
     pageisNotNull = True
@@ -103,12 +107,7 @@ def exchangeOption(request,fileId):
                 getFileDateProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "pdf", UserAccount.id)
             else:
                 getFileDateProcess.delay(targetFile.id, targetFile.file, "超級使用者", "mp4", UserAccount.id)
-    # 發請求
-    # s = render(request, 'viewFilePage.html', locals())
-    # s.setdefault('Cache-Control', 'no-store')
-    # s.setdefault('Expires', 0)
-    # s.setdefault('Pragma', 'no-cache')
-    # return render(request, 'viewFilePage.html', locals())
+
 
     return redirect('/viewFilePage/'+fileId)
 

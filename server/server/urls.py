@@ -20,6 +20,8 @@ from django.conf.urls import url
 from NutriliteSearchPage.views import NutriliteSearchPage,viewFilePage,returnPDF,exchangeOption
 from django .contrib.auth.decorators import login_required
 from userlogin.views import login,logout,register
+from personalInfoPage.views import personalInfoHomePage
+from managerPage.views import managerHomePage
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,7 +36,6 @@ urlpatterns+=[
 
 urlpatterns += [
     path('home', login_required(home), name='home'),
-
     path('accounts/login/', login, name='login'),
     path('accounts/logout/', logout, name='logout'),
     path('accounts/register/', register,name='register'),
@@ -42,6 +43,8 @@ urlpatterns += [
     path('viewFilePage/<str:fileId>', login_required(viewFilePage), name='viewFilePage'),
     path('returnPDF/<str:fileId>', login_required(returnPDF), name='returnPDF'),
     path('exchangeOption/<str:fileId>', login_required(exchangeOption), name='exchangeOption'),
+    path('personalInfoPage/home/<str:selectTag>', login_required(personalInfoHomePage), name='personalInfoHomePage'),
+    path('managerPages/home/<str:selectTag>', login_required(managerHomePage), name='managerHomePage'),
     path('', login_required(home), name='home'),
 ]
 

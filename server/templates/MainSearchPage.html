@@ -48,15 +48,15 @@
 						{%elif topic == "總部會議/活動" %}
 							{% include 'searchPagesHeader/meetingSearchPageHead.html' %}
 						{% endif %}
-						{% for fileData in fileDatas%}
+
 							<section id="two"  class="spotlights">
 
 								<div class="inner"  >
-									<header class="major">
-												<h3>{{fileData.title}}</h3>
-											</header>
+									{% for fileData in fileDatas%}
+									<h3><u>{{fileData.title}}</u></h3>
+
+
 											<p>{{fileData.describe}}</p>
-											<hr>
 											<p>
 											{% for keywords in fileData.filedatakeywords_set.all %}
 												#{{keywords.keyword}}
@@ -66,38 +66,39 @@
 											<ul class="actions">
 												<li>
 
-													{% if userpoint >= fileData.point %}
-														<button type="button" class="button" data-toggle="modal" data-target="#confirmViewFile" onclick="confirmViewFile({{ fileData.id }},'{{fileData.title}}',{{fileData.point}},{{userpoint}})">
-														  兌換觀看【{{fileData.point}}點】
+														{% if fileData.id in ownFileList %}
+														<button type="button" class="button" onclick="searPageViewFileSubmit({{ fileData.id }})">
+															  點選觀看
 														</button>
-													{% else %}
-														<button type="button" class="button" data-toggle="modal" data-target="#confirmViewFile" disabled>
-														  兌換觀看【{{fileData.point}}點】
-														</button>
-													{% endif %}
+
+														{% elif userpoint >= fileData.point %}
+															<button type="button" class="button" data-toggle="modal" data-target="#confirmViewFile" onclick="confirmViewFile({{ fileData.id }},'{{fileData.title}}',{{fileData.point}},{{userpoint}})">
+															  兌換觀看【{{fileData.point}}點】
+															</button>
+														{% else %}
+															<button type="button" class="button" data-toggle="modal" data-target="#confirmViewFile" disabled>
+															  兌換觀看【{{fileData.point}}點】
+															</button>
+														{% endif %}
 												</li>
 											</ul>
+										<hr>
+									{% endfor %}
 								</div>
 
 							</section>
-						<div>
-							<p><hr></p>
+							{% if pageisNotNull %}
+							<div class="dataTables_paginate paging_simple_numbers pull-right inner">
+									<ul class="pagination ">
+										{{ pagination.page_html|safe }}
+									</ul>
+
 							</div>
-						{% endfor %}
+							{% endif %}
+
 
 						<!-- Two -->
 
-					</div>
-						{% if pageisNotNull %}
-						<div class="row">
-						 <div class="dataTables_paginate paging_simple_numbers pull-right inner">
-									<div class="text-center container">
-										<ul class="pagination ">
-										  {{ pagination.page_html|safe }}
-										</ul>
-									</div>
-						</div>
-							{% endif %}
 					</div>
 
 
@@ -109,7 +110,7 @@
 			<div class="modal-content">
 			  <div class="modal-header">
 				<h3 style="color: black" class="modal-title" id="fileCheckTitle"></h3>
-				<h3 style="color: black" class="modal-title" id="needPoint"></h3>
+<!--				<h3 style="color: black" class="modal-title" id="needPoint"></h3>-->
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				  <span aria-hidden="true">&times;</span>
 				</button>
