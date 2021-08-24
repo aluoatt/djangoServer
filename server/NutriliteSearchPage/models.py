@@ -22,6 +22,13 @@ class fileDataInfo(models.Model):
     visible = models.BooleanField(verbose_name='是否可見')
     point = models.IntegerField(verbose_name='耗費點數')
     permissionsLevel = models.IntegerField(verbose_name='權限等級')
+    DBClass = models.ForeignKey("DBClassInfo",verbose_name='資料庫類別',on_delete=models.PROTECT)
+#資料庫類別對應表
+class DBClassInfo(models.Model):
+
+    DBClassName = models.CharField(max_length=100,verbose_name='名稱')
+    DBClassCode = models.CharField(max_length=50,verbose_name='編碼')
+
 
 #主類別對應表
 class mainClassInfo(models.Model):
@@ -95,7 +102,7 @@ class personalExchangeFileLog(models.Model):
 #     r = fileTypeInfo.objects.create(fileTypeName=data)
 #     r.save()
 #假資料測試
-# from NutriliteSearchPage.models import fileDataInfo,fileDataKeywords,mainClassInfo,secClassInfo,sourceFromInfo,fileTypeInfo
+# from NutriliteSearchPage.models import fileDataInfo,fileDataKeywords,mainClassInfo,secClassInfo,sourceFromInfo,fileTypeInfo,DBClassInfo
 # r = fileDataInfo(
 #     mainClass = mainClassInfo.objects.get(id=1),
 #     secClass = secClassInfo.objects.get(id=2),
@@ -155,3 +162,32 @@ class personalExchangeFileLog(models.Model):
 #     keyword = "keywordB2",
 # )
 # k.save()
+#影片
+# r = fileDataInfo(
+#     mainClass = mainClassInfo.objects.get(id=1),
+#     secClass = secClassInfo.objects.get(id=4),
+#     describe = "對抗3C藍光威脅，紐崔萊晶明錠可為你層層守護",
+#     PDF = "1n7Y_L9Nj4IpfJYj5WVWU59xVtYJK7abN",
+#     file = "1n7Y_L9Nj4IpfJYj5WVWU59xVtYJK7abN",
+#     fileType = fileTypeInfo.objects.get(id=1),
+#     sourceForm = sourceFromInfo.objects.get(id=5),
+#     sourceURL = "https://www.youtube.com/watch?v=wM4vUJ7mr7g",
+#     sourceScreenshot = "https://drive.google.com/open?id=1PAvoqZ5d-iuoct62bMSBRtCHZJjrKszC",
+#     characterName = None,
+#     characterClass = None,
+#     characterDD = None,
+#     occurrenceDate = "2021-08-01 00:00:00",
+#     lastModify = "2021-08-21 00:00:00",
+#     visible = 1,
+#     permissionsLevel = 0,
+#     point=5,
+#     DBClass=DBClassInfo.objects.get(id=2))
+# r.save()
+#
+# keywordList = ["眼睛","晶明錠","3C","藍光","金盞花","歐越莓","黑醋栗","菠菜","葉黃素","花青素","類胡蘿蔔素"]
+# for i in keywordList:
+#     k = fileDataKeywords(
+#         fileDataInfoID = r,
+#         keyword =  i,
+#     )
+#     k.save()

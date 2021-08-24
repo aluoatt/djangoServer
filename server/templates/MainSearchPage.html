@@ -45,7 +45,7 @@
 							{% include 'searchPagesHeader/othersSearchPageHead.html' %}
 						{%elif topic == "演講廳" %}
 							{% include 'searchPagesHeader/courseSearchPageHead.html' %}
-						{%elif topic == "總部會議" %}
+						{%elif topic == "總部會議/活動" %}
 							{% include 'searchPagesHeader/meetingSearchPageHead.html' %}
 						{% endif %}
 						{% for fileData in fileDatas%}
@@ -80,7 +80,11 @@
 								</div>
 
 							</section>
+						<div>
+							<p><hr></p>
+							</div>
 						{% endfor %}
+
 						<!-- Two -->
 
 					</div>
@@ -115,7 +119,7 @@
 				  <label style="color: red" for="demo-copy">*兌換即同意不截圖、不錄音、不錄影、不外流</label>
 			  </div>
 			  <div class="modal-footer">
-			  	<form action="22" id="fileID" name="fileID" method="post">{% csrf_token %}
+			  	<form action="22" id="fileIDModal" name="fileIDModal" method="post">{% csrf_token %}
 					<input type="hidden" id="fileViewID">
 				</form>>
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>

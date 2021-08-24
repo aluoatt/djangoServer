@@ -5,9 +5,9 @@ function confirmViewFile(id,title,costpoint,userpoint){
     document.getElementById("needPoint").innerHTML = "需點數" + costpoint + "點";
     document.getElementById("userpoint").innerHTML = "剩餘點數:" + userpoint;
     document.getElementById("fileViewID").value = id;
-    document.getElementById("fileID").action = "/viewFilePage/"+id;
+    document.getElementById("fileIDModal").action = "/exchangeOption/"+id;
 }
 
 function confirmViewFileSubmit(){
-    document.fileID.submit();
+    document.fileIDModal.submit();
 }

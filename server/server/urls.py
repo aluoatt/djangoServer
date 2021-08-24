@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from searchfile.views import home
 from django.conf.urls import url
-from NutriliteSearchPage.views import NutriliteSearchPage,viewFilePage,returnPDF
+from NutriliteSearchPage.views import NutriliteSearchPage,viewFilePage,returnPDF,exchangeOption
 from django .contrib.auth.decorators import login_required
 from userlogin.views import login,logout,register
 
@@ -41,6 +41,7 @@ urlpatterns += [
     path('filesearch/<str:topic>/<str:selectTag>', login_required(NutriliteSearchPage), name='NutriliteSearchPage'),
     path('viewFilePage/<str:fileId>', login_required(viewFilePage), name='viewFilePage'),
     path('returnPDF/<str:fileId>', login_required(returnPDF), name='returnPDF'),
+    path('exchangeOption/<str:fileId>', login_required(exchangeOption), name='exchangeOption'),
     path('', login_required(home), name='home'),
 ]
 
