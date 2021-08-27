@@ -158,3 +158,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SESSION_COOKIE_AGE = 60 * 60  # 設置session過期時間為30分鐘
 # SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # 當瀏覽器被關閉的時候將session失效，但是不能刪除數據庫的session數據
 SESSION_SAVE_EVERY_REQUEST = True  # 每次請求都要保存一下session
+
+# SMTP Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  #SMTP伺服器
+EMAIL_PORT = 587  #TLS通訊埠號
+EMAIL_USE_TLS = True  #開啟TLS(傳輸層安全性)
+EMAIL_HOST_USER = 'aluoatt@gmail.com'  #寄件者電子郵件
+EMAIL_HOST_PASSWORD = '****'  #Gmail應用程式的密碼

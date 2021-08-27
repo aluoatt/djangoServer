@@ -6,7 +6,7 @@ from NutriliteSearchPage.models import fileDataInfo,mainClassInfo,secClassInfo,p
 from userlogin.models import UserAccountInfo,UserAccountChainYenInfo
 from NutriliteSearchPage.utils.page import Pagination
 import logging
-from .tasks import getFileDateProcess
+from .tasks import getFileDateProcess,getFileWithoutWaterProcess
 import os
 import re
 import mimetypes
@@ -97,17 +97,32 @@ def exchangeOption(request,fileId):
         if not supervisord:
             waterMarkUserName = UserAccountChainYen.classRoom.ClassRoomCode + "_" + UserAccount.user + "_" \
                                 + str(UserAccount.useraccountamwayinfo_set.all().first().amwayNumber)
-            if targetFile.fileType.id > 1:  # 非影片
-                # 製作浮水印
-                getFileDateProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "pdf", UserAccount.id)
-            else:
-                getFileDateProcess.delay(targetFile.id, targetFile.file, waterMarkUserName, "mp4", UserAccount.id)
-        else:
-            if targetFile.fileType.id > 1:  # 非影片
-                getFileDateProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "pdf", UserAccount.id)
-            else:
-                getFileDateProcess.delay(targetFile.id, targetFile.file, "超級使用者", "mp4", UserAccount.id)
 
+            #是否製作浮水印
+            if targetFile.needWaterMark:
+                if targetFile.fileType.id > 1:  # 非影片
+                    # 製作浮水印
+                    getFileDateProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "pdf", UserAccount.id)
+                else:
+                    getFileDateProcess.delay(targetFile.id, targetFile.file, waterMarkUserName, "mp4", UserAccount.id)
+            else:
+                if targetFile.fileType.id > 1:  # 非影片
+                    # 製作浮水印
+                    getFileWithoutWaterProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "pdf", UserAccount.id)
+                else:
+                    getFileWithoutWaterProcess.delay(targetFile.id, targetFile.file, waterMarkUserName, "mp4", UserAccount.id)
+
+        else:
+            if targetFile.needWaterMark:
+                if targetFile.fileType.id > 1:  # 非影片
+                    getFileDateProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "pdf", UserAccount.id)
+                else:
+                    getFileDateProcess.delay(targetFile.id, targetFile.file, "超級使用者", "mp4", UserAccount.id)
+            else:
+                if targetFile.fileType.id > 1:  # 非影片
+                    getFileWithoutWaterProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "pdf", UserAccount.id)
+                else:
+                    getFileWithoutWaterProcess.delay(targetFile.id, targetFile.file, "超級使用者", "mp4", UserAccount.id)
 
     return redirect('/viewFilePage/'+fileId)
 

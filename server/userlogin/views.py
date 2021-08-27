@@ -100,6 +100,7 @@ def register(request,token):
                                             # is_superuser = 0,
                                             # is_staff =0,
                                             # is_active=1,
+                                            auditStatus = "審核中",
                                             email=e_mail,
                                             dataPermissionsLevel=0)
 

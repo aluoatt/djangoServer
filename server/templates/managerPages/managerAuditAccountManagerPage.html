@@ -179,6 +179,7 @@
                 　　
                 <th>會員編號</th>
                 　　
+                <th>帳號</th>
                 <th>性別</th>
                 　　
                 <th>電話</th>
@@ -198,42 +199,72 @@
                 　　
                 <th>操作</th>
                 　　
-                <th>移除</th>
                 　　
                 　
                 </tr>
-                　
-                <tr>
+                {% for AccountChainYen in TempUserAccountChainYen %}
+                <tr id = "{{AccountChainYen.UserAccountInfo.id}}_tr" >
                 　　
-                <td data-th="姓名">思妤 </td>
+                <td id = "{{AccountChainYen.UserAccountInfo.id}}_user" data-th="姓名">
+                    {{AccountChainYen.UserAccountInfo.user}}
+                </td>
                 　　
-                <td data-th="會員編號"> </td>
+                <td id = "{{AccountChainYen.UserAccountInfo.id}}_amwayNumber" data-th="會員編號">
+                    {{AccountChainYen.UserAccountInfo.tempuseraccountamwayinfo_set.first.amwayNumber}}
+                </td>
+                <td id = "{{AccountChainYen.UserAccountInfo.id}}_username" data-th="帳號">
+                    {{AccountChainYen.UserAccountInfo.username}}
+                </td>
+                <td id = "{{AccountChainYen.UserAccountInfo.id}}_gender"  data-th="性別">
+                    {{AccountChainYen.UserAccountInfo.gender}}
+                </td>
                 　　
-                <td data-th="性別"></td>
+                <td id = "{{AccountChainYen.UserAccountInfo.id}}_phone" data-th="電話">
+                    {{AccountChainYen.UserAccountInfo.phone}}
+                </td>
                 　　
-                <td data-th="電話"></td>
+                <td id = "{{AccountChainYen.UserAccountInfo.id}}_jobTitle" data-th="職務">
+                    {{AccountChainYen.jobTitle.jobTitle}}
+                </td>
                 　　
-                <td data-th="職務"></td>
-                　　
-                <td data-th="獎銜"></td>
+                <td id = "{{AccountChainYen.UserAccountInfo.id}}_amwayAward" data-th="獎銜">
+                    {{AccountChainYen.UserAccountInfo.tempuseraccountamwayinfo_set.first.amwayAward.amwayAward}}
+                </td>
                     　　
-                <td data-th="教室"></td>
+                <td id = "{{AccountChainYen.UserAccountInfo.id}}_ClassRoomName" data-th="教室">
+                    {{AccountChainYen.classRoom.ClassRoomName}}
+                </td>
                     　　
-                <td data-th="上手白金"></td>
+                <td id = "{{AccountChainYen.UserAccountInfo.id}}_amwayDD" data-th="上手白金">
+                    {{AccountChainYen.UserAccountInfo.tempuseraccountamwayinfo_set.first.amwayDD.main}}
+                </td>
                     　　
-                <td data-th="上手鑽石"></td>
+                <td  id = "{{AccountChainYen.UserAccountInfo.id}}_amwayDiamond" data-th="上手鑽石">
+                    {{AccountChainYen.UserAccountInfo.tempuseraccountamwayinfo_set.first.amwayDD.amwayDiamond}}
+                </td>
                     　　
-                <td data-th="狀態"></td>
+                <td id = "{{AccountChainYen.UserAccountInfo.id}}_auditStatus" data-th="狀態">
+                    {{AccountChainYen.UserAccountInfo.auditStatus}}
+                </td>
                     　　
-<!--                <td data-th="停權到期日"></td>-->
                     　　
-                <td data-th="操作"></td>
+                <td data-th="操作">
+                    <button id ="{{AccountChainYen.UserAccountInfo.id}}_acceptBtn" type="button" class="button small" data-toggle="modal"
+							data-target="#auditConfirmAccept" onclick="auditConfirmAccept('{{AccountChainYen.UserAccountInfo.id}}')"
+                            {% if AccountChainYen.UserAccountInfo.auditStatus == "確認中" %} disable {% endif %}>
+                            同意
+                    </button>
+                    <button type="button" class="button small"	data-toggle="modal"
+							data-target="#auditConfirmRemove" onclick="auditConfirmRemove('{{AccountChainYen.UserAccountInfo.id}}')">
+                            移除
+                    </button>
+                </td>
                     　　
-                <td data-th="移除"></td>
+
                     　　
 
                 </tr>
-
+                {% endfor %}
 
                 </table>
             </div>
@@ -260,6 +291,59 @@
 
 
 <!-- Scripts -->
+<!--modal-->
+
+
+<!-- Modal 同意-->
+<div class="modal fade" id="auditConfirmAccept" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 style="color: black" class="modal-title" id="staticBackdropLabel">是否同意該帳號申請</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <p id = "modal_user" style="color: black"><mark style="color: red">姓名:</mark></p>
+          <p id = "modal_amwayNumber" style="color: black"><mark style="color: red">會員編號:</mark></p>
+          <p id = "modal_jobTitle" style="color: black"><mark style="color: red">職務:</mark></p>
+          <p id = "modal_amwayAward" style="color: black"><mark style="color: red">獎銜:</mark></p>
+          <p id = "modal_amwayDD" style="color: black"><mark style="color: red">上手白金:</mark></p>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+          <input id="auditAcceptCurrentId"hidden type="text">
+        <button id="auditFinalAcceptBtn" type="button" class="btn btn-primary" data-dismiss="modal" onclick="auditFinalAccept('{{ csrf_token }}')" >確定</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 移除-->
+<div class="modal fade" id="auditConfirmRemove" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 style="color: black" class="modal-title" >是否移除該帳號申請</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <p id = "Remove_modal_user" style="color: black"><mark style="color: red">姓名:</mark></p>
+          <p id = "Remove_modal_amwayNumber" style="color: black"><mark style="color: red">會員編號:</mark></p>
+          <p id = "Remove_modal_jobTitle" style="color: black"><mark style="color: red">職務:</mark></p>
+          <p id = "Remove_modal_amwayAward" style="color: black"><mark style="color: red">獎銜:</mark></p>
+          <p id = "Remove_modal_amwayDD" style="color: black"><mark style="color: red">上手白金:</mark></p>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+          <input id="auditRemoveCurrentId"hidden type="text">
+        <button id="auditFinalRemoveBtn" type="button" data-dismiss="modal" class="btn btn-primary" onclick="auditFinalRemove('{{ csrf_token }}')" >確定</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!---->
 <script src="{%static 'assets/js/jquery.min.js' %}"></script>
 <script src="{%static 'assets/js/jquery.scrolly.min.js' %}"></script>
 <script src="{%static 'assets/js/jquery.scrollex.min.js' %}"></script>

@@ -21,7 +21,7 @@ from NutriliteSearchPage.views import NutriliteSearchPage,viewFilePage,returnPDF
 from django .contrib.auth.decorators import login_required
 from userlogin.views import login,logout,register,createRegisterPage,checkRegDD,registerSuccess
 from personalInfoPage.views import personalInfoHomePage
-from managerPage.views import managerAccountManagerPage,managerAuditAccountPage
+from managerPage.views import managerAccountManagerPage,managerAuditAccountPage,removeAuditAccount,AcceptAuditAccount
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -49,6 +49,9 @@ urlpatterns += [
     path('personalInfoPage/home/<str:selectTag>', login_required(personalInfoHomePage), name='personalInfoHomePage'),
     path('managerPages/home/accountManger', login_required(managerAccountManagerPage), name='managerAccountManagerPage'),
     path('managerPages/home/AuditManger', login_required(managerAuditAccountPage),name='managerAuditAccountPage'),
+    path('managerPages/removeAuditAccount', login_required(removeAuditAccount),name='removeAuditAccount'),
+    path('managerPages/AcceptAuditAccount', login_required(AcceptAuditAccount),name='AcceptAuditAccount'),
+
     path('checkRegDD', checkRegDD, name='checkRegDD'),
 
     path('', login_required(home), name='home'),

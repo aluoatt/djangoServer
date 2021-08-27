@@ -20,6 +20,7 @@ class fileDataInfo(models.Model):
     occurrenceDate = models.DateTimeField(verbose_name='資料發生日期')
     lastModify = models.DateTimeField(verbose_name='資料修改日期')
     visible = models.BooleanField(verbose_name='是否可見')
+    needWaterMark = models.BooleanField(verbose_name='是否需要浮水印')
     point = models.IntegerField(verbose_name='耗費點數')
     permissionsLevel = models.IntegerField(verbose_name='權限等級')
     DBClass = models.ForeignKey("DBClassInfo",verbose_name='資料庫類別',on_delete=models.PROTECT)
