@@ -12,7 +12,7 @@
     <ul class="actions stacked">
         <li><a href="{% url 'personalInfoHomePage' '全部' %}" class="button primary fit">個人資料</a></li>
         {% if perms.userlogin.seeManagerMenuButton %}
-        <li><a href="{% url 'managerHomePage' 'account' %}" class="button primary fit">管理</a></li>
+        <li><a href="{% url 'managerAuditAccountPage' %}" class="button primary fit">管理</a></li>
         {% endif %}
         <li><a href="{% url 'logout'%}" class="button fit">登出</a></li>
     </ul>

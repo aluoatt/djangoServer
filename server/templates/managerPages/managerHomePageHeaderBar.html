@@ -1,0 +1,64 @@
+<!--<section id="one">-->
+
+<!--    <div class="inner">-->
+<div class="row">
+    <header class="major">
+        <h2>管理</h2>
+    </header>
+    <p>
+    <div class="row align-items-center">
+        {% if tag == "ManagerAuditAccountPage" %}
+        <form action="#" method="post">{% csrf_token %}
+            <input class="primary disabled" type="submit" value="審核管理">
+        </form>
+        {% else %}
+        <form action="{% url 'managerAuditAccountPage' %}" method="post">{% csrf_token %}
+            <input class="" type="submit" value="審核管理">
+        </form>
+        {% endif %}
+
+        {% if tag == "ManagerAccountManagerPage" %}
+        <form action="#" method="post">{% csrf_token %}
+            <input class="primary disabled" type="submit" value="帳號管理">
+        </form>
+        {% else %}
+        <form action="{% url 'managerAccountManagerPage' %}" method="post">{% csrf_token %}
+            <input class="" type="submit" value="帳號管理">
+        </form>
+        {% endif %}
+        {% if tag == "ManagerArticleManagerPage" %}
+        <form action="#" method="post">{% csrf_token %}
+            <input class="primary disabled" type="submit" value="文章管理">
+        </form>
+        {% else %}
+        <form action="" method="post">{% csrf_token %}
+            <input class="" type="submit" value="文章管理">
+        </form>
+        {% endif %}
+        {% if tag == "ManagerPointManagerPage" %}
+        <form action="#" method="post">{% csrf_token %}
+            <input class="primary disabled" type="submit" value="點數管理">
+        </form>
+        {% else %}
+        <form action="" method="post">{% csrf_token %}
+            <input class="" type="submit" value="點數管理">
+        </form>
+        {% endif %}
+
+        {% if tag == "StatisticsManagerPage" %}
+        <form action="#" method="post">{% csrf_token %}
+            <input class="primary disabled" type="submit" value="統計分析">
+        </form>
+        {% else %}
+        <form action="" method="post">{% csrf_token %}
+            <input class="" type="submit" value="統計分析">
+        </form>
+        {% endif %}
+        </p>
+    </div>
+</div>
+
+
+<!--    </div>-->
+
+<!--</section>-->

@@ -22,3 +22,41 @@ function ViewFileSubmit(id){
     document.getElementById("fileIDview").action = "/viewFilePage/"+id;
     document.getElementById("fileIDview").submit();
 }
+
+function registerCheckDD(csrftoken){
+
+
+    var requestURL = "/checkRegDD";
+    var dataJSON = {"num":$('#amwayDD').val(),};
+    console.log(dataJSON)
+    $.ajax({
+        url: requestURL,
+        data: JSON.stringify(dataJSON),
+        headers: {'X-CSRFToken': csrftoken},
+        type: "POST",
+        method: "POST",
+        dataType: "json",
+        contentType: "application/json;charset=utf-8",
+        success: function (returnData) {
+        if (!returnData.status){
+
+            document.getElementById("DDnotExist").style.display = "";
+            document.getElementById("amwayDiamond").value = ""
+            document.getElementById("DDnotExist").innerHTML = "該白金不存在"
+            document.getElementById("DDnotExist").style.color = "red";
+        }
+        else{
+            document.getElementById("DDnotExist").style.display = "";
+            document.getElementById("DDnotExist").innerHTML = returnData.DDname
+            document.getElementById("DDnotExist").style.color = "#EBEB00";
+            document.getElementById("amwayDiamond").value = returnData.diamond
+
+        }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+
+
+
+        }
+    });
+}

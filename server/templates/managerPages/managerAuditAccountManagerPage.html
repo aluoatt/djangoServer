@@ -1,0 +1,280 @@
+<!DOCTYPE HTML>
+<!--
+	Forty by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+
+<html>
+<head>
+    <title>ChainYen System</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+
+    {% load static %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="{%static 'assets/css/main.css' %}"/>
+
+    <noscript>
+        <link rel="stylesheet" href="{%static 'assets/css/noscript.css' %}"/>
+    </noscript>
+    		<style type="text/css">
+			.rwd-table {
+		 	 /*background: #fff;*/
+		 	 overflow: hidden;
+			}
+
+			.rwd-table tr:nth-of-type(2n){
+			  /*background: #eee;*/
+			}
+			.rwd-table th,
+			.rwd-table td {
+			  margin: 0.5em 1em;
+			}
+			.rwd-table {
+			  min-width: 100%;
+			}
+
+			.rwd-table th {
+			  display: none;
+			}
+
+			.rwd-table td {
+			  display: block;
+			}
+
+			.rwd-table td:before {
+			  content: attr(data-th) " : ";
+			  font-weight: bold;
+			  width: 6.5em;
+			  display: inline-block;
+			}
+
+			.rwd-table th, .rwd-table td {
+			  text-align: left;
+			}
+
+			.rwd-table th, .rwd-table td:before {
+			  color: #FF2D2D;
+			  font-weight: bold;
+                /*background-color:#BEBEBE	;*/
+			}
+
+			@media (min-width: 480px) {
+			  .rwd-table td:before {
+			    display: none;
+			  }
+			 .rwd-table th, .rwd-table td {
+			    display: table-cell;
+			    padding: 0.25em 0.5em;
+			  }
+			  .rwd-table th:first-child,
+			  .rwd-table td:first-child {
+			    padding-left: 0;
+			  }
+			  .rwd-table th:last-child,
+			  .rwd-table td:last-child {
+			    padding-right: 0;
+			  }
+			   .rwd-table th,
+			   .rwd-table td {
+			    padding: 1em !important;
+			  }
+			}
+		</style>
+</head>
+<body class="is-preload">
+
+<!-- Wrapper -->
+<div id="wrapper">
+
+    <!-- Header -->
+    {% include 'baseHeader.html' %}
+
+    <!-- Menu -->
+    {% include 'baseMenu.html' %}
+
+    <!-- Main -->
+
+    <div id="main" class="alt">
+        <section id="one">
+
+            <div class="inner">
+                {% include 'managerPages/managerHomePageHeaderBar.html' %}
+                <div class="row align-items-center">
+
+                    <li style="list-style-type:none;">
+                        <label>職務:
+                            <input style="color: black;" list="jobtitles" class="small" name="jobtitle"></label>
+                        <datalist id="jobtitles">
+                            {% for jobtitle in jobTitles %}
+                            <option value="{{jobtitle.jobTitle}}">
+                                {% endfor %}
+                        </datalist>
+                    </li>
+                    <li style="list-style-type:none;">
+                        <label>獎銜:
+                            <input style="color: black;" list="amwayAwards" class="small" name="amwayAwards"></label>
+                        <datalist id="amwayAwards">
+                            {% for amwayAward in amwayAwards %}
+                            <option value="{{amwayAward.amwayAward}}">
+                                {% endfor %}
+                        </datalist>
+                    </li>
+                    <li style="list-style-type:none;">
+                        <label>教室:
+                            <input style="color: black;" list="chainYenClasses" class="small"
+                                   name="chainYenClasses"></label>
+                        <datalist id="chainYenClasses">
+                            {% for chainYenClass in chainYenClasses %}
+                            <option value="{{chainYenClass.ClassRoomName}}">
+                                {% endfor %}
+                        </datalist>
+                    </li>
+                    <li style="list-style-type:none;">
+                        <label>白金:
+                            <input style="color: black;" list="registerDDs" class="small" name="registerDDs"></label>
+                        <datalist id="registerDDs">
+                            {% for registerDD in registerDDs %}
+                            {% if registerDD.sec == Null %}
+
+                            <option value="{{registerDD.main}}">
+
+                                {% else %}
+                            <option value="{{registerDD.main}}/{{registerDD.sec}}">
+                                {% endif %}
+                                {% endfor %}
+                        </datalist>
+                    </li>
+                    <li style="list-style-type:none;">
+                        <label>鑽石:
+                            <input style="color: black;" list="registerDims" class="small" name="registerDims"></label>
+                        <datalist id="registerDims">
+                            {% for registerDim in registerDims %}
+                            {% if registerDim.sec == Null %}
+
+                            <option value="{{registerDim.main}}">
+
+                                {% else %}
+                            <option value="{{registerDim.main}}/{{registerDim.sec}}">
+                                {% endif %}
+                                {% endfor %}
+                        </datalist>
+                    </li>
+                    {% if perms.userlogin.can_see_register %}
+                    <li style="list-style-type:none;">
+
+								<a class="button scrolly small" href="{% url 'createRegisterPage' %}">註冊頁面</a>
+
+                    </li>
+                    {% endif %}
+                </div>
+                <table class="rwd-table">
+　
+                <tr>
+                　　
+                <th>姓名</th>
+                　　
+                <th>會員編號</th>
+                　　
+                <th>性別</th>
+                　　
+                <th>電話</th>
+                　　
+                <th>職務</th>
+                　　
+                <th>獎銜</th>
+                　　
+                <th>教室</th>
+                　　
+                <th>上手白金</th>
+                　　
+                <th>上手鑽石</th>
+                　　
+                <th>狀態</th>
+                　　
+                　　
+                <th>操作</th>
+                　　
+                <th>移除</th>
+                　　
+                　
+                </tr>
+                　
+                <tr>
+                　　
+                <td data-th="姓名">思妤 </td>
+                　　
+                <td data-th="會員編號"> </td>
+                　　
+                <td data-th="性別"></td>
+                　　
+                <td data-th="電話"></td>
+                　　
+                <td data-th="職務"></td>
+                　　
+                <td data-th="獎銜"></td>
+                    　　
+                <td data-th="教室"></td>
+                    　　
+                <td data-th="上手白金"></td>
+                    　　
+                <td data-th="上手鑽石"></td>
+                    　　
+                <td data-th="狀態"></td>
+                    　　
+<!--                <td data-th="停權到期日"></td>-->
+                    　　
+                <td data-th="操作"></td>
+                    　　
+                <td data-th="移除"></td>
+                    　　
+
+                </tr>
+
+
+                </table>
+            </div>
+
+        </section>
+
+        <section id="two" class="spotlights">
+
+
+        </section>
+        {% if pageisNotNull %}
+        <div class="dataTables_paginate paging_simple_numbers pull-right inner">
+            <ul class="pagination ">
+                {{ pagination.page_html|safe }}
+            </ul>
+
+        </div>
+        {% endif %}
+
+
+    </div>
+
+</div>
+
+
+<!-- Scripts -->
+<script src="{%static 'assets/js/jquery.min.js' %}"></script>
+<script src="{%static 'assets/js/jquery.scrolly.min.js' %}"></script>
+<script src="{%static 'assets/js/jquery.scrollex.min.js' %}"></script>
+<script src="{%static 'assets/js/browser.min.js' %}"></script>
+<script src="{%static 'assets/js/breakpoints.min.js' %}"></script>
+<script src="{%static 'assets/js/util.js' %}"></script>
+<script src="{%static 'assets/js/main.js' %}"></script>
+<script src="{%static 'assets/js/cyMain.js' %}"></script>
+<script src="{%static 'assets/js/viewPageAjax.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>

@@ -19,9 +19,9 @@ from searchfile.views import home
 from django.conf.urls import url
 from NutriliteSearchPage.views import NutriliteSearchPage,viewFilePage,returnPDF,exchangeOption
 from django .contrib.auth.decorators import login_required
-from userlogin.views import login,logout,register
+from userlogin.views import login,logout,register,createRegisterPage,checkRegDD,registerSuccess
 from personalInfoPage.views import personalInfoHomePage
-from managerPage.views import managerHomePage
+from managerPage.views import managerAccountManagerPage,managerAuditAccountPage
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -38,13 +38,19 @@ urlpatterns += [
     path('home', login_required(home), name='home'),
     path('accounts/login/', login, name='login'),
     path('accounts/logout/', logout, name='logout'),
-    path('accounts/register/', register,name='register'),
+    path('accounts/registerSuccessStatus/<str:status>', registerSuccess, name='registerSuccess'),
+    path('accounts/register/<str:token>', register,name='register'),
+    path('accounts/createRegisterPage/', createRegisterPage,name='createRegisterPage'),
+
     path('filesearch/<str:topic>/<str:selectTag>', login_required(NutriliteSearchPage), name='NutriliteSearchPage'),
     path('viewFilePage/<str:fileId>', login_required(viewFilePage), name='viewFilePage'),
     path('returnPDF/<str:fileId>', login_required(returnPDF), name='returnPDF'),
     path('exchangeOption/<str:fileId>', login_required(exchangeOption), name='exchangeOption'),
     path('personalInfoPage/home/<str:selectTag>', login_required(personalInfoHomePage), name='personalInfoHomePage'),
-    path('managerPages/home/<str:selectTag>', login_required(managerHomePage), name='managerHomePage'),
+    path('managerPages/home/accountManger', login_required(managerAccountManagerPage), name='managerAccountManagerPage'),
+    path('managerPages/home/AuditManger', login_required(managerAuditAccountPage),name='managerAuditAccountPage'),
+    path('checkRegDD', checkRegDD, name='checkRegDD'),
+
     path('', login_required(home), name='home'),
 ]
 

@@ -1,13 +1,30 @@
 from django.db import models
 from django.contrib.auth.models import User, AbstractUser   # 匯入 AbstractUser 類
-
+from django.contrib.auth.hashers import make_password
 # Create your models here.
 class Server(models.Model):
 
     class Meta:
         permissions = (
             ("can_see_register", "can_see_register"),
-            ("seeManagerMenuButton","seeManagerMenuButton")
+            ("seeManagerMenuButton","seeManagerMenuButton"),
+            ("seeManagerAccountManagerPage", "seeManagerAccountManagerPage"),
+            ("seeManagerAuditAccountPage", "seeManagerAuditAccountPage"),
+            ("ALLAuditManager","ALLAuditManager"),
+            ("CYPManager","CYPManager"),
+            ("CYLManager", "CYLManager"),
+            ("CYSManager", "CYSManager"),
+            ("CYZManager", "CYZManager"),
+            ("CYJManager", "CYJManager"),
+            ("CYN2Manager", "CYN2Manager"),
+            ("CYN1Manager", "CYN1Manager"),
+            ("CYMManager", "CYMManager"),
+            ("CYKManager", "CYKManager"),
+            ("CYDManager", "CYDManager"),
+            ("CYWManager", "CYWManager"),
+            ("CYTManager", "CYTManager"),
+            ("CYHManager", "CYHManager"),
+
         )
 
 class UserAccountInfo(AbstractUser):
@@ -60,6 +77,39 @@ class registerDDandDimInfo(models.Model):
     main = models.CharField(max_length=20, verbose_name='主直銷權')
     sec = models.CharField(max_length=20, verbose_name='次直銷權',null=True)
 
+
+class TempUserAccountInfo(models.Model):
+    """
+    繼承 AbstractUser
+    新增欄位：phone、addr
+    """
+    username = models.CharField(max_length=20, verbose_name='帳號')
+    user = models.CharField(max_length=20, verbose_name='姓名')
+
+    gender = models.CharField(max_length=4, verbose_name='性別')
+    phone = models.CharField(max_length=50, verbose_name='電話')
+    password = models.CharField(max_length=128, verbose_name='密碼')
+    email = models.CharField(max_length=254, verbose_name='信箱')
+    dataPermissionsLevel = models.IntegerField(verbose_name='資料權限等級')
+
+class TempUserAccountAmwayInfo(models.Model):
+    UserAccountInfo = models.ForeignKey("TempUserAccountInfo",on_delete=models.CASCADE)
+    amwayNumber = models.IntegerField()
+    amwayAward = models.ForeignKey("amwayAwardInfo",on_delete=models.CASCADE, verbose_name='獎銜')
+    amwayDD = models.ForeignKey("registerDDandDimInfo",verbose_name='白金',on_delete=models.PROTECT)
+    # amwayDiamond = models.CharField(max_length=20, verbose_name='鑽石')
+
+class TempUserAccountChainYenInfo(models.Model):
+    UserAccountInfo = models.ForeignKey("TempUserAccountInfo",on_delete=models.CASCADE)
+    jobTitle = models.ForeignKey("chainYenJobTitleInfo",on_delete=models.CASCADE, verbose_name='職務')
+    classRoom = models.ForeignKey("chainYenClassInfo",on_delete=models.CASCADE, verbose_name='教室')
+    # babysitter = models.CharField(max_length=20, verbose_name='保母')
+
+    accountStatus = models.CharField(max_length=4, verbose_name='狀態') #停權
+    freezeDate = models.DateTimeField( verbose_name='停權到期日',null=True)
+    point = models.IntegerField( verbose_name='點數')
+
+    EM = models.BooleanField(verbose_name='愛馬')
 
 
 # from userlogin.models import amwayAwardInfo

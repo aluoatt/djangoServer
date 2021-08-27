@@ -2,104 +2,193 @@
 <!-- saved from url=(0040)http://127.0.0.1:8080/accounts/register/ -->
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-    <title>註冊</title>
+    <title>ChainYen System</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		{% load static %}
+		<link rel="stylesheet" href="{%static 'assets/css/main.css' %}" />
+		<noscript><link rel="stylesheet" href="{%static 'assets/css/noscript.css' %}" /></noscript>
+        <style type="text/css">
+            label {
+             color: #BFFFFF        /* 透過 CSS 重新定義元素的排列方式 */
+            }
+        </style>
 </head>
-<body>
-<h1>註冊新帳號</h1>
-<form action="http://127.0.0.1:8080/accounts/register/" method="post">{% csrf_token %}
-    <p><label>會員編號:</label> <input type="text" name="accountName" maxlength="150" autocapitalize="none"
-                                   autocomplete="accountName" autofocus="" required="" id="accountName"
-                                   value="{{accountName}}">
-    </p>
-    <p><label for="id_password1">密碼:</label> <input type="password" name="password1" autocomplete="new-password"
-                                                    required="" id="id_password1"> <span class="helptext"></span>
-    </p>
-    <p></p>
+<body class="is-preload">
 
-    <p><label for="id_password2">再次確認密碼:</label>
-        <input type="password" name="password2"
-               autocomplete="new-password" required=""
-               id="id_password2">
-    </p>
-    {% if passwordConfirm %}
-        <p style="color: red;">兩次輸入的密碼不一致</p>
-    {% endif %}
-    <p><label>姓名:</label> <input type="text" name="username" maxlength="150" autocapitalize="none"
-                                 autocomplete="username" autofocus="" required="" id="username" value="{{username}}">
-    </p>
-    <p><label>身分證後四碼:</label> <input type="text" name="IDnumber" maxlength="150" autocapitalize="none"
-                                     autocomplete="IDnumber" autofocus="" required="" id="IDnumber"
-                                     value="{{IDnumber}}">
-    </p>
-    <p><label>性別:</label>
-        <input type="radio" id="男" name="gander" value="男" required {% if gander == "男" %} checked {% endif %}>
-        <label>男</label>
-        <input type="radio" id="女" name="gander" value="女" {% if gander == "女" %} checked {% endif %}>
-        <label>女</label><br>
-    </p>
+<!-- Wrapper -->
+			<div id="wrapper">
 
-    <p><label>電話:</label> <input type="text" name="phone" autocomplete="none"
-                                 required="" id="phone" value="{{phone}}">
-    </p>
-    <p><label>e-mail:</label> <input type="text" name="e_mail" autocomplete="none"
-                                 required="" id="e_mail" value="{{e_mail}}">
-    </p>
+				<!-- Header -->
+					<header id="header" class="alt">
+						<a href="{% url 'home' %}" class="logo"><strong>ChainYen</strong> <span>System</span></a>
 
-    <hr>
-    <p><label>職務:</label>
-        {% for ChainYenJobTitle in ChainYenJobTitles %}
-        <input type="radio" id="{{ ChainYenJobTitle.jobTitle }}" name="chainYenJobTitle"
-
-               value="{{ ChainYenJobTitle.id }}" required {% if chainYenJobTitle == ChainYenJobTitle.id %}
-               checked {% endif %}>
-        <label>{{ ChainYenJobTitle.jobTitle }}</label>
-        {% endfor %}
-    </p>
-    <p><label>獎銜:</label>
-        <select>
-            {% for award in amwayawards %}
-                <option {% if amwayAward == award.amwayAward %} checked {% endif %}>{{ award.amwayAward }}</option>
-            {% endfor %}
-        </select>
-
-    </p>
-    <p><label>上手白金編號:</label> <input type="text" name="amwayDD" autocomplete="none"
-                                 required="required" id="amwayDD" value="{{amwayDD}}">
-    </p>
-
-    <p><label>上手鑽石:</label> <input type="text" name="amwayDiamond" autocomplete="none"
-                                 required="required" id="amwayDiamond" value="{{amwayDiamond}}">
-    <hr>
-    <p><label>教室:</label>
-        <select>
-        {% for ChainYenClassInfo in ChainYenClassInfos %}
-
-            <option {% if ChainYenClass == ChainYenClassInfo.ClassRoomName %} checked {% endif %}>{{ ChainYenClassInfo.ClassRoomName }}</option>
-        {% endfor %}
-        </select>
-    </p>
-    <p><label>是否為愛馬小組:</label>
-        <input type="radio" id="是" name="EM" value="True" required {% if EM == "True" %} checked {% endif %}>
-        <label>是</label>
-        <input type="radio" id="否" name="EM" value="False" {% if EM == "False" %} checked {% endif %}>
-        <label>否</label><br>
-    </p>
-<!--    <p><label>保母:</label> <input type="text" name="babysitter" autocomplete="none"-->
-<!--                                 required="required" id="babysitter" value="{{babysitter}}">-->
-<!--    </p>-->
-
-    </p>
+					</header>
 
 
-    <p></p>
+				<!-- Banner -->
+					<section id="" class="">
+						<div class="inner">
+							<header class="major">
 
-    {% if regSuccess %}
-        <p style="color: red;">{{regSuccessnName}}註冊成功</p>
-    {% endif %}
-    <input type="submit" value="註冊">
-</form>
+								<h2>帳號註冊</h2>
+							</header>
+<!--							<div class="content">-->
+                                <form action="{% url 'register' token %}" method="post">{% csrf_token %}
+                                    <div name="step1">
+                                    <p>
+                                        <label >會員編號:</label>
+                                        <input type="text" name="accountName" maxlength="150" autocapitalize="none"
+                                                                    autocomplete="accountName" autofocus="" required="" id="accountName"
+                                                                    value="{{accountName}}" placeholder="安麗會員編號"
+                                                                    pattern="^[0-9]*$"
+                                                                    oninput="setCustomValidity('');" oninvalid="setCustomValidity('格式錯誤，請檢查');"
+                                        >
+                                    </p>
+                                    <p>
+                                        <label>身分證後四碼:</label>
+                                        <input type="text" name="IDnumber" maxlength="150" autocapitalize="none"
+                                                                     autocomplete="IDnumber" autofocus="" required="" id="IDnumber"
+                                                                     value="{{IDnumber}}" pattern="[0-9]{4}"
+                                        oninput="setCustomValidity('');" oninvalid="setCustomValidity('格式錯誤，請檢查');">
+                                    </p>
+                                    <p>
+                                        <label for="id_password1">密碼:</label>
+                                        <input type="password" name="password1" autocomplete="new-password"
+                                                                                    required="" id="id_password1" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$"
+                                               oninput="setCustomValidity('');" oninvalid="setCustomValidity('請輸入正確的密碼格式:請包含英文大小寫及數字且為8到20碼');"
+                                               placeholder="請包含英文大小寫及數字且為8到20碼"
+                                        >
+                                        <span class="helptext"></span>
+                                    </p>
+
+
+                                    <p>
+                                        <label for="id_password2">再次確認密碼:</label>
+                                        <input type="password" name="password2"
+                                               autocomplete="new-password" required=""
+                                               id="id_password2"
+                                               oninput="setCustomValidity('');"
+                                               onchange="if(document.getElementById('id_password1').value != document.getElementById('id_password2').value){setCustomValidity('兩次密碼不吻合');}"
+                                        >
+                                    </p>
+                                    {% if passwordConfirm %}
+                                        <p style="color: red;">兩次輸入的密碼不一致</p>
+                                    {% endif %}
+                                    </div>
+                                    <hr style="border: 1px solid whitesmoke;">
+
+                                    <div name="step2">
+                                    <p>
+                                        <label>姓名:</label>
+                                        <input type="text" name="username" maxlength="150" autocapitalize="none"
+                                                                 autocomplete="username" autofocus="" required="" id="username" value="{{username}}">
+                                    </p>
+
+                                    <p>
+                                        <label>性別:</label>
+                                        <input type="radio" id="男" name="gander" value="男" required {% if gander == "男" %} checked {% endif %}>
+                                        <label for="男">男</label>
+                                        <input type="radio" id="女" name="gander" value="女" {% if gander == "女" %} checked {% endif %}>
+                                        <label for="女">女</label><br>
+                                    </p>
+
+                                    <p>
+                                        <label>電話:</label>
+                                        <input type="text" name="phone" autocomplete="none"
+                                                                 required="" id="phone" value="{{phone}}">
+                                    </p>
+                                    <p>
+                                        <label>e-mail:</label>
+                                        <input type="text" name="e_mail" autocomplete="none"
+                                                                 required="" id="e_mail" value="{{e_mail}}" placeholder="請務必填寫正確，否則無法註冊"
+                                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+                                    </p>
+                                    </div>
+                                    <hr style="border: 1px solid whitesmoke;">
+                                    <div name="step3">
+                                    <p>
+                                        <label>職務:</label>
+                                        <select id="chainYenJobTitle" name="chainYenJobTitle">
+                                            {% for ChainYenJobTitle in ChainYenJobTitles %}
+                                                <option value="{{ChainYenJobTitle.id}}" {% if chainYenJobTitle == ChainYenJobTitle.id %} checked {% endif %}>{{ ChainYenJobTitle.jobTitle }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </p>
+                                    <p>
+                                        <label>獎銜:</label>
+                                        <select id="amwayAward" name="amwayAward">
+                                            {% for award in amwayawards %}
+                                                <option value="{{award.id}}" {% if amwayAward == award.amwayAward %} checked {% endif %}>{{ award.amwayAward }}</option>
+                                            {% endfor %}
+                                        </select>
+
+                                    </p>
+                                    <p>
+                                        <label>上手白金編號:</label>
+                                        <input type="text" name="amwayDD" autocomplete="none"
+                                                                 required="required" id="amwayDD" value="{{amwayDD}}"
+                                               onchange="registerCheckDD('{{ csrf_token }}')"
+
+                                        >
+                                    </p>
+                                        <p id="DDnotExist" style="display:none; color:red">該白金編號不存在</p>
+
+                                    <p>
+                                        <label>上手鑽石:</label>
+                                        <input placeholder="請先填寫上手白金編號" type="text" name="amwayDiamond" autocomplete="none"
+                                                                 required="required" id="amwayDiamond" value="{{amwayDiamond}}" disabled>
+                                    </p>
+                                    </div>
+                                    <hr style="border: 1px solid whitesmoke;">
+                                    <div name="step4">
+                                    <p>
+                                        <label>教室:</label>
+                                        <select id="ChainYenClass" name="ChainYenClass">
+                                        {% for ChainYenClassInfo in ChainYenClassInfos %}
+
+                                            <option value="{{ChainYenClassInfo.id}}" {% if ChainYenClass == ChainYenClassInfo.ClassRoomName %} checked {% endif %}>{{ ChainYenClassInfo.ClassRoomName }}</option>
+                                        {% endfor %}
+                                        </select>
+                                    </p>
+                                    <p><label>是否為愛馬小組:</label>
+                                        <input type="radio" id="是" name="EM" value="True" required {% if EM == "True" %} checked {% endif %}>
+                                        <label for="是">是</label>
+                                        <input type="radio" id="否" name="EM" value="False" {% if EM == "False" %} checked {% endif %}>
+                                        <label for="否">否</label>
+                                        <br>
+                                    </p>
+                                    </div>
+
+
+
+
+
+                                <p></p>
+
+
+                                <input type="submit" value="註冊">
+                            </form>
+
+
+<!--								<a class="button scrolly" href="{% url 'register' token %}">註冊</a>-->
+						</div>
+					</section>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="{%static 'assets/js/jquery.min.js' %}"></script>
+			<script src="{%static 'assets/js/jquery.scrolly.min.js' %}"></script>
+			<script src="{%static 'assets/js/jquery.scrollex.min.js' %}"></script>
+			<script src="{%static 'assets/js/browser.min.js' %}"></script>
+			<script src="{%static 'assets/js/breakpoints.min.js' %}"></script>
+			<script src="{%static 'assets/js/util.js' %}"></script>
+			<script src="{%static 'assets/js/main.js' %}"></script>
+            <script src="{%static 'assets/js/cyMain.js' %}"></script>
 
 </body>
 </html>
+
+
+
