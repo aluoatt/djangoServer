@@ -164,5 +164,23 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  #SMTP伺服器
 EMAIL_PORT = 587  #TLS通訊埠號
 EMAIL_USE_TLS = True  #開啟TLS(傳輸層安全性)
-EMAIL_HOST_USER = 'aluoatt@gmail.com'  #寄件者電子郵件
-EMAIL_HOST_PASSWORD = '****'  #Gmail應用程式的密碼
+EMAIL_HOST_USER = 'ChainYenRetrieve@gmail.com'  #寄件者電子郵件
+EMAIL_HOST_PASSWORD = 'dxuzkjluwqxbryox'  #Gmail應用程式的密碼
+CONFIRM_DAYS = 3
+MYIP = "http://1.34.134.127:12000"
+
+CLASS_CHARIMAN_MANAGER_DICT = {
+            "台北":"CYPManager",
+            "中壢": "CYLManager",
+            "新竹": "CYSManager",
+            "台中": "CYZManager",
+            "嘉義": "CYJManager",
+            "永康245": "CYN2Manager",
+            "永康135": "CYN1Manager",
+            "良美": "CYMManager",
+            "高雄": "CYKManager",
+            "屏東": "CYDManager",
+            "花蓮": "CYWManager",
+            "台東": "CYTManager",
+            "澎湖": "CYHManager"
+}

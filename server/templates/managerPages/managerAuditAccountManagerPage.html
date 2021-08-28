@@ -104,19 +104,20 @@
             <div class="inner">
                 {% include 'managerPages/managerHomePageHeaderBar.html' %}
                 <div class="row align-items-center">
-
                     <li style="list-style-type:none;">
-                        <label>職務:
-                            <input style="color: black;" list="jobtitles" class="small" name="jobtitle"></label>
-                        <datalist id="jobtitles">
-                            {% for jobtitle in jobTitles %}
-                            <option value="{{jobtitle.jobTitle}}">
-                                {% endfor %}
+                        <label>編號:
+                            <input onmousedown="setEmptyByTagId('amwayNumbers_input')" onkeyup="auditFilter()" style="color: black;" list="amwayNumbers" class="small" id="amwayNumbers_input" name="amwayNumbers_input"></label>
+                        <datalist id="amwayNumbers">
+                            {% for AccountChainYen in TempUserAccountChainYen %}
+
+                                <option value="{{AccountChainYen.UserAccountInfo.tempuseraccountamwayinfo_set.first.amwayNumber}}">
+
+                            {% endfor %}
                         </datalist>
                     </li>
                     <li style="list-style-type:none;">
                         <label>獎銜:
-                            <input style="color: black;" list="amwayAwards" class="small" name="amwayAwards"></label>
+                            <input onmousedown="setEmptyByTagId('amwayAwards_input')" onkeyup="auditFilter()" style="color: black;" list="amwayAwards" class="small" id="amwayAwards_input" name="amwayAwards"></label>
                         <datalist id="amwayAwards">
                             {% for amwayAward in amwayAwards %}
                             <option value="{{amwayAward.amwayAward}}">
@@ -125,8 +126,8 @@
                     </li>
                     <li style="list-style-type:none;">
                         <label>教室:
-                            <input style="color: black;" list="chainYenClasses" class="small"
-                                   name="chainYenClasses"></label>
+                            <input  onmousedown="setEmptyByTagId('chainYenClasses_input')" onkeyup="auditFilter()" style="color: black;" list="chainYenClasses" class="small"
+                                   name="chainYenClasses" id="chainYenClasses_input"></label>
                         <datalist id="chainYenClasses">
                             {% for chainYenClass in chainYenClasses %}
                             <option value="{{chainYenClass.ClassRoomName}}">
@@ -135,7 +136,7 @@
                     </li>
                     <li style="list-style-type:none;">
                         <label>白金:
-                            <input style="color: black;" list="registerDDs" class="small" name="registerDDs"></label>
+                            <input onmousedown="setEmptyByTagId('registerDDs_input')" onkeyup="auditFilter()" style="color: black;" list="registerDDs" class="small" id="registerDDs_input" name="registerDDs"></label>
                         <datalist id="registerDDs">
                             {% for registerDD in registerDDs %}
                             {% if registerDD.sec == Null %}
@@ -150,7 +151,7 @@
                     </li>
                     <li style="list-style-type:none;">
                         <label>鑽石:
-                            <input style="color: black;" list="registerDims" class="small" name="registerDims"></label>
+                            <input onmousedown="setEmptyByTagId('registerDims_input')" onkeyup="auditFilter()" style="color: black;" list="registerDims" id="registerDims_input" class="small" name="registerDims"></label>
                         <datalist id="registerDims">
                             {% for registerDim in registerDims %}
                             {% if registerDim.sec == Null %}
@@ -171,7 +172,7 @@
                     </li>
                     {% endif %}
                 </div>
-                <table class="rwd-table">
+                <table class="rwd-table" id="myTable">
 　
                 <tr>
                 　　
@@ -249,11 +250,16 @@
                     　　
                     　　
                 <td data-th="操作">
-                    <button id ="{{AccountChainYen.UserAccountInfo.id}}_acceptBtn" type="button" class="button small" data-toggle="modal"
-							data-target="#auditConfirmAccept" onclick="auditConfirmAccept('{{AccountChainYen.UserAccountInfo.id}}')"
-                            {% if AccountChainYen.UserAccountInfo.auditStatus == "確認中" %} disable {% endif %}>
-                            同意
-                    </button>
+
+                        <button id ="{{AccountChainYen.UserAccountInfo.id}}_acceptBtn" type="button" class="button small" data-toggle="modal"
+                                data-target="#auditConfirmAccept" onclick="auditConfirmAccept('{{AccountChainYen.UserAccountInfo.id}}')">
+                            {% if AccountChainYen.UserAccountInfo.auditStatus == "確認中" %}
+                                重送
+                            {% else %}
+                                同意
+                            {% endif %}
+                        </button>
+
                     <button type="button" class="button small"	data-toggle="modal"
 							data-target="#auditConfirmRemove" onclick="auditConfirmRemove('{{AccountChainYen.UserAccountInfo.id}}')">
                             移除

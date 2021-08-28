@@ -2,7 +2,8 @@ from wsgiref.util import FileWrapper
 
 from django.http import HttpResponse, FileResponse
 from django.shortcuts import render
-from NutriliteSearchPage.models import fileDataInfo,mainClassInfo,secClassInfo,personalFileData,personalExchangeFileLog
+from NutriliteSearchPage.models import fileDataInfo, mainClassInfo, secClassInfo, personalFileData, \
+    personalExchangeFileLog, fileDataKeywords
 from userlogin.models import UserAccountInfo,UserAccountChainYenInfo
 from NutriliteSearchPage.utils.page import Pagination
 import logging
@@ -11,10 +12,79 @@ import os
 import re
 import mimetypes
 from django.shortcuts import redirect
-
+from django.db.models import Q
+import datetime
+from dateutil.relativedelta import relativedelta
 from django.http.response import StreamingHttpResponse
 backaddress = "/home/aluo/backEnd"
 # Create your views here.
+#關鍵字查詢
+def keywordSearchPage(request):
+    keywords = request.POST.get("keywords")
+    timelim = int(request.POST.get("timelim"))
+
+    keywords_list = keywords.split(" ")
+    totalKeywordNum = len(keywords_list)
+    q1 = Q()
+    q1.connector = 'OR'
+    for keyword in keywords_list:
+        q1.children.append(("keyword__contains",keyword))
+
+    try:
+        userAcc = UserAccountInfo.objects.get(username=request.user)
+        dataPermissionsLevel = userAcc.dataPermissionsLevel
+        userpoint = UserAccountChainYenInfo.objects.get(UserAccountInfo=UserAccountInfo.objects.get(username=request.user)).point
+
+    except:
+        userpoint = 0
+        dataPermissionsLevel = -1
+    limDate = (datetime.datetime.now() - relativedelta(years=timelim)).strftime('%Y-%m-%d')+" 23:59:59"
+
+    q2 = Q()
+    q2.connector = 'OR'
+    earchIdKeywordCount_dict = {}
+
+    fileDataKeywords_obj = fileDataKeywords.objects.filter(q1)
+    hasKeywordData = False
+
+    for keyfileInfo in fileDataKeywords_obj:
+        if keyfileInfo.fileDataInfoID.id in earchIdKeywordCount_dict.keys():
+            earchIdKeywordCount_dict[keyfileInfo.fileDataInfoID.id] += 1
+            if earchIdKeywordCount_dict[keyfileInfo.fileDataInfoID.id] >= totalKeywordNum:
+                q2.children.append(("id", keyfileInfo.fileDataInfoID.id))
+        else:
+
+            earchIdKeywordCount_dict[keyfileInfo.fileDataInfoID.id] = 1
+            if earchIdKeywordCount_dict[keyfileInfo.fileDataInfoID.id] >= totalKeywordNum:
+                q2.children.append(("id", keyfileInfo.fileDataInfoID.id))
+
+    if len(q2) >0 :
+        hasKeywordData = True
+    else:
+        q2.children.append(("id", -1))
+    fileDatas = fileDataInfo.objects.filter(
+                                            occurrenceDate__gte=limDate,
+                                            visible=1,
+                                            permissionsLevel__lte=dataPermissionsLevel
+                                            ).filter(q2).order_by('occurrenceDate')
+    ownFileList = [k.fileDataID.id for k in personalFileData.objects.filter(ownerAccount = userAcc)]
+
+    # 總頁數
+    page_count = fileDatas.count()
+    pageisNotNull = True
+    if page_count == 0:
+        pageisNotNull = False
+    # 當前頁
+    current_page_num = request.GET.get("page")
+    pagination = Pagination(current_page_num, page_count,request, per_page_num=10)
+    # 處理之後的資料
+    fileDatas = fileDatas[pagination.start:pagination.end]
+
+    content = {
+        "fileDatas": fileDatas, "pagination": pagination, }
+
+    return render(request, 'searchPage/KeywordsSearchPage.html', locals())
+
 # 查詢檔案
 def NutriliteSearchPage(request,topic,selectTag):
     selectTag = selectTag
@@ -154,36 +224,7 @@ def viewFilePage(request,fileId):
         targetFile = ""
         return render(request, 'viewFilePage.html', locals())
 
-    # if not supervisord:
-    #     if not aleardyExchange:
-    #         UserAccountChainYen.point = UserAccountChainYen.point - targetFile.point
-    #         UserAccountChainYen.save()
-    # if not aleardyExchange:
-    #     personalFileData(fileDataID=targetFile,
-    #                      ownerAccount=UserAccount,
-    #                      expiryDate=None,
-    #                      costPoint=targetFile.point,
-    #                      waterCreateReady=0,
-    #                      ).save()
-    #
-    #     personalExchangeFileLog(fileDataID=targetFile,
-    #                             ownerAccount=UserAccount,
-    #                             costPoint=targetFile.point,
-    #                             ).save()
-    #     if not supervisord:
-    #         waterMarkUserName = UserAccountChainYen.classRoom.ClassRoomCode + "_" + UserAccount.user + "_"  \
-    #                             + str(UserAccount.useraccountamwayinfo_set.all().first().amwayNumber)
-    #         if targetFile.fileType.id > 1:# 非影片
-    #             #製作浮水印
-    #             getFileDateProcess.delay(targetFile.id,targetFile.PDF,waterMarkUserName,"pdf",UserAccount.id)
-    #         else:
-    #             getFileDateProcess.delay(targetFile.id,targetFile.file,waterMarkUserName, "mp4",UserAccount.id)
-    #     else:
-    #         if targetFile.fileType.id > 1:  # 非影片
-    #             getFileDateProcess.delay(targetFile.id,targetFile.PDF,"超級使用者", "pdf",UserAccount.id)
-    #         else:
-    #             getFileDateProcess.delay(targetFile.id,targetFile.file,"超級使用者", "mp4",UserAccount.id)
-    # 發請求
+
     s = render(request, 'viewFilePage.html', locals())
     s.setdefault('Cache-Control', 'no-store')
     s.setdefault('Expires', 0)

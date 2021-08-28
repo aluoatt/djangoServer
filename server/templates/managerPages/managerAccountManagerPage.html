@@ -104,19 +104,41 @@
             <div class="inner">
                 {% include 'managerPages/managerHomePageHeaderBar.html' %}
                 <div class="row align-items-center">
+                    <li style="list-style-type:none;">
+                        <label>編號:
+                            <input onmousedown="setEmptyByTagId('amwayNumbers_input')" onkeyup="accountManagerFilter()" style="color: black;" list="amwayNumbers" class="small" id="amwayNumbers_input" name="amwayNumbers_input"></label>
+                        <datalist id="amwayNumbers">
+                            {% for searchUserAccount in searchUserAccountInfo %}
 
+                                <option value="{{searchUserAccount.useraccountamwayinfo_set.first.amwayNumber}}">
+
+                            {% endfor %}
+                        </datalist>
+                    </li>
+                    <li style="list-style-type:none;">
+                        <label>姓名:
+                            <input onmousedown="setEmptyByTagId('user_input')" onkeyup="accountManagerFilter()" style="color: black;" list="users" class="small" id="user_input" name="amwayNumbers_input"></label>
+                        <datalist id="users">
+                            {% for searchUserAccount in searchUserAccountInfo %}
+
+                                <option value="{{searchUserAccount.user}}">
+
+                            {% endfor %}
+                        </datalist>
+                    </li>
                     <li style="list-style-type:none;">
                         <label>職務:
-                            <input style="color: black;" list="jobtitles" class="small" name="jobtitle"></label>
+                            <input onmousedown="setEmptyByTagId('jobtitles_input')" onkeyup="accountManagerFilter()" style="color: black;" list="jobtitles" class="small" id="jobtitles_input" name="jobtitles_input"></label>
                         <datalist id="jobtitles">
+
                             {% for jobtitle in jobTitles %}
                             <option value="{{jobtitle.jobTitle}}">
-                                {% endfor %}
+                            {% endfor %}
                         </datalist>
                     </li>
                     <li style="list-style-type:none;">
                         <label>獎銜:
-                            <input style="color: black;" list="amwayAwards" class="small" name="amwayAwards"></label>
+                            <input onmousedown="setEmptyByTagId('amwayAwards_input')" onkeyup="accountManagerFilter()" style="color: black;" list="amwayAwards" class="small" id="amwayAwards_input" name="amwayAwards"></label>
                         <datalist id="amwayAwards">
                             {% for amwayAward in amwayAwards %}
                             <option value="{{amwayAward.amwayAward}}">
@@ -125,8 +147,8 @@
                     </li>
                     <li style="list-style-type:none;">
                         <label>教室:
-                            <input style="color: black;" list="chainYenClasses" class="small"
-                                   name="chainYenClasses"></label>
+                            <input  onmousedown="setEmptyByTagId('chainYenClasses_input')" onkeyup="accountManagerFilter()" style="color: black;" list="chainYenClasses" class="small"
+                                   name="chainYenClasses" id="chainYenClasses_input"></label>
                         <datalist id="chainYenClasses">
                             {% for chainYenClass in chainYenClasses %}
                             <option value="{{chainYenClass.ClassRoomName}}">
@@ -135,7 +157,7 @@
                     </li>
                     <li style="list-style-type:none;">
                         <label>白金:
-                            <input style="color: black;" list="registerDDs" class="small" name="registerDDs"></label>
+                            <input onmousedown="setEmptyByTagId('registerDDs_input')" onkeyup="accountManagerFilter()" style="color: black;" list="registerDDs" class="small" id="registerDDs_input" name="registerDDs"></label>
                         <datalist id="registerDDs">
                             {% for registerDD in registerDDs %}
                             {% if registerDD.sec == Null %}
@@ -150,7 +172,7 @@
                     </li>
                     <li style="list-style-type:none;">
                         <label>鑽石:
-                            <input style="color: black;" list="registerDims" class="small" name="registerDims"></label>
+                            <input onmousedown="setEmptyByTagId('registerDims_input')" onkeyup="accountManagerFilter()" style="color: black;" list="registerDims" id="registerDims_input" class="small" name="registerDims"></label>
                         <datalist id="registerDims">
                             {% for registerDim in registerDims %}
                             {% if registerDim.sec == Null %}
@@ -163,9 +185,18 @@
                                 {% endfor %}
                         </datalist>
                     </li>
+                    <li style="list-style-type:none;">
+                        <label>狀態:
+                            <input onmousedown="setEmptyByTagId('accountStatus_input')" onkeyup="accountManagerFilter()" style="color: black;" list="accountStatus" id="accountStatus_input" class="small" name="accountStatus"></label>
+                        <datalist id="accountStatus">
+
+                            <option value="正常">
+
+                        </datalist>
+                    </li>
 
                 </div>
-                <table class="rwd-table">
+                <table id = "myTable" class="rwd-table">
 　
                 <tr>
                 　　
@@ -187,9 +218,6 @@
                 　　
                 <th>上手鑽石</th>
                 　　
-                <th>狀態</th>
-                　　
-<!--                <th>停權到期日</th>-->
                 　　
                 <th>點數</th>
                 　　
@@ -198,39 +226,59 @@
                 <th>修改歷史紀錄</th>
                 　
                 </tr>
-                　
-                <tr>
+                {% for UserAccount in searchUserAccountInfo %}
+                <tr id = "{{UserAccount.id}}_tr">
                 　　
-                <td data-th="姓名">思妤 </td>
+                <td id = "{{UserAccount.id}}_user" data-th="姓名">
+                    {{UserAccount.user}}
+                </td>
                 　　
-                <td data-th="會員編號"> </td>
+                <td id = "{{UserAccount.id}}_amwayNumber" data-th="會員編號">
+                    {{UserAccount.useraccountamwayinfo_set.first.amwayNumber}}
+                </td>
                 　　
-                <td data-th="性別"></td>
+                <td id = "{{UserAccount.id}}_gender" data-th="性別">
+                    {{UserAccount.gender}}
+                </td>
                 　　
-                <td data-th="電話"></td>
+                <td id = "{{UserAccount.id}}_phone" data-th="電話">
+                    {{UserAccount.phone}}
+                </td>
                 　　
-                <td data-th="職務"></td>
+                <td id = "{{UserAccount.id}}_jobTitle" data-th="職務">
+                    {{UserAccount.useraccountchainyeninfo_set.first.jobTitle.jobTitle}}
+                </td>
                 　　
-                <td data-th="獎銜"></td>
+                <td id = "{{UserAccount.id}}_amwayAward" data-th="獎銜">
+                     {{UserAccount.useraccountamwayinfo_set.first.amwayAward.amwayAward}}
+                </td>
                     　　
-                <td data-th="教室"></td>
+                <td id = "{{UserAccount.id}}_ClassRoomName" data-th="教室">
+                    {{UserAccount.useraccountchainyeninfo_set.first.classRoom.ClassRoomName}}
+                </td>
                     　　
-                <td data-th="上手白金"></td>
+                <td id = "{{UserAccount.id}}_amwayDD" data-th="上手白金">
+                    {{UserAccount.useraccountamwayinfo_set.first.amwayDD.main}}
+                </td>
                     　　
-                <td data-th="上手鑽石"></td>
+                <td id = "{{UserAccount.id}}_amwayDiamond" data-th="上手鑽石">
+                    {{UserAccount.useraccountamwayinfo_set.first.amwayDD.amwayDiamond}}
+                </td>
+                    　　 　　 　　
+                <td id = "{{UserAccount.id}}_point" data-th="點數">
+                    {{UserAccount.useraccountchainyeninfo_set.first.point}}
+                </td>
                     　　
-                <td data-th="狀態"></td>
+                <td id = "{{UserAccount.id}}_modify" data-th="修改">
+
+                </td>
                     　　
-<!--                <td data-th="停權到期日"></td>-->
-                    　　
-                <td data-th="點數"></td>
-                    　　
-                <td data-th="修改"></td>
-                    　　
-                <td data-th="修改歷史紀錄"></td>
+                <td id = "{{UserAccount.id}}_history" data-th="修改歷史紀錄">
+
+                </td>
 
                 </tr>
-
+                {% endfor %}
 
                 </table>
             </div>

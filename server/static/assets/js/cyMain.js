@@ -95,7 +95,8 @@ function auditFinalAccept(csrftoken){
         success: function (returnData) {
         if (returnData.status){
             document.getElementById(curId+"_auditStatus").innerHTML ="確認中"
-            document.getElementById(curId+"_acceptBtn").disabled = true
+            document.getElementById(curId+"_acceptBtn").innerHTML = "重送"
+            document.getElementById("_acceptBtn").setAttribute("class","primary");
         }
         else{
             document.getElementById(curId+"_auditStatus").innerHTML ="發生錯誤，請重整頁面"
@@ -161,3 +162,95 @@ function auditFinalRemove(csrftoken){
     });
 }
 
+function auditFilter() {
+  var amwayNumbers, amwayAwards, chainYenClasses, registerDDs, registerDims;
+  var amwayNumbersValue,amwayAwardsValue,chainYenClassesValue,registerDDsValue,registerDimsValue
+  var amwayNumbers_input = document.getElementById("amwayNumbers_input").value.toUpperCase();
+  var amwayAwards_input = document.getElementById("amwayAwards_input").value.toUpperCase();
+  var chainYenClasses_input = document.getElementById("chainYenClasses_input").value.toUpperCase();
+  var registerDDs_input = document.getElementById("registerDDs_input").value.toUpperCase();
+  var registerDims_input = document.getElementById("registerDims_input").value.toUpperCase();
+
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    amwayNumbers = tr[i].getElementsByTagName("td")[1];
+    amwayAwards = tr[i].getElementsByTagName("td")[6];
+    chainYenClasses = tr[i].getElementsByTagName("td")[7];
+    registerDDs = tr[i].getElementsByTagName("td")[8];
+    registerDims = tr[i].getElementsByTagName("td")[9];
+
+      if (amwayNumbers) {
+          amwayNumbersValue = amwayNumbers.textContent || amwayNumbers.innerText;
+          amwayAwardsValue = amwayAwards.textContent || amwayAwards.innerText;
+          chainYenClassesValue = chainYenClasses.textContent || chainYenClasses.innerText;
+          registerDDsValue = registerDDs.textContent || registerDDs.innerText;
+          registerDimsValue = registerDims.textContent || registerDims.innerText;
+
+          if (amwayNumbersValue.toUpperCase().indexOf(amwayNumbers_input) > -1
+              && amwayAwardsValue.toUpperCase().indexOf(amwayAwards_input) > -1
+              && chainYenClassesValue.toUpperCase().indexOf(chainYenClasses_input) > -1
+              && registerDDsValue.toUpperCase().indexOf(registerDDs_input) > -1
+              && registerDimsValue.toUpperCase().indexOf(registerDims_input) > -1
+          ) {
+              tr[i].style.display = "";
+          } else {
+              tr[i].style.display = "none";
+          }
+      }
+  }
+}
+
+function accountManagerFilter() {
+    var amwayNumbers, amwayAwards, chainYenClasses, registerDDs, registerDims;
+    var amwayNumbersValue, amwayAwardsValue, chainYenClassesValue, registerDDsValue, registerDimsValue
+    var user, jobtitles,jobtitlesValue,userValue
+    var amwayNumbers_input = document.getElementById("amwayNumbers_input").value.toUpperCase();
+    var user_input = document.getElementById("user_input").value.toUpperCase();
+    var jobtitles_input = document.getElementById("jobtitles_input").value.toUpperCase();
+    var amwayAwards_input = document.getElementById("amwayAwards_input").value.toUpperCase();
+    var chainYenClasses_input = document.getElementById("chainYenClasses_input").value.toUpperCase();
+    var registerDDs_input = document.getElementById("registerDDs_input").value.toUpperCase();
+    var registerDims_input = document.getElementById("registerDims_input").value.toUpperCase();
+    table = document.getElementById("myTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+        user = tr[i].getElementsByTagName("td")[0];
+        amwayNumbers = tr[i].getElementsByTagName("td")[1];
+        jobtitles = tr[i].getElementsByTagName("td")[4];
+        amwayAwards = tr[i].getElementsByTagName("td")[5];
+        chainYenClasses = tr[i].getElementsByTagName("td")[6];
+        registerDDs = tr[i].getElementsByTagName("td")[7];
+        registerDims = tr[i].getElementsByTagName("td")[8];
+
+
+        if (amwayNumbers) {
+            amwayNumbersValue = amwayNumbers.textContent || amwayNumbers.innerText;
+            amwayAwardsValue = amwayAwards.textContent || amwayAwards.innerText;
+            chainYenClassesValue = chainYenClasses.textContent || chainYenClasses.innerText;
+            registerDDsValue = registerDDs.textContent || registerDDs.innerText;
+            registerDimsValue = registerDims.textContent || registerDims.innerText;
+            jobtitlesValue = jobtitles.textContent || jobtitles.innerText;
+            userValue = user.textContent || user.innerText;
+
+            if (amwayNumbersValue.toUpperCase().indexOf(amwayNumbers_input) > -1
+                && amwayAwardsValue.toUpperCase().indexOf(amwayAwards_input) > -1
+                && chainYenClassesValue.toUpperCase().indexOf(chainYenClasses_input) > -1
+                && registerDDsValue.toUpperCase().indexOf(registerDDs_input) > -1
+                && registerDimsValue.toUpperCase().indexOf(registerDims_input) > -1
+                && jobtitlesValue.toUpperCase().indexOf(jobtitles_input) > -1
+                && userValue.toUpperCase().indexOf(user_input) > -1
+            ) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
+
+function setEmptyByTagId(TagId) {
+
+    document.getElementById(TagId).value = ""
+    auditFilter()
+}

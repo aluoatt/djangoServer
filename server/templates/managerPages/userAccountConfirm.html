@@ -26,12 +26,9 @@
 
 				<!-- Menu -->
 					{% include 'baseMenu.html' %}
-				{% if status == "success" %}
-              	<h2>註冊成功，請洽詢會長</h2>
-				{% elif status == "exist" %}
-				<h2>該帳號已存在，請洽詢會長</h2>
-				{% endif %}
-				<script>
+				<h2 style="margin-left: 100px;">{{ message }}</h2>
+
+                <script>
                     window.setTimeout("window.location='/'",5000);
                 </script>
 			</div>

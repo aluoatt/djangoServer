@@ -17,12 +17,12 @@ from django.contrib import admin
 from django.urls import path
 from searchfile.views import home
 from django.conf.urls import url
-from NutriliteSearchPage.views import NutriliteSearchPage,viewFilePage,returnPDF,exchangeOption
+from NutriliteSearchPage.views import NutriliteSearchPage,viewFilePage,returnPDF,exchangeOption,keywordSearchPage
 from django .contrib.auth.decorators import login_required
 from userlogin.views import login,logout,register,createRegisterPage,checkRegDD,registerSuccess
 from personalInfoPage.views import personalInfoHomePage
 from managerPage.views import managerAccountManagerPage,managerAuditAccountPage,removeAuditAccount,AcceptAuditAccount
-
+from managerPage.views import userAccountConfirm
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
@@ -44,6 +44,8 @@ urlpatterns += [
 
     path('filesearch/<str:topic>/<str:selectTag>', login_required(NutriliteSearchPage), name='NutriliteSearchPage'),
     path('viewFilePage/<str:fileId>', login_required(viewFilePage), name='viewFilePage'),
+    path('keywordSearchPage', login_required(keywordSearchPage), name='keywordSearchPage'),
+
     path('returnPDF/<str:fileId>', login_required(returnPDF), name='returnPDF'),
     path('exchangeOption/<str:fileId>', login_required(exchangeOption), name='exchangeOption'),
     path('personalInfoPage/home/<str:selectTag>', login_required(personalInfoHomePage), name='personalInfoHomePage'),
@@ -51,7 +53,7 @@ urlpatterns += [
     path('managerPages/home/AuditManger', login_required(managerAuditAccountPage),name='managerAuditAccountPage'),
     path('managerPages/removeAuditAccount', login_required(removeAuditAccount),name='removeAuditAccount'),
     path('managerPages/AcceptAuditAccount', login_required(AcceptAuditAccount),name='AcceptAuditAccount'),
-
+    path('managerPages/userAccountConfirm', userAccountConfirm,name='userAccountConfirm'),
     path('checkRegDD', checkRegDD, name='checkRegDD'),
 
     path('', login_required(home), name='home'),

@@ -112,6 +112,19 @@ class TempUserAccountChainYenInfo(models.Model):
 
     EM = models.BooleanField(verbose_name='愛馬')
 
+class ConfirmString(models.Model):
+    code = models.CharField(max_length=256)
+    user_name = models.CharField(max_length=20, verbose_name='帳號')
+    c_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.name + ":   " + self.code
+
+    class Meta:
+
+        ordering = ["-c_time"]
+        verbose_name = "確認碼"
+        verbose_name_plural = "確認碼"
 
 # from userlogin.models import amwayAwardInfo
 # r = amwayAwardInfo.objects.create(rank=0,amwayAward="暫無")
