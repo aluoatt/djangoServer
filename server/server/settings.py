@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'NutriliteSearchPage',
     'userlogin',
     'personalInfoPage',
+    'pointManage',
     # plug-in
     'django_celery_results'
 ]

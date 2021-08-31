@@ -10,6 +10,7 @@ class Server(models.Model):
             ("seeManagerMenuButton","seeManagerMenuButton"),
             ("seeManagerAccountManagerPage", "seeManagerAccountManagerPage"),
             ("seeManagerAuditAccountPage", "seeManagerAuditAccountPage"),
+            ("seeManagerPointPage", "seeManagerPointPage"),
             ("ALLAuditManager","ALLAuditManager"),
             ("CYPManager","CYPManager"),
             ("CYLManager", "CYLManager"),

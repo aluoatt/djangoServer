@@ -40,7 +40,7 @@
             <input class="primary disabled" type="submit" value="點數管理">
         </form>
         {% else %}
-        <form action="" method="post">{% csrf_token %}
+        <form action="{% url 'managerPointManagerPage' %}" method="post">{% csrf_token %}
             <input class="" type="submit" value="點數管理">
         </form>
         {% endif %}

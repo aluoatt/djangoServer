@@ -23,6 +23,7 @@ from userlogin.views import login,logout,register,createRegisterPage,checkRegDD,
 from personalInfoPage.views import personalInfoHomePage
 from managerPage.views import managerAccountManagerPage,managerAuditAccountPage,removeAuditAccount,AcceptAuditAccount
 from managerPage.views import userAccountConfirm
+from managerPage.views import managerPointManagerPage
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
@@ -51,6 +52,7 @@ urlpatterns += [
     path('personalInfoPage/home/<str:selectTag>', login_required(personalInfoHomePage), name='personalInfoHomePage'),
     path('managerPages/home/accountManger', login_required(managerAccountManagerPage), name='managerAccountManagerPage'),
     path('managerPages/home/AuditManger', login_required(managerAuditAccountPage),name='managerAuditAccountPage'),
+    path('managerPages/home/PointManager', login_required(managerPointManagerPage),name='managerPointManagerPage'),
     path('managerPages/removeAuditAccount', login_required(removeAuditAccount),name='removeAuditAccount'),
     path('managerPages/AcceptAuditAccount', login_required(AcceptAuditAccount),name='AcceptAuditAccount'),
     path('managerPages/userAccountConfirm', userAccountConfirm,name='userAccountConfirm'),
@@ -59,6 +61,12 @@ urlpatterns += [
     path('', login_required(home), name='home'),
 ]
 
+# Use include() to add paths from the catalog application
+from django.conf.urls import include
+
+urlpatterns += [
+    path('pointManage/', include('pointManage.urls')),
+]
 
 
 # from django.views.generic import RedirectView
