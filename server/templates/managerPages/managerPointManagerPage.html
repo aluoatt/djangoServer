@@ -99,6 +99,34 @@
     <!-- Main -->
 
     <div id="main" class="alt">
+        <!-- Modal -->
+        <div class="modal fade" id="pointModal" tabindex="-1" aria-labelledby="pointModalLabel" aria-hidden="true" style="width:100%">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content" style="background-color: #2a2f4a;">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="pointModalLabel">點數歷史紀錄</h5>
+                    </div>
+                    <div class="modal-body">
+                        <table id="example" class="table-bordered" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>變更者</th>
+                                    <th>修改日期</th>
+                                    <th>增點</th>
+                                    <th>扣點</th>
+                                    <th>轉讓</th>
+                                    <th>原因</th>
+                                    <th>剩餘點數</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <section id="one">
 
             <div class="inner">
@@ -110,7 +138,7 @@
                         <datalist id="amwayNumbers">
                             {% for searchUserAccount in searchUserAccountInfo %}
 
-                                <option value="{{searchUserAccount.useraccountamwayinfo_set.first.amwayNumber}}">
+                            <option value="{{searchUserAccount.useraccountamwayinfo_set.first.amwayNumber}}">
 
                             {% endfor %}
                         </datalist>
@@ -121,7 +149,7 @@
                         <datalist id="users">
                             {% for searchUserAccount in searchUserAccountInfo %}
 
-                                <option value="{{searchUserAccount.user}}">
+                            <option value="{{searchUserAccount.user}}">
 
                             {% endfor %}
                         </datalist>
@@ -142,17 +170,17 @@
                         <datalist id="amwayAwards">
                             {% for amwayAward in amwayAwards %}
                             <option value="{{amwayAward.amwayAward}}">
-                                {% endfor %}
+                            {% endfor %}
                         </datalist>
                     </li>
                     <li style="list-style-type:none;">
                         <label>教室:
                             <input  onmousedown="setEmptyByTagId('chainYenClasses_input')" onkeyup="accountManagerFilter()" style="color: black;" list="chainYenClasses" class="small"
-                                   name="chainYenClasses" id="chainYenClasses_input"></label>
+                                                                                                                                                                         name="chainYenClasses" id="chainYenClasses_input"></label>
                         <datalist id="chainYenClasses">
                             {% for chainYenClass in chainYenClasses %}
                             <option value="{{chainYenClass.ClassRoomName}}">
-                                {% endfor %}
+                            {% endfor %}
                         </datalist>
                     </li>
                     <li style="list-style-type:none;">
@@ -164,10 +192,10 @@
 
                             <option value="{{registerDD.main}}">
 
-                                {% else %}
+                            {% else %}
                             <option value="{{registerDD.main}}/{{registerDD.sec}}">
-                                {% endif %}
-                                {% endfor %}
+                            {% endif %}
+                            {% endfor %}
                         </datalist>
                     </li>
                     <li style="list-style-type:none;">
@@ -179,10 +207,10 @@
 
                             <option value="{{registerDim.main}}">
 
-                                {% else %}
+                            {% else %}
                             <option value="{{registerDim.main}}/{{registerDim.sec}}">
-                                {% endif %}
-                                {% endfor %}
+                            {% endif %}
+                            {% endfor %}
                         </datalist>
                     </li>
                     <li style="list-style-type:none;">
@@ -241,15 +269,17 @@
                     </td>
                     　　
                     <td id = "{{UserAccount.username}}_addPoint" data-th="增點">
-                        <button>+10</button>
+                        <button class="button_modified">+10</button>
                     </td>
 
                     <td id = "{{UserAccount.username}}_reducePoint" data-th="扣點">
-                        <button>-1</button>
+                        <button class="button_modified">-1</button>
                     </td>
                     　　
-                    <td id = "{{UserAccount.username}}_pointHistory" data-th="點數歷史紀錄">
-                        <button>查看</button>
+                    <td id = "{{UserAccount.username}}_getPointHistory" data-th="點數歷史紀錄">
+                        <button class="button_history" type="button" data-toggle="modal" data-target="#pointModal">
+                            查看
+                        </button>
                     </td>
 
                 </tr>
@@ -264,6 +294,9 @@
             
 
         </section>
+        <!-- Button trigger modal -->
+
+
         {% if pageisNotNull %}
         <div class="dataTables_paginate paging_simple_numbers pull-right inner">
             <ul class="pagination ">
@@ -296,6 +329,9 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.11.0/datatables.min.css"/>
+ 
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.11.0/datatables.min.js"></script>
 
 </body>
 </html>

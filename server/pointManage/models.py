@@ -9,6 +9,6 @@ class pointHistory(models.Model):
     reason       = models.CharField(verbose_name = "原因" , max_length = 100)
     addPoint     = models.CharField(verbose_name = "增點" , max_length = 100)
     reducePoint  = models.CharField(verbose_name = "扣點" , max_length = 100)
-    tranferPoint = models.CharField(verbose_name = "轉讓" , max_length = 100)
+    transferPoint = models.CharField(verbose_name = "轉讓" , max_length = 100)
     resultPoint  = models.IntegerField( verbose_name='剩餘點數')
 

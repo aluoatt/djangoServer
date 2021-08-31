@@ -1,5 +1,5 @@
 $(document).ready(()=>{
-    $("button").on("click", (event)=>{
+    $(".button_modified").on("click", (event)=>{
         id = $(event.target).parent()[0].id;
         username = id.split("_")[0];
         action   = id.split("_")[1];
@@ -24,6 +24,53 @@ $(document).ready(()=>{
         }
     });
 
+    var t = $('#example').DataTable({
+        "orderClasses": false,
+        "createdRow": function( row, data, dataIndex ){
+            $(row).addClass('table-warning');
+            $(row).addClass('text-dark');
+            $(row).addClass('font-weight-bold');
+        }
+    });
+    $(".button_history").on("click", (event)=>{
+        var counter = 1;
+        t.clear()
+
+
+        id = $(event.target).parent()[0].id;
+        username = id.split("_")[0];
+        action   = id.split("_")[1];
+        formData = new FormData();
+        formData.append("username", username)
+        $.ajax({
+            'url': location.origin + "/pointManage/" + action,
+            'method': 'POST',
+            'processData': false,
+            'contentType': false,
+            'data': formData,
+            'headers': {'X-CSRFToken': getCookie('csrftoken')},
+            'success': (res) => {
+                console.log(res)
+                data = JSON.parse(res)
+                for(i in data){
+                    fields = data[i]['fields']
+                    t.row.add( [
+                        fields['modifier'],
+                        fields['recordDate'],
+                        fields['addPoint'],
+                        fields['reducePoint'],
+                        fields['transferPoint'],
+                        fields['reason'],
+                        fields['resultPoint'],
+                    ]  ).draw( false  );
+                }
+            },
+            'error': (res) => {
+                alert("BAD")
+            }
+        });
+
+    });
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
