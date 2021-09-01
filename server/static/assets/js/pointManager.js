@@ -26,6 +26,7 @@ $(document).ready(()=>{
 
     var t = $('#example').DataTable({
         "orderClasses": false,
+        "responsive": true,
         "createdRow": function( row, data, dataIndex ){
             $(row).addClass('table-warning');
             $(row).addClass('text-dark');
@@ -66,7 +67,7 @@ $(document).ready(()=>{
                 }
             },
             'error': (res) => {
-                alert("BAD")
+                alert("伺服器出狀況,請聯繫系統人員")
             }
         });
 
