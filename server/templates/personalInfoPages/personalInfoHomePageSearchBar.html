@@ -1,85 +1,16 @@
-<section id="one" >
-
-    <div class="inner"  >
-        <div class="row">
-        <header class="major">
-            <h2>個人資料</h2>
-        </header>
-           <p>
-        <div class="row align-items-center">
+<div class="row">
+    <header class="major">
+        <h2>個人資料</h2>
+    </header>
+    <div class="row align-items-center">
+        <form action="{% url 'personalInfoHomePage' selectTag='全部' %}" method="post">{% csrf_token %}
+            <input class="primary small " type="submit" value="瀏覽已兌換資料">
+        </form>
         <form action="" method="post">{% csrf_token %}
             <input class="primary small " type="submit" value="修改個人資料">
         </form>
-           </p>
-        </div>
-        </div>
-        <div class="row gtr-uniform">
-            <li >
-                {% if selectTag == "全部" %}
-                    <a href="#" class="primary" style="background-color:grey;">全部</a>
-                {% else %}
-                    <a href="{% url 'personalInfoHomePage' '全部' %}">全部</a>
-                {% endif %}
-            </li>
-            <li>
-                {% if selectTag == "營養" %}
-                    <a href="#" class="primary" style="background-color:grey;">營養</a>
-                {% else %}
-                    <a href="{% url 'personalInfoHomePage' '營養' %}" >營養</a>
-                {% endif %}
-            </li>
-
-            <li>
-
-                {% if selectTag == "美容" %}
-                    <a href="#" class="primary" style="background-color:grey;">美容</a>
-                {% else %}
-                    <a href="{% url 'personalInfoHomePage' '美容' %}" >美容</a>
-                {% endif %}
-
-            </li>
-
-            <li>
-                {% if selectTag == "科技" %}
-                    <a href="#" class="primary" style="background-color:grey;">科技</a>
-                {% else %}
-                    <a href="{% url 'personalInfoHomePage' '科技' %}">科技</a>
-                {% endif %}
-
-            </li>
-            <li>
-                {% if selectTag == "金鍋" %}
-                    <a href="#" class="primary" style="background-color:grey;">金鍋</a>
-                {% else %}
-                    <a href="{% url 'personalInfoHomePage' '金鍋' %}">金鍋</a>
-                {% endif %}
-
-            </li>
-            <li >
-                {% if selectTag == "其他" %}
-                    <a href="#" class="primary" style="background-color:grey;">其他</a>
-                {% else %}
-                    <a href="{% url 'personalInfoHomePage' '其他' %}">其他</a>
-                {% endif %}
-
-            </li>
-            <li >
-                {% if selectTag == "總部會議/活動" %}
-                    <a href="#" class="primary" style="background-color:grey;">總部會議/活動</a>
-                {% else %}
-                    <a href="{% url 'personalInfoHomePage' '總部會議' %}">總部會議/活動</a>
-                {% endif %}
-
-            </li>
-            <li >
-                {% if selectTag == "演講廳" %}
-                    <a href="#" class="primary" style="background-color:grey;">演講廳</a>
-                {% else %}
-                    <a href="{% url 'personalInfoHomePage' '演講廳' %}">演講廳</a>
-                {% endif %}
-
-            </li>
-        </div>
+        <form action="{% url 'personalInfoPointPage' %}" method="get">{% csrf_token %}
+            <input class="primary small " type="submit" value="管理個人點數">
+        </form>
     </div>
-
-</section>
+</div>
