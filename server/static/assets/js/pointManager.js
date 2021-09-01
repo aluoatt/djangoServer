@@ -35,8 +35,8 @@ $(document).ready(()=>{
     $(".button_history").on("click", (event)=>{
         var counter = 1;
         t.clear()
-
-
+        $(".dataTables_empty").addClass("table-warning text-dark font-weight-bold");
+        $(".dataTables_empty").text("目前沒有紀錄");
         id = $(event.target).parent()[0].id;
         username = id.split("_")[0];
         action   = id.split("_")[1];
