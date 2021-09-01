@@ -7,52 +7,62 @@
     </header>
     <p>
     <div class="row align-items-center">
-        {% if tag == "ManagerAuditAccountPage" %}
-        <form action="#" method="get">{% csrf_token %}
-            <input class="primary disabled" type="submit" value="審核管理">
-        </form>
-        {% else %}
-        <form action="{% url 'managerAuditAccountPage' %}" method="get">{% csrf_token %}
-            <input class="" type="submit" value="審核管理">
-        </form>
+        {% if perms.userlogin.seeManagerAuditAccountPage %}
+            {% if tag == "ManagerAuditAccountPage" %}
+            <form action="#" method="get">{% csrf_token %}
+                <input class="primary disabled" type="submit" value="審核管理">
+            </form>
+            {% else %}
+            <form action="{% url 'managerAuditAccountPage' %}" method="get">{% csrf_token %}
+                <input class="" type="submit" value="審核管理">
+            </form>
+            {% endif %}
         {% endif %}
 
-        {% if tag == "ManagerAccountManagerPage" %}
-        <form action="#" method="get">{% csrf_token %}
-            <input class="primary disabled" type="submit" value="帳號管理">
-        </form>
-        {% else %}
-        <form action="{% url 'managerAccountManagerPage' %}" method="get">{% csrf_token %}
-            <input class="" type="submit" value="帳號管理">
-        </form>
+        {% if perms.userlogin.seeManagerAccountManagerPage %}
+            {% if tag == "ManagerAccountManagerPage" %}
+            <form action="#" method="get">{% csrf_token %}
+                <input class="primary disabled" type="submit" value="帳號管理">
+            </form>
+            {% else %}
+            <form action="{% url 'managerAccountManagerPage' %}" method="get">{% csrf_token %}
+                <input class="" type="submit" value="帳號管理">
+            </form>
+            {% endif %}
         {% endif %}
-        {% if tag == "ManagerArticleManagerPage" %}
-        <form action="#" method="get">{% csrf_token %}
-            <input class="primary disabled" type="submit" value="文章管理">
-        </form>
-        {% else %}
-        <form action="" method="get">{% csrf_token %}
-            <input class="" type="submit" value="文章管理">
-        </form>
+        {% if perms.userlogin.seeManagerArticleManagerPage %}
+            {% if tag == "ManagerArticleManagerPage" %}
+            <form action="#" method="get">{% csrf_token %}
+                <input class="primary disabled" type="submit" value="文章管理">
+            </form>
+            {% else %}
+            <form action="" method="get">{% csrf_token %}
+                <input class="" type="submit" value="文章管理">
+            </form>
+            {% endif %}
         {% endif %}
-        {% if tag == "ManagerPointManagerPage" %}
-        <form action="#" method="get">{% csrf_token %}
-            <input class="primary disabled" type="submit" value="點數管理">
-        </form>
-        {% else %}
-        <form action="{% url 'managerPointManagerPage' %}" method="get">{% csrf_token %}
-            <input class="" type="submit" value="點數管理">
-        </form>
+        {% if perms.userlogin.seeManagerPointPage %}
+            {% if tag == "ManagerPointManagerPage" %}
+            <form action="#" method="get">{% csrf_token %}
+                <input class="primary disabled" type="submit" value="點數管理">
+            </form>
+            {% else %}
+            <form action="{% url 'managerPointManagerPage' %}" method="get">{% csrf_token %}
+                <input class="" type="submit" value="點數管理">
+            </form>
+            {% endif %}
         {% endif %}
 
-        {% if tag == "StatisticsManagerPage" %}
-        <form action="#" method="get">{% csrf_token %}
-            <input class="primary disabled" type="submit" value="統計分析">
-        </form>
-        {% else %}
-        <form action="" method="get">{% csrf_token %}
-            <input class="" type="submit" value="統計分析">
-        </form>
+        {% if perms.userlogin.seeManagerStaticManagerPage %}
+            {% if tag == "StatisticsManagerPage" %}
+            <form action="#" method="get">{% csrf_token %}
+                <input class="primary disabled" type="submit" value="統計分析">
+            </form>
+            {% else %}
+            <form action="" method="get">{% csrf_token %}
+                <input class="" type="submit" value="統計分析">
+            </form>
+            {% endif %}
         {% endif %}
         </p>
     </div>
