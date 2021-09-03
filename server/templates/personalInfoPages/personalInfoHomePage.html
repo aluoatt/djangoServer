@@ -27,6 +27,10 @@
                 margin: 0;
                 padding: 0;
             }
+
+            .list-inline{display:block;}
+            .list-inline li{display:inline-block;}
+            .list-inline li:after{content:'|'; margin:0 10px;}
         </style>
     </head>
     <body class="is-preload">
@@ -45,7 +49,7 @@
             <div id="main" class="alt">
                 <div class="inner">
                     {% include 'personalInfoPages/personalInfoHomePageSearchBar.html' %}
-                    <div class="row gtr-uniform">
+                    <ul class="list-inline">
                         <li >
                             {% if selectTag == "全部" %}
                             <a href="#" class="primary" style="background-color:grey;">全部</a>
@@ -111,7 +115,7 @@
                             {% endif %}
 
                         </li>
-                    </div>
+                    </ul>
                 </div>
                 <section id="one" class="spotlights">
 
