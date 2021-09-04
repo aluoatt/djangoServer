@@ -4,10 +4,10 @@ from django.http import HttpResponse, FileResponse
 from django.shortcuts import render
 from NutriliteSearchPage.models import fileDataInfo, mainClassInfo, secClassInfo, personalFileData, \
     personalExchangeFileLog, fileDataKeywords
-from userlogin.models import UserAccountInfo,UserAccountChainYenInfo
+from userlogin.models import UserAccountInfo, UserAccountChainYenInfo
 from NutriliteSearchPage.utils.page import Pagination
 import logging
-from .tasks import getFileDateProcess,getFileWithoutWaterProcess
+from .tasks import getFileDateProcess, getFileWithoutWaterProcess
 import os
 import re
 import mimetypes
@@ -17,18 +17,22 @@ import datetime
 from dateutil.relativedelta import relativedelta
 from django.http.response import StreamingHttpResponse
 import pytz
+
 backaddress = "/home/aluo/backEnd"
+
+
 # Create your views here.
 def getDimName(value, arg):
     """Removes all values of arg from the given string"""
     return value.filter(amwayNumber=arg).main
 
-#關鍵字查詢
+
+# 關鍵字查詢
 def keywordSearchPage(request):
     try:
         keywords = request.POST.get("keywords")
         timelim = int(request.POST.get("timelim"))
-    except :
+    except:
         keywords = request.GET.get("keyword")
         timelim = int(request.GET.get("timelim"))
 
@@ -37,22 +41,21 @@ def keywordSearchPage(request):
     keywords_list = keywords.split(" ")
     totalKeywordNum = len(keywords_list)
 
-
-
     q1 = Q()
     q1.connector = 'OR'
     for keyword in keywords_list:
-        q1.children.append(("keyword__contains",keyword))
+        q1.children.append(("keyword__contains", keyword))
 
     try:
         userAcc = UserAccountInfo.objects.get(username=request.user)
         dataPermissionsLevel = userAcc.dataPermissionsLevel
-        userpoint = UserAccountChainYenInfo.objects.get(UserAccountInfo=UserAccountInfo.objects.get(username=request.user)).point
+        userpoint = UserAccountChainYenInfo.objects.get(
+            UserAccountInfo=UserAccountInfo.objects.get(username=request.user)).point
 
     except:
         userpoint = 0
         dataPermissionsLevel = -1
-    limDate = (datetime.datetime.now() - relativedelta(years=timelim)).strftime('%Y-%m-%d')+" 23:59:59"
+    limDate = (datetime.datetime.now() - relativedelta(years=timelim)).strftime('%Y-%m-%d') + " 23:59:59"
 
     q2 = Q()
     q2.connector = 'OR'
@@ -60,7 +63,7 @@ def keywordSearchPage(request):
 
     fileDataKeywords_obj = fileDataKeywords.objects.filter(q1)
     hasKeywordData = False
-    if not keywords=="":
+    if not keywords == "":
         for keyfileInfo in fileDataKeywords_obj:
             if keyfileInfo.fileDataInfoID.id in earchIdKeywordCount_dict.keys():
                 earchIdKeywordCount_dict[keyfileInfo.fileDataInfoID.id] += 1
@@ -77,10 +80,10 @@ def keywordSearchPage(request):
         # else:
         #     q2.children.append(("id", -1))
         fileDatas = fileDataInfo.objects.filter(
-                                                occurrenceDate__gte=limDate,
-                                                visible=1,
-                                                permissionsLevel__lte=dataPermissionsLevel
-                                                ).filter(q2).order_by('occurrenceDate')
+            occurrenceDate__gte=limDate,
+            visible=1,
+            permissionsLevel__lte=dataPermissionsLevel
+        ).filter(q2).order_by('occurrenceDate')
     else:
 
         fileDatas = fileDataInfo.objects.filter(
@@ -89,10 +92,10 @@ def keywordSearchPage(request):
             permissionsLevel__lte=dataPermissionsLevel
         ).order_by('occurrenceDate')
 
-    if fileDatas.count() >0:
+    if fileDatas.count() > 0:
         hasKeywordData = True
 
-    ownFileList = [k.fileDataID.id for k in personalFileData.objects.filter(ownerAccount = userAcc)]
+    ownFileList = [k.fileDataID.id for k in personalFileData.objects.filter(ownerAccount=userAcc)]
 
     # 總頁數
     page_count = fileDatas.count()
@@ -101,7 +104,7 @@ def keywordSearchPage(request):
         pageisNotNull = False
     # 當前頁
     current_page_num = request.GET.get("page")
-    pagination = Pagination(current_page_num, page_count,request, per_page_num=10,keywords=keywords,timelim=timelim)
+    pagination = Pagination(current_page_num, page_count, request, per_page_num=10, keywords=keywords, timelim=timelim)
     # 處理之後的資料
     fileDatas = fileDatas[pagination.start:pagination.end]
 
@@ -110,13 +113,15 @@ def keywordSearchPage(request):
 
     return render(request, 'searchPage/KeywordsSearchPage.html', locals())
 
+
 # 查詢檔案
-def NutriliteSearchPage(request,topic,selectTag):
+def NutriliteSearchPage(request, topic, selectTag):
     selectTag = selectTag
     try:
         userAcc = UserAccountInfo.objects.get(username=request.user)
         dataPermissionsLevel = userAcc.dataPermissionsLevel
-        userpoint = UserAccountChainYenInfo.objects.get(UserAccountInfo=UserAccountInfo.objects.get(username=request.user)).point
+        userpoint = UserAccountChainYenInfo.objects.get(
+            UserAccountInfo=UserAccountInfo.objects.get(username=request.user)).point
 
     except:
         userpoint = 0
@@ -125,12 +130,12 @@ def NutriliteSearchPage(request,topic,selectTag):
     if topic == "總部會議":
         topic += "/活動"
 
-    fileDatas = fileDataInfo.objects.filter(mainClass = mainClassInfo.objects.get(mainClassName=topic).id,
-                                           secClass = secClassInfo.objects.get(secClassName=selectTag).id,
-                                           visible = 1,
-                                           permissionsLevel__lte = dataPermissionsLevel).order_by('occurrenceDate')
+    fileDatas = fileDataInfo.objects.filter(mainClass=mainClassInfo.objects.get(mainClassName=topic).id,
+                                            secClass=secClassInfo.objects.get(secClassName=selectTag).id,
+                                            visible=1,
+                                            permissionsLevel__lte=dataPermissionsLevel).order_by('occurrenceDate')
 
-    ownFileList = [k.fileDataID.id for k in personalFileData.objects.filter(ownerAccount = userAcc)]
+    ownFileList = [k.fileDataID.id for k in personalFileData.objects.filter(ownerAccount=userAcc)]
 
     # 總頁數
     page_count = fileDatas.count()
@@ -139,7 +144,7 @@ def NutriliteSearchPage(request,topic,selectTag):
         pageisNotNull = False
     # 當前頁
     current_page_num = request.GET.get("page")
-    pagination = Pagination(current_page_num, page_count,request, per_page_num=10,keywords=keywords,timelim=timelim)
+    pagination = Pagination(current_page_num, page_count, request, per_page_num=10)
     # 處理之後的資料
     fileDatas = fileDatas[pagination.start:pagination.end]
 
@@ -148,7 +153,8 @@ def NutriliteSearchPage(request,topic,selectTag):
 
     return render(request, 'MainSearchPage.html', locals())
 
-def exchangeOption(request,fileId):
+
+def exchangeOption(request, fileId):
     targetFile = fileDataInfo.objects.get(id=int(fileId))
     UserAccount = UserAccountInfo.objects.get(username=request.user)
     alreadyExchange = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id).count() > 0
@@ -233,9 +239,11 @@ def exchangeOption(request,fileId):
                 p.waterCreateReady = 1
                 p.waterMarkPath = "cantdownload"
                 p.save()
-    return redirect('/viewFilePage/'+fileId)
+    return redirect('/viewFilePage/' + fileId)
+
+
 ###
-def regetPersonalFile(request,fileId):
+def regetPersonalFile(request, fileId):
     targetFile = fileDataInfo.objects.get(id=int(fileId))
     UserAccount = UserAccountInfo.objects.get(username=request.user)
     alreadyExchange = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id).count() > 0
@@ -258,8 +266,6 @@ def regetPersonalFile(request,fileId):
         targetFile = ""
         return render(request, 'viewFilePage.html', locals())
 
-    if targetFile.downloadAble:
-
     if alreadyExchange:
 
         personalExchangeFileLog(fileDataID=targetFile,
@@ -270,23 +276,27 @@ def regetPersonalFile(request,fileId):
             waterMarkUserName = UserAccountChainYen.classRoom.ClassRoomCode + "_" + UserAccount.user + "_" \
                                 + str(UserAccount.useraccountamwayinfo_set.all().first().amwayNumber)
 
-            #是否可下載
+            # 是否可下載
             if targetFile.downloadAble:
                 # 是否製作浮水印
                 if targetFile.needWaterMark:
                     if targetFile.fileType.id > 1:  # 非影片
                         # 製作浮水印
-                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "pdf", UserAccount.id)
+                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "pdf",
+                                                 UserAccount.id)
                     else:
-                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "mp4", UserAccount.id)
+                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "mp4",
+                                                 UserAccount.id)
                 else:
                     if targetFile.fileType.id > 1:  # 非影片
                         # 製作浮水印
-                        getFileWithoutWaterProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "pdf", UserAccount.id)
+                        getFileWithoutWaterProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "pdf",
+                                                         UserAccount.id)
                     else:
-                        getFileWithoutWaterProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "mp4", UserAccount.id)
+                        getFileWithoutWaterProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "mp4",
+                                                         UserAccount.id)
             else:
-                p = personalFileData.objects.filter(fileDataID=targetFile,ownerAccount=UserAccount).first()
+                p = personalFileData.objects.filter(fileDataID=targetFile, ownerAccount=UserAccount).first()
                 p.waterCreateReady = 1
                 p.waterMarkPath = "cantdownload"
                 p.save()
@@ -303,31 +313,32 @@ def regetPersonalFile(request,fileId):
                     else:
                         getFileWithoutWaterProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "mp4", UserAccount.id)
             else:
-                p = personalFileData.objects.filter(fileDataID=targetFile,ownerAccount=UserAccount).first()
+                p = personalFileData.objects.filter(fileDataID=targetFile, ownerAccount=UserAccount).first()
                 p.waterCreateReady = 1
                 p.waterMarkPath = "cantdownload"
                 p.save()
         return True
     else:
         return False
-def viewFilePage(request,fileId):
-    
+
+
+def viewFilePage(request, fileId):
     targetFile = fileDataInfo.objects.get(id=int(fileId))
     UserAccount = UserAccountInfo.objects.get(username=request.user)
-    alreadyExchange = personalFileData.objects.filter(ownerAccount=UserAccount.id,fileDataID=targetFile.id).count() > 0
+    alreadyExchange = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id).count() > 0
 
     if request.user == "administrator":
         permission = True
         pointEnough = True
         supervisord = True
     else:
-        #是否兌換
+        # 是否兌換
 
         supervisord = False
         UserAccountChainYen = UserAccountChainYenInfo.objects.get(UserAccountInfo=UserAccount)
         permission = targetFile.permissionsLevel <= UserAccount.dataPermissionsLevel
         pointEnough = True
-        #還沒兌換
+        # 還沒兌換
         if not alreadyExchange:
             return render(request, 'viewFilePage.html', locals())
         #     pointEnough = targetFile.point <= UserAccountChainYen.point
@@ -354,10 +365,11 @@ def viewFilePage(request,fileId):
         s.setdefault('Pragma', 'no-cache')
     return s
 
+
 def returnPDF(request, fileId):
     # Get the applicant's resume
     userAc = UserAccountInfo.objects.get(username=request.user)
-    resume = personalFileData.objects.filter(fileDataID=fileId,ownerAccount=userAc)
+    resume = personalFileData.objects.filter(fileDataID=fileId, ownerAccount=userAc)
 
     if resume.count() != 1:
         return HttpResponse("error", content_type="text/plain")
@@ -380,8 +392,8 @@ def returnPDF(request, fileId):
     else:
 
         try:
-            if (resume.first().fileDataID.fileType.id ==1 ):
-                return stream_video(request,backaddress+'/'+resume.first().waterMarkPath)
+            if (resume.first().fileDataID.fileType.id == 1):
+                return stream_video(request, backaddress + '/' + resume.first().waterMarkPath)
             else:
 
                 fsock = open(backaddress + '/' + resume.first().waterMarkPath, 'rb')
@@ -449,7 +461,8 @@ def stream_video(request, path):
         if last_byte >= size:
             last_byte = size - 1
         length = last_byte - first_byte + 1
-        resp = StreamingHttpResponse(RangeFileWrapper(open(path, 'rb'), offset=first_byte, length=length), status=206, content_type=content_type)
+        resp = StreamingHttpResponse(RangeFileWrapper(open(path, 'rb'), offset=first_byte, length=length), status=206,
+                                     content_type=content_type)
         resp['Content-Length'] = str(length)
         resp['Content-Range'] = 'bytes %s-%s/%s' % (first_byte, last_byte, size)
     else:
