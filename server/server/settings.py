@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'personalInfoPage',
     'managerPage',
     'managerPage.templatetags',
+    'pointManage',
     # plug-in
     'django_celery_results',
 ]

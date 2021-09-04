@@ -1,111 +1,183 @@
 <!DOCTYPE HTML>
 <!--
-	Forty by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+    Forty by HTML5 UP
+    html5up.net | @ajlkn
+    Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
 
 <html>
-<head>
-    <title>ChainYen System</title>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <head>
+        <title>ChainYen System</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
 
     {% load static %}
     <link href="{%static 'favicon.ico' %}" rel="shortcut icon">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="{%static 'assets/css/main.css' %}"/>
+        <link rel="stylesheet" href="{%static 'assets/css/main.css' %}"/>
 
-    <noscript>
-        <link rel="stylesheet" href="{%static 'assets/css/noscript.css' %}"/>
-    </noscript>
-    <style type="text/css">
-        html, body, #pdf_viewer {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-    </style>
-</head>
-<body class="is-preload">
+        <noscript>
+            <link rel="stylesheet" href="{%static 'assets/css/noscript.css' %}"/>
+        </noscript>
+        <style type="text/css">
+            html, body, #pdf_viewer {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
 
-<!-- Wrapper -->
-<div id="wrapper">
+            .list-inline{display:block;}
+            .list-inline li{display:inline-block;}
+            .list-inline li:after{content:'|'; margin:0 10px;}
+        </style>
+    </head>
+    <body class="is-preload">
 
-    <!-- Header -->
-    {% include 'baseHeader.html' %}
+        <!-- Wrapper -->
+        <div id="wrapper">
 
-    <!-- Menu -->
-    {% include 'baseMenu.html' %}
+            <!-- Header -->
+            {% include 'baseHeader.html' %}
 
-    <!-- Main -->
+            <!-- Menu -->
+            {% include 'baseMenu.html' %}
 
-    <div id="main" class="alt">
-        {% include 'personalInfoPages/personalInfoHomePageSearchBar.html' %}
+            <!-- Main -->
 
-        <section id="one" class="spotlights">
+            <div id="main" class="alt">
+                <div class="inner">
+                    {% include 'personalInfoPages/personalInfoHomePageSearchBar.html' %}
+                    <ul class="list-inline">
+                        <li >
+                            {% if selectTag == "全部" %}
+                            <a href="#" class="primary" style="background-color:grey;">全部</a>
+                            {% else %}
+                            <a href="{% url 'personalInfoHomePage' '全部' %}">全部</a>
+                            {% endif %}
+                        </li>
+                        <li>
+                            {% if selectTag == "營養" %}
+                            <a href="#" class="primary" style="background-color:grey;">營養</a>
+                            {% else %}
+                            <a href="{% url 'personalInfoHomePage' '營養' %}" >營養</a>
+                            {% endif %}
+                        </li>
 
-            <div class="inner">
-                {% for fileData in fileDatas %}
-                <!--									<header class="major">-->
-                <h3><u>{{fileData.fileDataID.title}}</u></h3>
-                <!--											</header>-->
-                <p>{{fileData.fileDataID.describe}}</p>
-                <p>
-                    {% for keywords in fileData.fileDataID.filedatakeywords_set.all %}
-                    #{{keywords.keyword}}
-                    {% endfor %}
-                </p>
+                        <li>
 
-                <ul class="actions">
-                    <li>
-                        <form id="fileIDview" name="fileIDview" method="POST">{% csrf_token %}
-                            <button type="button" class="button" onclick="ViewFileSubmit({{ fileData.fileDataID.id }})">
-                                點選觀看
-                            </button>
-                        </form>
+                            {% if selectTag == "美容" %}
+                            <a href="#" class="primary" style="background-color:grey;">美容</a>
+                            {% else %}
+                            <a href="{% url 'personalInfoHomePage' '美容' %}" >美容</a>
+                            {% endif %}
 
-                    </li>
-                </ul>
-                <hr>
-                {% endfor %}
+                        </li>
+
+                        <li>
+                            {% if selectTag == "科技" %}
+                            <a href="#" class="primary" style="background-color:grey;">科技</a>
+                            {% else %}
+                            <a href="{% url 'personalInfoHomePage' '科技' %}">科技</a>
+                            {% endif %}
+
+                        </li>
+                        <li>
+                            {% if selectTag == "金鍋" %}
+                            <a href="#" class="primary" style="background-color:grey;">金鍋</a>
+                            {% else %}
+                            <a href="{% url 'personalInfoHomePage' '金鍋' %}">金鍋</a>
+                            {% endif %}
+
+                        </li>
+                        <li >
+                            {% if selectTag == "其他" %}
+                            <a href="#" class="primary" style="background-color:grey;">其他</a>
+                            {% else %}
+                            <a href="{% url 'personalInfoHomePage' '其他' %}">其他</a>
+                            {% endif %}
+
+                        </li>
+                        <li >
+                            {% if selectTag == "總部會議/活動" %}
+                            <a href="#" class="primary" style="background-color:grey;">總部會議/活動</a>
+                            {% else %}
+                            <a href="{% url 'personalInfoHomePage' '總部會議' %}">總部會議/活動</a>
+                            {% endif %}
+
+                        </li>
+                        <li >
+                            {% if selectTag == "演講廳" %}
+                            <a href="#" class="primary" style="background-color:grey;">演講廳</a>
+                            {% else %}
+                            <a href="{% url 'personalInfoHomePage' '演講廳' %}">演講廳</a>
+                            {% endif %}
+
+                        </li>
+                    </ul>
+                </div>
+                <section id="one" class="spotlights">
+
+                    <div class="inner">
+                        {% for fileData in fileDatas %}
+                        <!--									<header class="major">-->
+                        <h3><u>{{fileData.fileDataID.title}}</u></h3>
+                        <!--											</header>-->
+                        <p>{{fileData.fileDataID.describe}}</p>
+                        <p>
+                        {% for keywords in fileData.fileDataID.filedatakeywords_set.all %}
+                        #{{keywords.keyword}}
+                        {% endfor %}
+                        </p>
+
+                        <ul class="actions">
+                            <li>
+                                <form id="fileIDview" name="fileIDview" method="POST">{% csrf_token %}
+                                    <button type="button" class="button" onclick="ViewFileSubmit({{ fileData.fileDataID.id }})">
+                                        點選觀看
+                                    </button>
+                                </form>
+
+                            </li>
+                        </ul>
+                        <hr>
+                        {% endfor %}
+                    </div>
+
+                </section>
+                {% if pageisNotNull %}
+                <div class="dataTables_paginate paging_simple_numbers pull-right inner">
+                    <ul class="pagination ">
+                        {{ pagination.page_html|safe }}
+                    </ul>
+
+                </div>
+                {% endif %}
+
+
             </div>
 
-        </section>
-        {% if pageisNotNull %}
-        <div class="dataTables_paginate paging_simple_numbers pull-right inner">
-                <ul class="pagination ">
-                    {{ pagination.page_html|safe }}
-                </ul>
-
-		</div>
-		{% endif %}
+        </div>
 
 
-    </div>
+        <!-- Scripts -->
+        <script src="{%static 'assets/js/jquery.min.js' %}"></script>
+        <script src="{%static 'assets/js/jquery.scrolly.min.js' %}"></script>
+        <script src="{%static 'assets/js/jquery.scrollex.min.js' %}"></script>
+        <script src="{%static 'assets/js/browser.min.js' %}"></script>
+        <script src="{%static 'assets/js/breakpoints.min.js' %}"></script>
+        <script src="{%static 'assets/js/util.js' %}"></script>
+        <script src="{%static 'assets/js/main.js' %}"></script>
+        <script src="{%static 'assets/js/cyMain.js' %}"></script>
+        <script src="{%static 'assets/js/viewPageAjax.js' %}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+                integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+                crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+                integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+                crossorigin="anonymous"></script>
 
-</div>
-
-
-<!-- Scripts -->
-<script src="{%static 'assets/js/jquery.min.js' %}"></script>
-<script src="{%static 'assets/js/jquery.scrolly.min.js' %}"></script>
-<script src="{%static 'assets/js/jquery.scrollex.min.js' %}"></script>
-<script src="{%static 'assets/js/browser.min.js' %}"></script>
-<script src="{%static 'assets/js/breakpoints.min.js' %}"></script>
-<script src="{%static 'assets/js/util.js' %}"></script>
-<script src="{%static 'assets/js/main.js' %}"></script>
-<script src="{%static 'assets/js/cyMain.js' %}"></script>
-<script src="{%static 'assets/js/viewPageAjax.js' %}"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-        crossorigin="anonymous"></script>
-
-</body>
+    </body>
 </html>

@@ -2,6 +2,7 @@ from django.shortcuts import render
 from NutriliteSearchPage.models import fileDataInfo,mainClassInfo,secClassInfo,personalFileData,personalExchangeFileLog
 from userlogin.models import UserAccountInfo,UserAccountChainYenInfo
 from NutriliteSearchPage.utils.page import Pagination
+from pointManage.models import pointHistory
 # Create your views here.
 
 def personalInfoHomePage(request,selectTag):
@@ -43,3 +44,11 @@ def personalInfoHomePage(request,selectTag):
 
 
     return render(request, 'personalInfoPages/personalInfoHomePage.html', locals())
+
+
+def personalInfoPointPage(request):
+
+    userAccountInfo = UserAccountInfo.objects.get(username = request.user.username)
+    pHistory = pointHistory.objects.filter(UserAccountInfo = userAccountInfo)
+
+    return render(request, 'personalInfoPages/personalInfoPointPage.html', locals())

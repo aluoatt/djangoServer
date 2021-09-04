@@ -20,9 +20,10 @@ from django.conf.urls import url
 from NutriliteSearchPage.views import NutriliteSearchPage,viewFilePage,returnPDF,exchangeOption,keywordSearchPage
 from django .contrib.auth.decorators import login_required
 from userlogin.views import login,logout,register,createRegisterPage,checkRegDD,registerSuccess
-from personalInfoPage.views import personalInfoHomePage
+from personalInfoPage.views import personalInfoHomePage, personalInfoPointPage
 from managerPage.views import managerAccountManagerPage,managerAuditAccountPage,removeAuditAccount,AcceptAuditAccount
 from managerPage.views import userAccountConfirm,managerAccountModify,modalAccountModifyPOST
+from managerPage.views import managerPointManagerPage
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
@@ -49,8 +50,10 @@ urlpatterns += [
     path('returnPDF/<str:fileId>', login_required(returnPDF), name='returnPDF'),
     path('exchangeOption/<str:fileId>', login_required(exchangeOption), name='exchangeOption'),
     path('personalInfoPage/home/<str:selectTag>', login_required(personalInfoHomePage), name='personalInfoHomePage'),
+    path('personalInfoPage/pointPage', login_required(personalInfoPointPage), name='personalInfoPointPage'),
     path('managerPages/home/accountManger', login_required(managerAccountManagerPage), name='managerAccountManagerPage'),
     path('managerPages/home/AuditManger', login_required(managerAuditAccountPage),name='managerAuditAccountPage'),
+    path('managerPages/home/PointManager', login_required(managerPointManagerPage),name='managerPointManagerPage'),
     path('managerPages/removeAuditAccount', login_required(removeAuditAccount),name='removeAuditAccount'),
     path('managerPages/AcceptAuditAccount', login_required(AcceptAuditAccount),name='AcceptAuditAccount'),
     path('managerPages/userAccountConfirm', userAccountConfirm,name='userAccountConfirm'),
@@ -62,6 +65,12 @@ urlpatterns += [
     path('', login_required(home), name='home'),
 ]
 
+# Use include() to add paths from the catalog application
+from django.conf.urls import include
+
+urlpatterns += [
+    path('pointManage/', include('pointManage.urls')),
+]
 
 
 # from django.views.generic import RedirectView
