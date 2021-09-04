@@ -10,8 +10,9 @@
     <title>ChainYen System</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-
+    {% load poll_extras %}
     {% load static %}
+    <link href="{%static 'favicon.ico' %}" rel="shortcut icon">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
@@ -259,10 +260,14 @@
                     　　
                 <td id = "{{UserAccount.id}}_amwayDD" data-th="上手白金">
                     {{UserAccount.useraccountamwayinfo_set.first.amwayDD.main}}
+
                 </td>
+                <input type="hidden" value ="{{UserAccount.useraccountamwayinfo_set.first.amwayDD.amwayNumber}}" id="{{UserAccount.id}}_amwayDD_number">
+                <input type="hidden" value ="{{UserAccount.dataPermissionsLevel}}" id="{{UserAccount.id}}_dataPermissionsLevel">
+
                     　　
                 <td id = "{{UserAccount.id}}_amwayDiamond" data-th="上手鑽石">
-                    {{UserAccount.useraccountamwayinfo_set.first.amwayDD.amwayDiamond}}
+                    {{registerDims|getdimName:UserAccount.useraccountamwayinfo_set.first.amwayDD.amwayDiamond}}
                 </td>
                     　　 　　 　　
                 <td id = "{{UserAccount.id}}_point" data-th="點數">
@@ -270,11 +275,17 @@
                 </td>
                     　　
                 <td id = "{{UserAccount.id}}_modify" data-th="修改">
-
+                    <button type="button" class="button small"	data-toggle="modal"
+							data-target="#accountModifyConfirm" onclick="accountManagerConfirm('{{UserAccount.id}}')">
+                            修改
+                    </button>
                 </td>
                     　　
                 <td id = "{{UserAccount.id}}_history" data-th="修改歷史紀錄">
-
+                    <button type="button" class="button small"	data-toggle="modal"
+							data-target="#accountHistory" onclick="accountHistory('{{UserAccount.id}}')">
+                            查看
+                    </button>
                 </td>
 
                 </tr>
@@ -285,10 +296,7 @@
 
         </section>
 
-        <section id="two" class="spotlights">
 
-
-        </section>
         {% if pageisNotNull %}
         <div class="dataTables_paginate paging_simple_numbers pull-right inner">
             <ul class="pagination ">
@@ -302,8 +310,106 @@
     </div>
 
 </div>
+<!-- Modal 修改-->
+<!--<form method="POST" id="modalAccountModifyPOST" action="{% url 'modalAccountModifyPOST' %}">{% csrf_token %}-->
+<div class="modal fade" id="accountModifyConfirm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 style="color: black" class="modal-title" id="staticBackdropLabel"></h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <input id = "userid_user" style="font-size:12px;border: 1px solid #ccc;" type="hidden" required>
+          <label  style="color: black"><mark style="color: red">姓名:</mark>
+              <input id = "modal_user" style="font-size:12px;border: 1px solid #ccc;" type="text" required>
+          </label>
+          <label  style="color: black"><mark style="color: red">會員編號:</mark>
+              <input id = "modal_amwayNumber" disabled style="font-size:12px;" type="text">
+          </label>
+          <label id = "modal_gender" style="color: black"><mark style="color: red">性別:</mark>
+                <select  style="font-size:12px;border: 1px solid #ccc;" id="gander" name="gander">
+                        <option id="男" value="男"  >男</option>
+                        <option id="女" value="女" >女</option>
+                </select>
+          </label>
+          <label id = "" style="color: black"><mark style="color: red">電話:</mark>
+              <input required id = "modal_phone" style="font-size:12px;border: 1px solid #ccc;" type="text">
+          </label>
+          <label id = "modal_jobTitle" style="color: black"><mark style="color: red">職務:</mark>
+              {% if perms.userlogin.can_Change_JobTitle %}
+            <select id="chainYenJobTitle" name="chainYenJobTitle"style="font-size:12px;border: 1px solid #ccc;">
+                {% else %}
+                <select id="chainYenJobTitle" name="chainYenJobTitle"style="font-size:12px" disabled>
+                {% endif %}
+                {% for jobtitle in jobTitles %}
+                <option id="{{jobtitle.jobTitle}}" value="{{jobtitle.jobTitle}}">{{jobtitle.jobTitle}}</option>
+                {% endfor %}
+            </select>
+          </label>
+          <label  style="color: black"><mark style="color: red">獎銜:</mark>
+                <select id="modal_amwayAward" name="modal_amwayAward"style="font-size:12px;border: 1px solid #ccc;">
+
+                {% for amwayAward in amwayAwards %}
+                    <option id="{{amwayAward.amwayAward}}" value="{{amwayAward.amwayAward}}">{{amwayAward.amwayAward}}</option>
+                {% endfor %}
+            </select>
+          </label>
+          <label  style="color: black"><mark style="color: red">教室:</mark>
+          {% if perms.userlogin.can_Change_class %}
+            <select id="modal_classRoom" name="modal_classRoom"style="font-size:12px;border: 1px solid #ccc;">
+          {% else %}
+                <select id="modal_classRoom" name="modal_classRoom"style="font-size:12px; disable">
+          {% endif %}
+                {% for chainYenClass in chainYenClasses %}
+                    <option id="{{chainYenClass.ClassRoomName}}" value="{{chainYenClass.ClassRoomName}}">{{chainYenClass.ClassRoomName}}</option>
+                {% endfor %}
+            </select>
+          </label>
+          <label style="color: black"><mark style="color: red">上手白金編號:</mark>
+            <input id = "amwayDD" style="font-size:12px;border: 1px solid #ccc;" type="text" onchange = "managerCheckDD('{{ csrf_token }}')">
+          </label>
+
+          <label style="color: black"><mark style="color: red">上手白金姓名:</mark>
+            <input required id = "modal_amwayDD_name" style="font-size:12px;" disabled type="text">
+          </label>
+
+          <label  style="color: black"><mark style="color: red">上手鑽石:</mark>
+            <input required id = "modal_amwayDiamond" style="font-size:12px;" disabled type="text">
+          </label>
+          {% if perms.userlogin.can_Change_DataPermission %}
+          <label  style="color: black"><mark style="color: red">資料權限等級:</mark>
+            <input id = "modal_dataPermissionsLevel" style="font-size:12px;border: 1px solid #ccc;"  type="text">
+          </label>
+          {% endif %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+          <input id="auditAcceptCurrentId"hidden type="text">
+        <button id="auditFinalAcceptBtn" type="button" class="btn btn-primary" data-dismiss="modal" onclick="modifySubmit('{{ csrf_token }}')" >確定修改</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--</form>-->
+<!-- Modal 歷史查看-->
+<div class="modal fade" id="accountHistory" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 style="color: black" class="modal-title" >修改的歷史紀錄</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
 
 
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" >關閉</button>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- Scripts -->
 <script src="{%static 'assets/js/jquery.min.js' %}"></script>
 <script src="{%static 'assets/js/jquery.scrolly.min.js' %}"></script>
@@ -312,7 +418,7 @@
 <script src="{%static 'assets/js/breakpoints.min.js' %}"></script>
 <script src="{%static 'assets/js/util.js' %}"></script>
 <script src="{%static 'assets/js/main.js' %}"></script>
-<script src="{%static 'assets/js/cyMain.js' %}"></script>
+<!--<script src="{%static 'assets/js/cyMain.js' %}"></script>-->
 <script src="{%static 'assets/js/viewPageAjax.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
@@ -320,6 +426,155 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
+<script>
+function accountManagerConfirm(id){
+    document.getElementById("modal_user").value = document.getElementById(id+"_user").innerHTML.trim()
+
+    document.getElementById("modal_amwayNumber").value = document.getElementById(id+"_amwayNumber").innerHTML.trim()
+
+    if (document.getElementById(id+"_gender").value == "男"){
+
+        document.getElementById("男").checked=true;
+        document.getElementById("女").checked=false;
+
+    }
+    else{
+        document.getElementById("女").checked=true;
+        document.getElementById("男").checked=false;
+    }
+    document.getElementById("modal_phone").value = document.getElementById(id+"_phone").innerHTML.trim()
+    {% for jobtitle in jobTitles %}
+
+        if ("{{jobtitle.jobTitle}}" == document.getElementById(id+"_jobTitle").innerHTML.trim()){
+            document.getElementById("{{jobtitle.jobTitle}}").selected = true
+        }
+        else{
+            document.getElementById("{{jobtitle.jobTitle}}").selected = false
+        }
+    {% endfor %}
+
+    {% for amwayAward in amwayAwards %}
+
+        if ("{{amwayAward.amwayAward}}" == document.getElementById(id+"_amwayAward").innerHTML.trim()){
+            document.getElementById("{{amwayAward.amwayAward}}").selected = true
+        }
+        else{
+            document.getElementById("{{amwayAward.amwayAward}}").selected = false
+        }
+    {% endfor %}
+
+    {% for chainYenClass in chainYenClasses %}
+
+        if ("{{chainYenClass.ClassRoomName}}" == document.getElementById(id+"_ClassRoomName").innerHTML.trim()){
+            document.getElementById("{{chainYenClass.ClassRoomName}}").selected = true
+        }
+        else{
+            document.getElementById("{{chainYenClass.ClassRoomName}}").selected = false
+        }
+    {% endfor %}
+
+    document.getElementById("amwayDD").value = document.getElementById(id+"_amwayDD_number").value.trim()
+    document.getElementById("modal_amwayDD_name").value = document.getElementById(id+"_amwayDD").innerHTML.trim()
+    document.getElementById("modal_amwayDiamond").value  =document.getElementById(id+"_amwayDiamond").innerHTML.trim()
+    document.getElementById("modal_amwayDD_name").style.color = "black";
+    document.getElementById("modal_dataPermissionsLevel").value = document.getElementById(id+"_dataPermissionsLevel").value
+
+    document.getElementById("userid_user").value = id
+
+
+}
+function modifySubmit(csrftoken){
+
+    var requestURL = "{% url 'modalAccountModifyPOST' %}";
+    var userid = $('#userid_user').val();
+    var dataJSON = {"userid":userid,
+                    "modal_user":$('#modal_user').val(),
+                    "modal_amwayNumber":$('#modal_amwayNumber').val(),
+                    "gander":$('#gander').val(),
+                    "phone":$('#modal_phone').val(),
+                    "chainYenJobTitle":$('#chainYenJobTitle').val(),
+                    "modal_amwayAward":$('#modal_amwayAward').val(),
+                    "classRoom":$('#modal_classRoom').val(),
+                    "amwayDD":$('#amwayDD').val(),
+                    "modal_amwayDD_name":$('#modal_amwayDD_name').val(),
+                    "modal_amwayDiamond":$('#modal_amwayDiamond').val(),
+                    "modal_dataPermissionsLevel":$('#modal_dataPermissionsLevel').val()
+                    };
+    $.ajax({
+        url: requestURL,
+        data: JSON.stringify(dataJSON),
+        headers: {'X-CSRFToken': csrftoken},
+        type: "POST",
+        method: "POST",
+        dataType: "json",
+        contentType: "application/json;charset=utf-8",
+        success: function (returnData) {
+
+        if (returnData.status){
+            document.getElementById(userid+"_user").innerHTML = $('#modal_user').val();
+            document.getElementById(userid+"_amwayNumber").innerHTML = $('#modal_amwayNumber').val();
+            document.getElementById(userid+"_gender").innerHTML = $('#gander').val();
+            document.getElementById(userid+"_phone").innerHTML = $('#modal_phone').val();
+            document.getElementById(userid+"_jobTitle").innerHTML = $('#chainYenJobTitle').val();
+            document.getElementById(userid+"_amwayAward").innerHTML = $('#modal_amwayAward').val();
+            document.getElementById(userid+"_ClassRoomName").innerHTML = $('#modal_classRoom').val();
+            document.getElementById(userid+"_amwayDD_number").innerHTML = $('#amwayDD').val();
+            document.getElementById(userid+"_amwayDD").innerHTML = $('#modal_amwayDD_name').val();
+            document.getElementById(userid+"_amwayDiamond").innerHTML = $('#modal_amwayDiamond').val();
+            document.getElementById(userid+"_dataPermissionsLevel").innerHTML = $('#modal_dataPermissionsLevel').val();
+
+
+        }
+        else{
+            console.log("error")
+
+        }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+
+            console.log(thrownError)
+        }
+    });
+
+}
+function managerCheckDD(csrftoken){
+
+
+    var requestURL = "/checkRegDD";
+    var dataJSON = {"num":$('#amwayDD').val(),};
+    $.ajax({
+        url: requestURL,
+        data: JSON.stringify(dataJSON),
+        headers: {'X-CSRFToken': csrftoken},
+        type: "POST",
+        method: "POST",
+        dataType: "json",
+        contentType: "application/json;charset=utf-8",
+        success: function (returnData) {
+        if (!returnData.status){
+            document.getElementById("modal_amwayDD_name").style.display = "";
+            document.getElementById("modal_amwayDiamond").value = ""
+            document.getElementById("modal_amwayDD_name").value = "該白金不存在"
+            document.getElementById("modal_amwayDD_name").style.color = "red";
+        }
+        else{
+            document.getElementById("modal_amwayDD_name").style.display = "";
+            document.getElementById("modal_amwayDD_name").value = returnData.DDname
+            document.getElementById("modal_amwayDD_name").style.color = "black";
+            document.getElementById("modal_amwayDiamond").value = returnData.diamond
+
+        }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+
+
+
+        }
+    });
+}
+
+
+</script>
 
 </body>
 </html>

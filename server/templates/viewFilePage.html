@@ -12,6 +12,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
 		{% load static %}
+		<link href="{%static 'favicon.ico' %}" rel="shortcut icon">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
 		<link rel="stylesheet" href="{%static 'assets/css/main.css' %}" />
@@ -181,7 +182,7 @@
 					let csrftoken = '{{ csrf_token }}'
 					var requestURL = "/returnPDF/" + document.getElementById("fileID").value;
 					// var dataJSON = {};
-
+					clearInterval(my_refresh)
 					$.ajax({
 						url: requestURL,
 						// data: JSON.stringify(dataJSON),
@@ -189,6 +190,7 @@
 						type: "GET",
 						// dataType: "json",
 						// contentType: "application/json;charset=utf-8",
+
 						success: function (returnData) {
 
 							if (returnData != "error" && returnData != "not ready") {
@@ -230,14 +232,12 @@
 							}
 						},
 						error: function (xhr, ajaxOptions, thrownError) {
-							if (t < 3000) {
 								clearInterval(my_refresh)
-								t = 3000
+								clearInterval(my_refresh)
+								clearInterval(my_refresh)
+								clearInterval(my_refresh)
 								my_refresh = setInterval(ajpdf, t);
-							}
 
-							console.log(xhr.status);
-							console.log(thrownError);
 
 						}
 					});
@@ -264,7 +264,7 @@
 					let csrftoken = '{{ csrf_token }}'
 					var requestURL = "/returnPDF/" + document.getElementById("fileID").value;
 					// var dataJSON = {};
-
+					clearInterval(my_refresh)
 					$.ajax({
 						url: requestURL,
 						// data: JSON.stringify(dataJSON),
@@ -272,39 +272,33 @@
 						type: "GET",
 						// dataType: "json",
 						// contentType: "application/json;charset=utf-8",
+
 						success: function (returnData) {
 
 							if (returnData != "error" && returnData != "not ready") {
 								successgetvideo = 1
+								clearInterval(my_refresh)
+								clearInterval(my_refresh)
+								clearInterval(my_refresh)
 								clearInterval(my_refresh)
 								document.getElementById("videoWait").style.display = "none"
 								document.getElementById("demo").style.display = "";
 								$('#demo').attr('src', requestURL);
 							} else {
 
+
 								clearInterval(my_refresh)
 								my_refresh = setInterval(ajpdf, t);
-								// if (t<3000){
-								// clearInterval(my_refresh)
-								// t = 3000
-								// my_refresh = setInterval(ajpdf, t);
-								// }
-								// if (returnData == "not ready"){
-								// 	document.getElementById("pdf_viewer").innerHTML = "正在產生檔案..請稍候";
-								// }else{
-								// 	document.getElementById("pdf_viewer").innerHTML = "發生錯誤";
-								// }
+
 							}
 						},
 						error: function (xhr, ajaxOptions, thrownError) {
-							if (t < 3000) {
 								clearInterval(my_refresh)
-								t = 3000
+								clearInterval(my_refresh)
+								clearInterval(my_refresh)
+								clearInterval(my_refresh)
 								my_refresh = setInterval(ajpdf, t);
-							}
 
-							console.log(xhr.status);
-							console.log(thrownError);
 
 						}
 					});

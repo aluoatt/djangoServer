@@ -16,15 +16,29 @@ from django.db.models import Q
 import datetime
 from dateutil.relativedelta import relativedelta
 from django.http.response import StreamingHttpResponse
+import pytz
 backaddress = "/home/aluo/backEnd"
 # Create your views here.
+def getDimName(value, arg):
+    """Removes all values of arg from the given string"""
+    return value.filter(amwayNumber=arg).main
+
 #關鍵字查詢
 def keywordSearchPage(request):
-    keywords = request.POST.get("keywords")
-    timelim = int(request.POST.get("timelim"))
+    try:
+        keywords = request.POST.get("keywords")
+        timelim = int(request.POST.get("timelim"))
+    except :
+        keywords = request.GET.get("keyword")
+        timelim = int(request.GET.get("timelim"))
 
+    if keywords is None:
+        keywords = ""
     keywords_list = keywords.split(" ")
     totalKeywordNum = len(keywords_list)
+
+
+
     q1 = Q()
     q1.connector = 'OR'
     for keyword in keywords_list:
@@ -46,27 +60,38 @@ def keywordSearchPage(request):
 
     fileDataKeywords_obj = fileDataKeywords.objects.filter(q1)
     hasKeywordData = False
+    if not keywords=="":
+        for keyfileInfo in fileDataKeywords_obj:
+            if keyfileInfo.fileDataInfoID.id in earchIdKeywordCount_dict.keys():
+                earchIdKeywordCount_dict[keyfileInfo.fileDataInfoID.id] += 1
+                if earchIdKeywordCount_dict[keyfileInfo.fileDataInfoID.id] >= totalKeywordNum:
+                    q2.children.append(("id", keyfileInfo.fileDataInfoID.id))
+            else:
 
-    for keyfileInfo in fileDataKeywords_obj:
-        if keyfileInfo.fileDataInfoID.id in earchIdKeywordCount_dict.keys():
-            earchIdKeywordCount_dict[keyfileInfo.fileDataInfoID.id] += 1
-            if earchIdKeywordCount_dict[keyfileInfo.fileDataInfoID.id] >= totalKeywordNum:
-                q2.children.append(("id", keyfileInfo.fileDataInfoID.id))
-        else:
+                earchIdKeywordCount_dict[keyfileInfo.fileDataInfoID.id] = 1
+                if earchIdKeywordCount_dict[keyfileInfo.fileDataInfoID.id] >= totalKeywordNum:
+                    q2.children.append(("id", keyfileInfo.fileDataInfoID.id))
 
-            earchIdKeywordCount_dict[keyfileInfo.fileDataInfoID.id] = 1
-            if earchIdKeywordCount_dict[keyfileInfo.fileDataInfoID.id] >= totalKeywordNum:
-                q2.children.append(("id", keyfileInfo.fileDataInfoID.id))
-
-    if len(q2) >0 :
-        hasKeywordData = True
+        # if len(q2) >0 :
+        #     hasKeywordData = True
+        # else:
+        #     q2.children.append(("id", -1))
+        fileDatas = fileDataInfo.objects.filter(
+                                                occurrenceDate__gte=limDate,
+                                                visible=1,
+                                                permissionsLevel__lte=dataPermissionsLevel
+                                                ).filter(q2).order_by('occurrenceDate')
     else:
-        q2.children.append(("id", -1))
-    fileDatas = fileDataInfo.objects.filter(
-                                            occurrenceDate__gte=limDate,
-                                            visible=1,
-                                            permissionsLevel__lte=dataPermissionsLevel
-                                            ).filter(q2).order_by('occurrenceDate')
+
+        fileDatas = fileDataInfo.objects.filter(
+            occurrenceDate__gte=limDate,
+            visible=1,
+            permissionsLevel__lte=dataPermissionsLevel
+        ).order_by('occurrenceDate')
+
+    if fileDatas.count() >0:
+        hasKeywordData = True
+
     ownFileList = [k.fileDataID.id for k in personalFileData.objects.filter(ownerAccount = userAcc)]
 
     # 總頁數
@@ -76,7 +101,7 @@ def keywordSearchPage(request):
         pageisNotNull = False
     # 當前頁
     current_page_num = request.GET.get("page")
-    pagination = Pagination(current_page_num, page_count,request, per_page_num=10)
+    pagination = Pagination(current_page_num, page_count,request, per_page_num=10,keywords=keywords,timelim=timelim)
     # 處理之後的資料
     fileDatas = fileDatas[pagination.start:pagination.end]
 
@@ -114,7 +139,7 @@ def NutriliteSearchPage(request,topic,selectTag):
         pageisNotNull = False
     # 當前頁
     current_page_num = request.GET.get("page")
-    pagination = Pagination(current_page_num, page_count,request, per_page_num=10)
+    pagination = Pagination(current_page_num, page_count,request, per_page_num=10,keywords=keywords,timelim=timelim)
     # 處理之後的資料
     fileDatas = fileDatas[pagination.start:pagination.end]
 
@@ -158,6 +183,7 @@ def exchangeOption(request,fileId):
                          expiryDate=None,
                          costPoint=targetFile.point,
                          waterCreateReady=0,
+                         exchangeDate=datetime.datetime.now()
                          ).save()
 
         personalExchangeFileLog(fileDataID=targetFile,
@@ -168,34 +194,122 @@ def exchangeOption(request,fileId):
             waterMarkUserName = UserAccountChainYen.classRoom.ClassRoomCode + "_" + UserAccount.user + "_" \
                                 + str(UserAccount.useraccountamwayinfo_set.all().first().amwayNumber)
 
-            #是否製作浮水印
-            if targetFile.needWaterMark:
-                if targetFile.fileType.id > 1:  # 非影片
-                    # 製作浮水印
-                    getFileDateProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "pdf", UserAccount.id)
+            # 是否製作浮水印
+            if targetFile.downloadAble:
+                if targetFile.needWaterMark:
+                    if targetFile.fileType.id > 1:  # 非影片
+                        # 製作浮水印
+                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "pdf",
+                                                 UserAccount.id)
+                    else:
+                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "mp4",
+                                                 UserAccount.id)
                 else:
-                    getFileDateProcess.delay(targetFile.id, targetFile.file, waterMarkUserName, "mp4", UserAccount.id)
+                    if targetFile.fileType.id > 1:  # 非影片
+                        getFileWithoutWaterProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "pdf",
+                                                         UserAccount.id)
+                    else:
+                        getFileWithoutWaterProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "mp4",
+                                                         UserAccount.id)
             else:
-                if targetFile.fileType.id > 1:  # 非影片
-                    # 製作浮水印
-                    getFileWithoutWaterProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "pdf", UserAccount.id)
-                else:
-                    getFileWithoutWaterProcess.delay(targetFile.id, targetFile.file, waterMarkUserName, "mp4", UserAccount.id)
-
+                p = personalFileData.objects.filter(fileDataID=targetFile, ownerAccount=UserAccount).first()
+                p.waterCreateReady = 1
+                p.waterMarkPath = "cantdownload"
+                p.save()
         else:
-            if targetFile.needWaterMark:
-                if targetFile.fileType.id > 1:  # 非影片
-                    getFileDateProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "pdf", UserAccount.id)
+            if targetFile.downloadAble:
+                if targetFile.needWaterMark:
+                    if targetFile.fileType.id > 1:  # 非影片
+                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "pdf", UserAccount.id)
+                    else:
+                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "mp4", UserAccount.id)
                 else:
-                    getFileDateProcess.delay(targetFile.id, targetFile.file, "超級使用者", "mp4", UserAccount.id)
+                    if targetFile.fileType.id > 1:  # 非影片
+                        getFileWithoutWaterProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "pdf", UserAccount.id)
+                    else:
+                        getFileWithoutWaterProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "mp4", UserAccount.id)
             else:
-                if targetFile.fileType.id > 1:  # 非影片
-                    getFileWithoutWaterProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "pdf", UserAccount.id)
-                else:
-                    getFileWithoutWaterProcess.delay(targetFile.id, targetFile.file, "超級使用者", "mp4", UserAccount.id)
-
+                p = personalFileData.objects.filter(fileDataID=targetFile, ownerAccount=UserAccount).first()
+                p.waterCreateReady = 1
+                p.waterMarkPath = "cantdownload"
+                p.save()
     return redirect('/viewFilePage/'+fileId)
+###
+def regetPersonalFile(request,fileId):
+    targetFile = fileDataInfo.objects.get(id=int(fileId))
+    UserAccount = UserAccountInfo.objects.get(username=request.user)
+    alreadyExchange = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id).count() > 0
 
+    if request.user == "administrator":
+        permission = True
+        pointEnough = True
+        supervisord = True
+    else:
+        # 是否兌換
+
+        supervisord = False
+        UserAccountChainYen = UserAccountChainYenInfo.objects.get(UserAccountInfo=UserAccount)
+        permission = targetFile.permissionsLevel <= UserAccount.dataPermissionsLevel
+        # 還沒兌換
+
+        pointEnough = True
+
+    if (not permission) or (not pointEnough):
+        targetFile = ""
+        return render(request, 'viewFilePage.html', locals())
+
+    if targetFile.downloadAble:
+
+    if alreadyExchange:
+
+        personalExchangeFileLog(fileDataID=targetFile,
+                                ownerAccount=UserAccount,
+                                costPoint=-1,
+                                ).save()
+        if not supervisord:
+            waterMarkUserName = UserAccountChainYen.classRoom.ClassRoomCode + "_" + UserAccount.user + "_" \
+                                + str(UserAccount.useraccountamwayinfo_set.all().first().amwayNumber)
+
+            #是否可下載
+            if targetFile.downloadAble:
+                # 是否製作浮水印
+                if targetFile.needWaterMark:
+                    if targetFile.fileType.id > 1:  # 非影片
+                        # 製作浮水印
+                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "pdf", UserAccount.id)
+                    else:
+                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "mp4", UserAccount.id)
+                else:
+                    if targetFile.fileType.id > 1:  # 非影片
+                        # 製作浮水印
+                        getFileWithoutWaterProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "pdf", UserAccount.id)
+                    else:
+                        getFileWithoutWaterProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "mp4", UserAccount.id)
+            else:
+                p = personalFileData.objects.filter(fileDataID=targetFile,ownerAccount=UserAccount).first()
+                p.waterCreateReady = 1
+                p.waterMarkPath = "cantdownload"
+                p.save()
+        else:
+            if targetFile.downloadAble:
+                if targetFile.needWaterMark:
+                    if targetFile.fileType.id > 1:  # 非影片
+                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "pdf", UserAccount.id)
+                    else:
+                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "mp4", UserAccount.id)
+                else:
+                    if targetFile.fileType.id > 1:  # 非影片
+                        getFileWithoutWaterProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "pdf", UserAccount.id)
+                    else:
+                        getFileWithoutWaterProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "mp4", UserAccount.id)
+            else:
+                p = personalFileData.objects.filter(fileDataID=targetFile,ownerAccount=UserAccount).first()
+                p.waterCreateReady = 1
+                p.waterMarkPath = "cantdownload"
+                p.save()
+        return True
+    else:
+        return False
 def viewFilePage(request,fileId):
     
     targetFile = fileDataInfo.objects.get(id=int(fileId))
@@ -224,19 +338,27 @@ def viewFilePage(request,fileId):
         targetFile = ""
         return render(request, 'viewFilePage.html', locals())
 
+    if targetFile.downloadAble:
 
-    s = render(request, 'viewFilePage.html', locals())
-    s.setdefault('Cache-Control', 'no-store')
-    s.setdefault('Expires', 0)
-    s.setdefault('Pragma', 'no-cache')
-    # return render(request, 'viewFilePage.html', locals())
+        s = render(request, 'viewFilePage.html', locals())
+        s.setdefault('Cache-Control', 'no-store')
+        s.setdefault('Expires', 0)
+        s.setdefault('Pragma', 'no-cache')
+        # return render(request, 'viewFilePage.html', locals())
 
+
+    else:
+        s = render(request, 'viewFilePageCantDownload.html', locals())
+        s.setdefault('Cache-Control', 'no-store')
+        s.setdefault('Expires', 0)
+        s.setdefault('Pragma', 'no-cache')
     return s
 
 def returnPDF(request, fileId):
     # Get the applicant's resume
     userAc = UserAccountInfo.objects.get(username=request.user)
     resume = personalFileData.objects.filter(fileDataID=fileId,ownerAccount=userAc)
+
     if resume.count() != 1:
         return HttpResponse("error", content_type="text/plain")
 
@@ -246,18 +368,38 @@ def returnPDF(request, fileId):
         return HttpResponse("error", content_type="text/plain")
 
     if resume.first().waterCreateReady == 0:
+
+        if resume.first().exchangeDate < (datetime.datetime.now() - datetime.timedelta(days=1)):
+
+            if regetPersonalFile(request, fileId):
+
+                return HttpResponse("not ready", content_type="text/plain")
+            else:
+                return HttpResponse("error", content_type="text/plain")
         return HttpResponse("not ready", content_type="text/plain")
-
-    if (resume.first().fileDataID.fileType.id ==1 ):
-        # file = FileWrapper(open(backaddress+'/'+resume.first().waterMarkPath, 'rb'))
-        # response = HttpResponse(file, content_type='video/mp4')
-        # response['Content-Disposition'] = 'attachment; filename=my_video.mp4'
-        return stream_video(request,backaddress+'/'+resume.first().waterMarkPath)
     else:
-        fsock = open(backaddress + '/' + resume.first().waterMarkPath, 'rb')
-        response = FileResponse(fsock, content_type='application/pdf', filename="pdf.pdf")
 
-    return response
+        try:
+            if (resume.first().fileDataID.fileType.id ==1 ):
+                return stream_video(request,backaddress+'/'+resume.first().waterMarkPath)
+            else:
+
+                fsock = open(backaddress + '/' + resume.first().waterMarkPath, 'rb')
+
+                response = FileResponse(fsock, content_type='application/pdf', filename="pdf.pdf")
+        except:
+            r = resume.first()
+            r.waterCreateReady = False
+            r.exchangeDate = datetime.datetime.now()
+            r.save()
+            if regetPersonalFile(request, fileId):
+
+                return HttpResponse("not ready", content_type="text/plain")
+            else:
+                return HttpResponse("error", content_type="text/plain")
+            return HttpResponse("error", content_type="text/plain")
+
+        return response
 
 
 range_re = re.compile(r'bytes\s*=\s*(\d+)\s*-\s*(\d*)', re.I)

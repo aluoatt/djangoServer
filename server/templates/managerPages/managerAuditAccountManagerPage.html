@@ -10,8 +10,9 @@
     <title>ChainYen System</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-
+    {% load poll_extras %}
     {% load static %}
+    <link href="{%static 'favicon.ico' %}" rel="shortcut icon">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
@@ -241,7 +242,7 @@
                 </td>
                     　　
                 <td  id = "{{AccountChainYen.UserAccountInfo.id}}_amwayDiamond" data-th="上手鑽石">
-                    {{AccountChainYen.UserAccountInfo.tempuseraccountamwayinfo_set.first.amwayDD.amwayDiamond}}
+                    {{registerDims|getdimName:AccountChainYen.UserAccountInfo.tempuseraccountamwayinfo_set.first.amwayDD.amwayDiamond}}
                 </td>
                     　　
                 <td id = "{{AccountChainYen.UserAccountInfo.id}}_auditStatus" data-th="狀態">
@@ -309,11 +310,11 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-          <p id = "modal_user" style="color: black"><mark style="color: red">姓名:</mark></p>
-          <p id = "modal_amwayNumber" style="color: black"><mark style="color: red">會員編號:</mark></p>
-          <p id = "modal_jobTitle" style="color: black"><mark style="color: red">職務:</mark></p>
-          <p id = "modal_amwayAward" style="color: black"><mark style="color: red">獎銜:</mark></p>
-          <p id = "modal_amwayDD" style="color: black"><mark style="color: red">上手白金:</mark></p>
+          <label id = "modal_user" style="color: black"><mark style="color: red">姓名:</mark></label>
+          <label id = "modal_amwayNumber" style="color: black"><mark style="color: red">會員編號:</mark></label>
+          <label id = "modal_jobTitle" style="color: black"><mark style="color: red">職務:</mark></label>
+          <label id = "modal_amwayAward" style="color: black"><mark style="color: red">獎銜:</mark></label>
+          <label id = "modal_amwayDD" style="color: black"><mark style="color: red">上手白金:</mark></label>
 
       </div>
       <div class="modal-footer">
@@ -334,11 +335,11 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-          <p id = "Remove_modal_user" style="color: black"><mark style="color: red">姓名:</mark></p>
-          <p id = "Remove_modal_amwayNumber" style="color: black"><mark style="color: red">會員編號:</mark></p>
-          <p id = "Remove_modal_jobTitle" style="color: black"><mark style="color: red">職務:</mark></p>
-          <p id = "Remove_modal_amwayAward" style="color: black"><mark style="color: red">獎銜:</mark></p>
-          <p id = "Remove_modal_amwayDD" style="color: black"><mark style="color: red">上手白金:</mark></p>
+          <label id = "Remove_modal_user" style="color: black"><mark style="color: red">姓名:</mark></label>
+          <label id = "Remove_modal_amwayNumber" style="color: black"><mark style="color: red">會員編號:</mark></label>
+          <label id = "Remove_modal_jobTitle" style="color: black"><mark style="color: red">職務:</mark></label>
+          <label id = "Remove_modal_amwayAward" style="color: black"><mark style="color: red">獎銜:</mark></label>
+          <label id = "Remove_modal_amwayDD" style="color: black"><mark style="color: red">上手白金:</mark></label>
 
       </div>
       <div class="modal-footer">

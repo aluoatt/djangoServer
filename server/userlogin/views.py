@@ -102,7 +102,7 @@ def register(request,token):
                                             # is_active=1,
                                             auditStatus = "審核中",
                                             email=e_mail,
-                                            dataPermissionsLevel=0)
+                                            dataPermissionsLevel=1)
 
                     r2 = TempUserAccountChainYenInfo(UserAccountInfo = r,
                                                  jobTitle = chainYenJobTitleInfo.objects.get(id=chainYenJobTitle),
@@ -164,7 +164,7 @@ def checkRegDD(request):
             response_data['DDname'] = DDinfo_obj.first().main
         else:
             response_data['DDname'] = DDinfo_obj.first().main+"/" + DDinfo_obj.first().sec
-        response_data['diamond'] = DDinfo_obj.first().amwayDiamond
+        response_data['diamond'] = registerDDandDimInfo.objects.get(amwayNumber=DDinfo_obj.first().amwayDiamond).main
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 import time

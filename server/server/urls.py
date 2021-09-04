@@ -22,7 +22,7 @@ from django .contrib.auth.decorators import login_required
 from userlogin.views import login,logout,register,createRegisterPage,checkRegDD,registerSuccess
 from personalInfoPage.views import personalInfoHomePage
 from managerPage.views import managerAccountManagerPage,managerAuditAccountPage,removeAuditAccount,AcceptAuditAccount
-from managerPage.views import userAccountConfirm
+from managerPage.views import userAccountConfirm,managerAccountModify,modalAccountModifyPOST
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
@@ -54,6 +54,9 @@ urlpatterns += [
     path('managerPages/removeAuditAccount', login_required(removeAuditAccount),name='removeAuditAccount'),
     path('managerPages/AcceptAuditAccount', login_required(AcceptAuditAccount),name='AcceptAuditAccount'),
     path('managerPages/userAccountConfirm', userAccountConfirm,name='userAccountConfirm'),
+    path('managerPages/managerAccountModify',managerAccountModify,name='managerAccountModify'),
+    path('managerPages/modalAccountModifyPOST',modalAccountModifyPOST,name='modalAccountModifyPOST'),
+
     path('checkRegDD', checkRegDD, name='checkRegDD'),
 
     path('', login_required(home), name='home'),

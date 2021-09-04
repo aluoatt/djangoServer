@@ -10,6 +10,7 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		{% load static %}
+		<link href="{%static 'favicon.ico' %}" rel="shortcut icon">
 		<link rel="stylesheet" href="{%static 'assets/css/main.css' %}" />
 <!--		<link rel="stylesheet" href="assets/css/main.css" />-->
 		<noscript><link rel="stylesheet" href="{%static 'assets/css/noscript.css' %}" /></noscript>
@@ -26,26 +27,27 @@
 					{% include 'baseMenu.html' %}
 
 				<!-- Banner -->
-					<section id="banner" class="major">
+<!--				style="background-color: rgba(0,0,0,0.2);"-->
+					<section  style="background-image:url('{%static 'images/cyBackgroundImage.jpg' %}');background-size: Cover ;" id="banner" class="major">
 						<div class="inner">
 							<header class="major">
-								<h1>群雁資訊檢索系統</h1>
+								<h1 style="color:black">群雁資訊檢索系統</h1>
 							</header>
 
 							<div class="content">
 
-								<h3>{{name}}<br/>
+								<h3 style="color:black">{{name}}<br/>
 
 									{{amwayMember}}
 									<br/>
 									剩餘點數:{{UserAccountChainYen.point}}
 
 								</h3>
-								<p>歡迎回家<br/>
+								<p style="color:black">歡迎回家<br/>
 									Welcome home.</p>
 
 								<ul class="actions">
-									<li><a href="#one" class="button next scrolly">開始</a></li>
+									<li ><a style="color:black;box-shadow: inset 0 0 0 2px #000000;" href="#one" class="button next scrolly" >開始</a></li>
 								</ul>
 							</div>
 

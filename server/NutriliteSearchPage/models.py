@@ -24,6 +24,8 @@ class fileDataInfo(models.Model):
     point = models.IntegerField(verbose_name='耗費點數')
     permissionsLevel = models.IntegerField(verbose_name='權限等級')
     DBClass = models.ForeignKey("DBClassInfo",verbose_name='資料庫類別',on_delete=models.PROTECT)
+    downloadAble = models.BooleanField(verbose_name='是否可以下載')
+
 #資料庫類別對應表
 class DBClassInfo(models.Model):
 
@@ -57,7 +59,7 @@ class fileDataKeywords(models.Model):
 class personalFileData(models.Model):
     fileDataID = models.ForeignKey('fileDataInfo',on_delete=models.CASCADE,verbose_name='對應的資料ID')
     ownerAccount = models.ForeignKey('userlogin.UserAccountInfo',on_delete=models.CASCADE,verbose_name='對應的帳號')
-    exchangeDate = models.DateField(verbose_name='資料兌換日期',default=timezone.now)
+    exchangeDate = models.DateTimeField(verbose_name='資料兌換日期')
     expiryDate = models.DateField(verbose_name='資料兌換時效到期日',null=True)
     costPoint = models.IntegerField(verbose_name='花費點數')
     waterCreateReady = models.BooleanField(default=0,verbose_name='浮水印是否完成')
@@ -66,7 +68,7 @@ class personalFileData(models.Model):
 class personalExchangeFileLog(models.Model):
     fileDataID = models.ForeignKey('fileDataInfo', on_delete=models.CASCADE, verbose_name='對應的資料ID')
     ownerAccount = models.ForeignKey('userlogin.UserAccountInfo', on_delete=models.CASCADE, verbose_name='對應的帳號')
-    exchangeDate = models.DateField(verbose_name='資料兌換日期',default=timezone.now)
+    exchangeDate = models.DateTimeField(verbose_name='資料兌換日期',default=timezone.now)
     costPoint = models.IntegerField(verbose_name='花費點數')
 
 #建立主類別表內容

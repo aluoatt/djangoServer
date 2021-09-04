@@ -10,6 +10,7 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		{% load static %}
+		<link href="{%static 'favicon.ico' %}" rel="shortcut icon">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
 		<link rel="stylesheet" href="{%static 'assets/css/main.css' %}" />
@@ -26,7 +27,7 @@
 
 				<!-- Menu -->
 					{% include 'baseMenu.html' %}
-
+				<p> </p>
 				<!-- Banner -->
 				{% include 'searchbar.html' %}
 				<!-- Note: The "styleN" class below should match that of the header element. -->
@@ -53,6 +54,7 @@
 
 								<div class="inner"  >
 									{% for fileData in fileDatas%}
+									<div style="background-color:rgb(47,53,83);">
 									<h3><u>{{fileData.title}}</u></h3>
 
 
@@ -83,8 +85,13 @@
 												</li>
 											</ul>
 										<hr>
+									</div>
 									{% endfor %}
+									{% if pageisNotNull is False %}
+									<p>沒有資料...</p>
+									{% endif %}
 								</div>
+
 
 							</section>
 							{% if pageisNotNull %}

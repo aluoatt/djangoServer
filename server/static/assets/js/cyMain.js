@@ -191,7 +191,7 @@ function auditFilter() {
               && amwayAwardsValue.toUpperCase().indexOf(amwayAwards_input) > -1
               && chainYenClassesValue.toUpperCase().indexOf(chainYenClasses_input) > -1
               && registerDDsValue.toUpperCase().indexOf(registerDDs_input) > -1
-              && registerDimsValue.toUpperCase().indexOf(registerDims_input) > -1
+              && registerDimsValue.toUpperCase().indexOf(registerDims_input.split("/")[0]) > -1
           ) {
               tr[i].style.display = "";
           } else {
@@ -237,7 +237,7 @@ function accountManagerFilter() {
                 && amwayAwardsValue.toUpperCase().indexOf(amwayAwards_input) > -1
                 && chainYenClassesValue.toUpperCase().indexOf(chainYenClasses_input) > -1
                 && registerDDsValue.toUpperCase().indexOf(registerDDs_input) > -1
-                && registerDimsValue.toUpperCase().indexOf(registerDims_input) > -1
+                && registerDimsValue.toUpperCase().indexOf(registerDims_input.split("/")[0]) > -1
                 && jobtitlesValue.toUpperCase().indexOf(jobtitles_input) > -1
                 && userValue.toUpperCase().indexOf(user_input) > -1
             ) {

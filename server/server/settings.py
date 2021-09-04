@@ -54,8 +54,10 @@ INSTALLED_APPS = [
     'NutriliteSearchPage',
     'userlogin',
     'personalInfoPage',
+    'managerPage',
+    'managerPage.templatetags',
     # plug-in
-    'django_celery_results'
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [

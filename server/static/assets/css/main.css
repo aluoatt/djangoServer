@@ -246,6 +246,7 @@ input, select, textarea {
 
 	blockquote {
 		border-left: solid 4px rgba(212, 212, 255, 0.1);
+
 		font-style: italic;
 		margin: 0 0 2em 0;
 		padding: 0.5em 0 0.5em 2em;
@@ -253,6 +254,7 @@ input, select, textarea {
 
 	code {
 		background: rgba(212, 212, 255, 0.035);
+
 		font-family: "Courier New", monospace;
 		font-size: 0.9em;
 		margin: 0 0.25em;
@@ -3415,7 +3417,8 @@ input, select, textarea {
 			display: block;
 			height: 100%;
 			left: 0;
-			opacity: 0.85;
+			/*banner透明度*/
+			opacity: 0.1;
 			position: absolute;
 			top: 0;
 			width: 100%;
@@ -3515,7 +3518,7 @@ input, select, textarea {
 		}
 
 		body.is-preload #banner:after {
-			opacity: 1.0;
+			opacity: 0.50;
 		}
 
 		body.is-preload #banner > .inner {

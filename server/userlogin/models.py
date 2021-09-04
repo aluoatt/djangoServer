@@ -1,17 +1,19 @@
 from django.db import models
-from django.contrib.auth.models import User, AbstractUser   # 匯入 AbstractUser 類
+from django.contrib.auth.models import User, AbstractUser  # 匯入 AbstractUser 類
 from django.contrib.auth.hashers import make_password
+
+
 # Create your models here.
 class Server(models.Model):
-
     class Meta:
         permissions = (
             ("can_see_register", "can_see_register"),
-            ("seeManagerMenuButton","seeManagerMenuButton"),
+            ("seeManagerMenuButton", "seeManagerMenuButton"),
             ("seeManagerAccountManagerPage", "seeManagerAccountManagerPage"),
             ("seeManagerAuditAccountPage", "seeManagerAuditAccountPage"),
-            ("ALLAuditManager","ALLAuditManager"),
-            ("CYPManager","CYPManager"),
+            ("seeManagerPointPage", "seeManagerPointPage"),
+            ("ALLAuditManager", "ALLAuditManager"),
+            ("CYPManager", "CYPManager"),
             ("CYLManager", "CYLManager"),
             ("CYSManager", "CYSManager"),
             ("CYZManager", "CYZManager"),
@@ -24,8 +26,11 @@ class Server(models.Model):
             ("CYWManager", "CYWManager"),
             ("CYTManager", "CYTManager"),
             ("CYHManager", "CYHManager"),
-
+            ("can_Change_DataPermission", "can_Change_DataPermission"),
+            ("can_Change_JobTitle", "can_Change_JobTitle"),
+            ("can_Change_class", "can_Change_class"),
         )
+
 
 class UserAccountInfo(AbstractUser):
     """
@@ -38,44 +43,50 @@ class UserAccountInfo(AbstractUser):
     phone = models.CharField(max_length=50, verbose_name='電話')
     dataPermissionsLevel = models.IntegerField(verbose_name='資料權限等級')
 
+
 class UserAccountAmwayInfo(models.Model):
-    UserAccountInfo = models.ForeignKey("UserAccountInfo",on_delete=models.CASCADE)
+    UserAccountInfo = models.ForeignKey("UserAccountInfo", on_delete=models.CASCADE)
     amwayNumber = models.IntegerField()
-    amwayAward = models.ForeignKey("amwayAwardInfo",on_delete=models.CASCADE, verbose_name='獎銜')
-    amwayDD = models.ForeignKey("registerDDandDimInfo",verbose_name='白金',on_delete=models.PROTECT)
+    amwayAward = models.ForeignKey("amwayAwardInfo", on_delete=models.CASCADE, verbose_name='獎銜')
+    amwayDD = models.ForeignKey("registerDDandDimInfo", verbose_name='白金', on_delete=models.PROTECT)
     # amwayDiamond = models.CharField(max_length=20, verbose_name='鑽石')
 
+
 class UserAccountChainYenInfo(models.Model):
-    UserAccountInfo = models.ForeignKey("UserAccountInfo",on_delete=models.CASCADE)
-    jobTitle = models.ForeignKey("chainYenJobTitleInfo",on_delete=models.CASCADE, verbose_name='職務')
-    classRoom = models.ForeignKey("chainYenClassInfo",on_delete=models.CASCADE, verbose_name='教室')
+    UserAccountInfo = models.ForeignKey("UserAccountInfo", on_delete=models.CASCADE)
+    jobTitle = models.ForeignKey("chainYenJobTitleInfo", on_delete=models.CASCADE, verbose_name='職務')
+    classRoom = models.ForeignKey("chainYenClassInfo", on_delete=models.CASCADE, verbose_name='教室')
     # babysitter = models.CharField(max_length=20, verbose_name='保母')
 
-    accountStatus = models.CharField(max_length=4, verbose_name='狀態') #停權
-    freezeDate = models.DateTimeField( verbose_name='停權到期日',null=True)
-    point = models.IntegerField( verbose_name='點數')
+    accountStatus = models.CharField(max_length=4, verbose_name='狀態')  # 停權
+    freezeDate = models.DateTimeField(verbose_name='停權到期日', null=True)
+    point = models.IntegerField(verbose_name='點數')
 
     EM = models.BooleanField(verbose_name='愛馬')
+
 
 class amwayAwardInfo(models.Model):
     rank = models.IntegerField()
     amwayAward = models.CharField(max_length=20, verbose_name='獎銜')
 
+
 class chainYenJobTitleInfo(models.Model):
     rank = models.IntegerField()
     jobTitle = models.CharField(max_length=20, verbose_name='職位')
+
 
 class chainYenClassInfo(models.Model):
     rank = models.IntegerField()
     ClassRoomName = models.CharField(max_length=20, verbose_name='教室名稱')
     ClassRoomCode = models.CharField(max_length=20, verbose_name='教室代碼')
 
+
 class registerDDandDimInfo(models.Model):
-    amwayAward = models.ForeignKey("amwayAwardInfo", verbose_name='獎銜',on_delete=models.PROTECT)#只有白金跟鑽石
-    amwayNumber = models.IntegerField( verbose_name='會員編號')
+    amwayAward = models.ForeignKey("amwayAwardInfo", verbose_name='獎銜', on_delete=models.PROTECT)  # 只有白金跟鑽石
+    amwayNumber = models.IntegerField(verbose_name='會員編號')
     amwayDiamond = models.CharField(max_length=20, verbose_name='上手鑽石')
     main = models.CharField(max_length=20, verbose_name='主直銷權')
-    sec = models.CharField(max_length=20, verbose_name='次直銷權',null=True)
+    sec = models.CharField(max_length=20, verbose_name='次直銷權', null=True)
 
 
 class TempUserAccountInfo(models.Model):
@@ -91,26 +102,29 @@ class TempUserAccountInfo(models.Model):
     password = models.CharField(max_length=128, verbose_name='密碼')
     email = models.CharField(max_length=254, verbose_name='信箱')
     dataPermissionsLevel = models.IntegerField(verbose_name='資料權限等級')
-    auditStatus = models.CharField(max_length=20, verbose_name='審核狀態')#審核中 #確認中
+    auditStatus = models.CharField(max_length=20, verbose_name='審核狀態')  # 審核中 #確認中
+
 
 class TempUserAccountAmwayInfo(models.Model):
-    UserAccountInfo = models.ForeignKey("TempUserAccountInfo",on_delete=models.CASCADE)
+    UserAccountInfo = models.ForeignKey("TempUserAccountInfo", on_delete=models.CASCADE)
     amwayNumber = models.IntegerField()
-    amwayAward = models.ForeignKey("amwayAwardInfo",on_delete=models.CASCADE, verbose_name='獎銜')
-    amwayDD = models.ForeignKey("registerDDandDimInfo",verbose_name='白金',on_delete=models.PROTECT)
+    amwayAward = models.ForeignKey("amwayAwardInfo", on_delete=models.CASCADE, verbose_name='獎銜')
+    amwayDD = models.ForeignKey("registerDDandDimInfo", verbose_name='白金', on_delete=models.PROTECT)
     # amwayDiamond = models.CharField(max_length=20, verbose_name='鑽石')
 
+
 class TempUserAccountChainYenInfo(models.Model):
-    UserAccountInfo = models.ForeignKey("TempUserAccountInfo",on_delete=models.CASCADE)
-    jobTitle = models.ForeignKey("chainYenJobTitleInfo",on_delete=models.CASCADE, verbose_name='職務')
-    classRoom = models.ForeignKey("chainYenClassInfo",on_delete=models.CASCADE, verbose_name='教室')
+    UserAccountInfo = models.ForeignKey("TempUserAccountInfo", on_delete=models.CASCADE)
+    jobTitle = models.ForeignKey("chainYenJobTitleInfo", on_delete=models.CASCADE, verbose_name='職務')
+    classRoom = models.ForeignKey("chainYenClassInfo", on_delete=models.CASCADE, verbose_name='教室')
     # babysitter = models.CharField(max_length=20, verbose_name='保母')
 
-    accountStatus = models.CharField(max_length=4, verbose_name='狀態') #停權
-    freezeDate = models.DateTimeField( verbose_name='停權到期日',null=True)
-    point = models.IntegerField( verbose_name='點數')
+    accountStatus = models.CharField(max_length=4, verbose_name='狀態')  # 停權
+    freezeDate = models.DateTimeField(verbose_name='停權到期日', null=True)
+    point = models.IntegerField(verbose_name='點數')
 
     EM = models.BooleanField(verbose_name='愛馬')
+
 
 class ConfirmString(models.Model):
     code = models.CharField(max_length=256)
@@ -121,10 +135,19 @@ class ConfirmString(models.Model):
         return self.user.name + ":   " + self.code
 
     class Meta:
-
         ordering = ["-c_time"]
         verbose_name = "確認碼"
         verbose_name_plural = "確認碼"
+
+#修改紀錄
+class AccountModifyHistory(models.Model):
+    UserAccountInfo = models.ForeignKey("userlogin.UserAccountInfo", on_delete=models.CASCADE)
+    modifier = models.CharField(verbose_name = "變更者" , max_length = 100)
+    recordDate = models.DateTimeField( verbose_name='修改日期')
+    modifyFielddName = models.CharField(verbose_name = "變更者" , max_length = 100)
+    originFieldData = models.CharField(verbose_name = "原始值" , max_length = 255)
+    RevisedData = models.CharField(verbose_name = "改後值" , max_length = 255)
+
 
 # from userlogin.models import amwayAwardInfo
 # r = amwayAwardInfo.objects.create(rank=0,amwayAward="暫無")

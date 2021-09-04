@@ -2,6 +2,7 @@ import json
 
 from django.http import HttpResponse
 from django.contrib.auth.models import Permission
+import traceback
 
 
 # Create your views here.
@@ -12,7 +13,7 @@ from django.db.models import Q
 from userlogin.models import UserAccountInfo, UserAccountChainYenInfo, chainYenJobTitleInfo
 from userlogin.models import chainYenClassInfo, registerDDandDimInfo, amwayAwardInfo, ConfirmString,UserAccountAmwayInfo
 from django.contrib.auth.decorators import permission_required
-from userlogin.models import TempUserAccountInfo, TempUserAccountAmwayInfo, TempUserAccountChainYenInfo
+from userlogin.models import TempUserAccountInfo, AccountModifyHistory, TempUserAccountChainYenInfo
 
 
 # Create your views here.
@@ -41,10 +42,13 @@ def send_email(email, code):
 
     subject = '來自群雁資訊檢索系統的確認信'
 
-    text_content = '''感謝您註冊自群雁資訊檢索系統！\
+    text_content = '''
+                    *此信件為系統發出信件，請勿直接回覆，感謝您的配合，謝謝!*
+                    感謝您註冊自群雁資訊檢索系統！
                     如果你看到這則消息，說明你的信箱不提供HTML連接功能，請洽會長或上手白金！'''
 
     html_content = '''
+                    <p>*此信件為系統發出信件，請勿直接回覆，感謝您的配合，謝謝!*<p>
                     <p>感謝您註冊自群雁資訊檢索系統</p>                  
                     <p>請點我認證註冊！</p>
                     <p><a href="{}/managerPages/userAccountConfirm?code={}" target=blank>確認連結</a></p>
@@ -82,7 +86,7 @@ def userAccountConfirm(request):
                             is_superuser=0,
                             is_staff=0,
                             is_active=1,
-                            dataPermissionsLevel=0,
+                            dataPermissionsLevel=1,
                             email=tr.email)
 
         r2 = UserAccountChainYenInfo(UserAccountInfo=r,
@@ -114,6 +118,8 @@ def userAccountConfirm(request):
             perm = Permission.objects.get(codename="seeManagerAccountManagerPage")
             userAcconut.user_permissions.add(perm)
             perm = Permission.objects.get(codename="seeManagerAuditAccountPage")
+            userAcconut.user_permissions.add(perm)
+            perm = Permission.objects.get(codename="can_Change_JobTitle")
             userAcconut.user_permissions.add(perm)
         tr.delete()
         confirm.delete()
@@ -189,7 +195,172 @@ def managerAccountManagerPage(request):
         for UserAccountAmway in UserAccountAmwayInfo.objects.filter(amwayDD=UserAccount.useraccountamwayinfo_set.first().amwayNumber):
             q2.children.append(("id", UserAccountAmway.UserAccountInfo.id))
     searchUserAccountInfo = UserAccountInfo.objects.filter(q2)
+
     return render(request, 'managerPages/managerAccountManagerPage.html', locals())
+
+
+#由管理者修改個人資料
+@permission_required('userlogin.seeManagerAccountManagerPage', login_url='/accounts/userlogin/')
+def managerAccountModify(request):
+    tag = "ManagerAuditAccountPage"
+
+    # 職務表
+    jobTitles = chainYenJobTitleInfo.objects.all()
+    # 獎銜表
+    amwayAwards = amwayAwardInfo.objects.all().order_by('rank')
+    # 教室表
+    chainYenClasses = chainYenClassInfo.objects.all().order_by('rank')
+    # 白金表
+    registerDDs = registerDDandDimInfo.objects.filter(amwayAward__rank__gte=15)
+    # 鑽石表
+    registerDims = registerDDandDimInfo.objects.filter(amwayAward__rank__gte=60)
+
+    TempUserAccountChainYen = TempUserAccountChainYenInfo.objects.all()
+    # print(TempUserAccount)
+    # kwargs = {}
+    # 台北
+    if not request.user.has_perm('userlogin.CYPManager'):
+        TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="台北")
+
+    if not request.user.has_perm('userlogin.CYLManager'):
+        TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="中壢")
+
+    if not request.user.has_perm('userlogin.CYSManager'):
+        TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="新竹")
+
+    return render(request, 'managerPages/managerAuditAccountManagerPage.html', locals())
+
+
+@permission_required('userlogin.seeManagerAccountManagerPage', login_url='/accounts/userlogin/')
+def modalAccountModifyPOST(request):
+    # AccountModifyHistory
+    try:
+        managerName = UserAccountInfo.objects.get(username=request.user).user
+        userid = json.loads(request.body.decode('utf-8'))["userid"]
+        user = json.loads(request.body.decode('utf-8'))["modal_user"]
+        phone = json.loads(request.body.decode('utf-8'))["phone"]
+        # amwayNumber = json.loads(request.body.decode('utf-8'))["modal_amwayNumber"]
+        gender = json.loads(request.body.decode('utf-8'))["gander"]
+        if request.user.has_perm('userlogin.can_Change_DataPermission'):
+            dataPermissionsLevel = json.loads(request.body.decode('utf-8'))["modal_dataPermissionsLevel"]
+
+        if request.user.has_perm('userlogin.can_Change_JobTitle'):
+            chainYenJobTitle = json.loads(request.body.decode('utf-8'))["chainYenJobTitle"]
+
+
+        if request.user.has_perm('userlogin.can_Change_class'):
+            classRoom = json.loads(request.body.decode('utf-8'))["classRoom"]
+
+        amwayAward = json.loads(request.body.decode('utf-8'))["modal_amwayAward"]
+        amwayDD = json.loads(request.body.decode('utf-8'))["amwayDD"]
+
+        r = UserAccountInfo.objects.get(id=int(userid))
+        if r.user != user:
+
+            AccountModifyHistory(UserAccountInfo=r,
+                                 modifier = managerName,
+                                 recordDate = datetime.datetime.now(),
+                                 modifyFielddName = "姓名",
+                                 originFieldData = r.user,
+                                 RevisedData = user).save()
+            r.user = user
+
+        if r.gender != gender:
+            AccountModifyHistory(UserAccountInfo=r,
+                                 modifier=managerName,
+                                 recordDate=datetime.datetime.now(),
+                                 modifyFielddName="性別",
+                                 originFieldData=r.gender,
+                                 RevisedData=gender).save()
+            r.gander = gender
+
+        if r.phone != phone:
+            AccountModifyHistory(UserAccountInfo=r,
+                                 modifier=managerName,
+                                 recordDate=datetime.datetime.now(),
+                                 modifyFielddName="電話",
+                                 originFieldData=r.phone,
+                                 RevisedData=phone).save()
+            r.phone = phone
+
+        if request.user.has_perm('userlogin.can_Change_DataPermission'):
+
+            if r.dataPermissionsLevel != int(dataPermissionsLevel):
+                AccountModifyHistory(UserAccountInfo=r,
+                                     modifier=managerName,
+                                     recordDate=datetime.datetime.now(),
+                                     modifyFielddName="資料權限等級",
+                                     originFieldData=r.dataPermissionsLevel,
+                                     RevisedData=int(dataPermissionsLevel)).save()
+
+                r.dataPermissionsLevel = int(dataPermissionsLevel)
+
+        r2 = UserAccountChainYenInfo.objects.get(UserAccountInfo = int(userid))
+        if request.user.has_perm('userlogin.can_Change_JobTitle'):
+            odata = chainYenJobTitleInfo.objects.get(jobTitle=chainYenJobTitle)
+            if r2.jobTitle.jobTitle != odata.jobTitle:
+                AccountModifyHistory(UserAccountInfo=r,
+                                     modifier=managerName,
+                                     recordDate=datetime.datetime.now(),
+                                     modifyFielddName="職務",
+                                     originFieldData=r2.jobTitle.jobTitle,
+                                     RevisedData=odata.jobTitle).save()
+
+                r2.jobTitle = odata
+
+
+
+        if request.user.has_perm('userlogin.can_Change_class'):
+
+
+            odata = chainYenClassInfo.objects.get(ClassRoomName = classRoom)
+            if r2.classRoom.ClassRoomName != odata.ClassRoomName:
+                AccountModifyHistory(UserAccountInfo=r,
+                                     modifier=managerName,
+                                     recordDate=datetime.datetime.now(),
+                                     modifyFielddName="教室",
+                                     originFieldData=r2.classRoom.ClassRoomName,
+                                     RevisedData=odata.ClassRoomName).save()
+
+                r2.classRoom = odata
+
+        r3 = UserAccountAmwayInfo.objects.get(UserAccountInfo=int(userid))
+
+        odata = amwayAwardInfo.objects.get(amwayAward = amwayAward)
+        if r3.amwayAward.amwayAward != odata.amwayAward:
+            AccountModifyHistory(UserAccountInfo=r,
+                                 modifier=managerName,
+                                 recordDate=datetime.datetime.now(),
+                                 modifyFielddName="教室",
+                                 originFieldData=r3.amwayAward.amwayAward,
+                                 RevisedData=odata.amwayAward).save()
+
+            r3.amwayAward = amwayAwardInfo.objects.get(amwayAward = amwayAward)
+
+        odata = registerDDandDimInfo.objects.get(amwayNumber=int(amwayDD))
+        if r3.amwayDD.amwayNumber != odata.amwayNumber:
+            AccountModifyHistory(UserAccountInfo=r,
+                                 modifier=managerName,
+                                 recordDate=datetime.datetime.now(),
+                                 modifyFielddName="教室",
+                                 originFieldData=r3.amwayDD.amwayNumber,
+                                 RevisedData=odata.amwayNumber).save()
+
+            r3.amwayDD = odata
+
+
+        r.save()
+        r2.save()
+        r3.save()
+    except:
+        traceback.print_exc()
+        response_data={}
+        response_data["status"] = False
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+    response_data = {}
+    response_data["status"] = True
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
 @permission_required('userlogin.seeManagerAuditAccountPage', login_url='/accounts/userlogin/')
@@ -253,6 +424,8 @@ def managerAuditAccountPage(request):
     return render(request, 'managerPages/managerAuditAccountManagerPage.html', locals())
 
 
+
+
 @permission_required('userlogin.seeManagerAuditAccountPage', login_url='/accounts/userlogin/')
 def removeAuditAccount(request):
     response_data = {}
@@ -295,3 +468,5 @@ def AcceptAuditAccount(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+

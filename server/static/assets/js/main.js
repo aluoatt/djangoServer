@@ -197,7 +197,7 @@
 				$banner.scrollex({
 					bottom:		$header.height() + 10,
 					terminate:	function() { $header.removeClass('alt'); },
-					enter:		function() { $header.addClass('alt'); },
+					// enter:		function() { $header.addClass('alt'); },
 					leave:		function() { $header.removeClass('alt'); $header.addClass('reveal'); }
 				});
 
