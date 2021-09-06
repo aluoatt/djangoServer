@@ -30,7 +30,7 @@
 	<body class="is-preload">
 
 		<!-- Wrapper -->
-			<div id="wrapper">
+			<div id="wrapper" class="container">
 
 				<!-- Header -->
 					{% include 'baseHeader.html' %}
@@ -49,9 +49,10 @@
 						<!-- One -->
 							<section id="one">
 								<div class="inner">
-									<header class="major">
+									<header class="">
 										<h2>{{targetFile.title}}</h2>
 									</header>
+									<hr>
 									<p>{{targetFile.describe}}</p>
 									<input type="hidden" id="fileID" value = "{{targetFile.id}}">
 									<hr>
@@ -92,7 +93,7 @@
 										</video>
 
 										{% else %}
-										<div id="pdf_viewer"></div>
+										<div id="pdf_viewer_newer" class="container"></div>
 										{% endif %}
 									{% endif %}
 								</div>
@@ -219,8 +220,14 @@
 												canvasContext: context,
 												viewport: viewport
 											};
-											page.render(renderContext);
-											document.getElementById('pdf_viewer').appendChild(canvas);
+											var task = page.render(renderContext);
+											task.promise.then(() => {
+												var pdfImg = document.createElement("img");
+												pdfImg.src = canvas.toDataURL("image/jpeg");
+												pdfImg.classList.add("img-fluid");
+												document.getElementById('pdf_viewer_newer').appendChild(pdfImg);
+											})
+
 										});
 									}
 								})
