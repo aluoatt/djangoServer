@@ -240,7 +240,7 @@ def modalAccountModifyPOST(request):
         user = json.loads(request.body.decode('utf-8'))["modal_user"]
         phone = json.loads(request.body.decode('utf-8'))["phone"]
         # amwayNumber = json.loads(request.body.decode('utf-8'))["modal_amwayNumber"]
-        gender = json.loads(request.body.decode('utf-8'))["gander"]
+        gender = json.loads(request.body.decode('utf-8'))["gender"]
         if request.user.has_perm('userlogin.can_Change_DataPermission'):
             dataPermissionsLevel = json.loads(request.body.decode('utf-8'))["modal_dataPermissionsLevel"]
 
@@ -266,13 +266,14 @@ def modalAccountModifyPOST(request):
             r.user = user
 
         if r.gender != gender:
+            print(gender)
             AccountModifyHistory(UserAccountInfo=r,
                                  modifier=managerName,
                                  recordDate=datetime.datetime.now(),
                                  modifyFielddName="性別",
                                  originFieldData=r.gender,
                                  RevisedData=gender).save()
-            r.gander = gender
+            r.gender = gender
 
         if r.phone != phone:
             AccountModifyHistory(UserAccountInfo=r,

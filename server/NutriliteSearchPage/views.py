@@ -38,11 +38,13 @@ def keywordSearchPage(request):
 
     if keywords is None:
         keywords = ""
+
     keywords_list = keywords.split(" ")
     totalKeywordNum = len(keywords_list)
 
     q1 = Q()
     q1.connector = 'OR'
+
     for keyword in keywords_list:
         q1.children.append(("keyword__contains", keyword))
 
@@ -79,11 +81,18 @@ def keywordSearchPage(request):
         #     hasKeywordData = True
         # else:
         #     q2.children.append(("id", -1))
-        fileDatas = fileDataInfo.objects.filter(
-            occurrenceDate__gte=limDate,
-            visible=1,
-            permissionsLevel__lte=dataPermissionsLevel
-        ).filter(q2).order_by('occurrenceDate')
+        if len(q2) > 0:
+            fileDatas = fileDataInfo.objects.filter(
+                occurrenceDate__gte=limDate,
+                visible=1,
+                permissionsLevel__lte=dataPermissionsLevel
+            ).filter(q2).order_by('occurrenceDate')
+        else:
+            fileDatas = fileDataInfo.objects.filter(
+                occurrenceDate__gte=limDate,
+                visible=1,
+                permissionsLevel__lte=-1
+            )
     else:
 
         fileDatas = fileDataInfo.objects.filter(
