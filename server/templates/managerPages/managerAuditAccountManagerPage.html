@@ -181,7 +181,10 @@
                 　　
                 <th>會員編號</th>
                 　　
-                <th>帳號</th>
+<!--                <th>帳號</th>-->
+
+                <th>信箱</th>
+
                 <th>性別</th>
                 　　
                 <th>電話</th>
@@ -194,7 +197,7 @@
                 　　
                 <th>上手白金</th>
                 　　
-                <th>上手鑽石</th>
+<!--                <th>上手鑽石</th>-->
                 　　
                 <th>狀態</th>
                 　　
@@ -214,8 +217,11 @@
                 <td id = "{{AccountChainYen.UserAccountInfo.id}}_amwayNumber" data-th="會員編號">
                     {{AccountChainYen.UserAccountInfo.tempuseraccountamwayinfo_set.first.amwayNumber}}
                 </td>
-                <td id = "{{AccountChainYen.UserAccountInfo.id}}_username" data-th="帳號">
-                    {{AccountChainYen.UserAccountInfo.username}}
+<!--                <td id = "{{AccountChainYen.UserAccountInfo.id}}_username" data-th="帳號">-->
+<!--                    {{AccountChainYen.UserAccountInfo.username}}-->
+<!--                </td>-->
+                <td id = "{{AccountChainYen.UserAccountInfo.id}}_email"  data-th="信箱">
+                    {{AccountChainYen.UserAccountInfo.email}}
                 </td>
                 <td id = "{{AccountChainYen.UserAccountInfo.id}}_gender"  data-th="性別">
                     {{AccountChainYen.UserAccountInfo.gender}}
@@ -241,9 +247,9 @@
                     {{AccountChainYen.UserAccountInfo.tempuseraccountamwayinfo_set.first.amwayDD.main}}
                 </td>
                     　　
-                <td  id = "{{AccountChainYen.UserAccountInfo.id}}_amwayDiamond" data-th="上手鑽石">
-                    {{registerDims|getdimName:AccountChainYen.UserAccountInfo.tempuseraccountamwayinfo_set.first.amwayDD.amwayDiamond}}
-                </td>
+<!--                <td  id = "{{AccountChainYen.UserAccountInfo.id}}_amwayDiamond" data-th="上手鑽石">-->
+<!--                    {{registerDims|getdimName:AccountChainYen.UserAccountInfo.tempuseraccountamwayinfo_set.first.amwayDD.amwayDiamond}}-->
+<!--                </td>-->
                     　　
                 <td id = "{{AccountChainYen.UserAccountInfo.id}}_auditStatus" data-th="狀態">
                     {{AccountChainYen.UserAccountInfo.auditStatus}}

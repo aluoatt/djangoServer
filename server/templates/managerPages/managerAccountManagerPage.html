@@ -328,8 +328,8 @@
               <input id = "modal_amwayNumber" disabled style="font-size:12px;" type="text">
           </label>
           <label id = "modal_gender" style="color: black"><mark style="color: red">性別:</mark>
-                <select  style="font-size:12px;border: 1px solid #ccc;" id="gander" name="gander">
-                        <option id="男" value="男"  >男</option>
+                <select  style="font-size:12px;border: 1px solid #ccc;" id="gender" name="gender">
+                        <option id="男" value="男" >男</option>
                         <option id="女" value="女" >女</option>
                 </select>
           </label>
@@ -418,6 +418,7 @@
 <script src="{%static 'assets/js/breakpoints.min.js' %}"></script>
 <script src="{%static 'assets/js/util.js' %}"></script>
 <script src="{%static 'assets/js/main.js' %}"></script>
+<script src="{%static 'assets/js/cyMain.js' %}"></script>
 <!--<script src="{%static 'assets/js/cyMain.js' %}"></script>-->
 <script src="{%static 'assets/js/viewPageAjax.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
@@ -431,16 +432,17 @@ function accountManagerConfirm(id){
     document.getElementById("modal_user").value = document.getElementById(id+"_user").innerHTML.trim()
 
     document.getElementById("modal_amwayNumber").value = document.getElementById(id+"_amwayNumber").innerHTML.trim()
+    console.log(document.getElementById(id+"_gender").innerHTML.trim())
+    if (document.getElementById(id+"_gender").innerHTML.trim() == "男"){
 
-    if (document.getElementById(id+"_gender").value == "男"){
-
-        document.getElementById("男").checked=true;
-        document.getElementById("女").checked=false;
+        document.getElementById("男").selected=true;
+        document.getElementById("女").selected=false;
 
     }
     else{
-        document.getElementById("女").checked=true;
-        document.getElementById("男").checked=false;
+
+        document.getElementById("女").selected=true;
+        document.getElementById("男").selected=false;
     }
     document.getElementById("modal_phone").value = document.getElementById(id+"_phone").innerHTML.trim()
     {% for jobtitle in jobTitles %}
@@ -490,7 +492,7 @@ function modifySubmit(csrftoken){
     var dataJSON = {"userid":userid,
                     "modal_user":$('#modal_user').val(),
                     "modal_amwayNumber":$('#modal_amwayNumber').val(),
-                    "gander":$('#gander').val(),
+                    "gender":$('#gender').val(),
                     "phone":$('#modal_phone').val(),
                     "chainYenJobTitle":$('#chainYenJobTitle').val(),
                     "modal_amwayAward":$('#modal_amwayAward').val(),
@@ -513,7 +515,7 @@ function modifySubmit(csrftoken){
         if (returnData.status){
             document.getElementById(userid+"_user").innerHTML = $('#modal_user').val();
             document.getElementById(userid+"_amwayNumber").innerHTML = $('#modal_amwayNumber').val();
-            document.getElementById(userid+"_gender").innerHTML = $('#gander').val();
+            document.getElementById(userid+"_gender").innerHTML = $('#gender').val();
             document.getElementById(userid+"_phone").innerHTML = $('#modal_phone').val();
             document.getElementById(userid+"_jobTitle").innerHTML = $('#chainYenJobTitle').val();
             document.getElementById(userid+"_amwayAward").innerHTML = $('#modal_amwayAward').val();
