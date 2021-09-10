@@ -405,9 +405,9 @@ def returnPDF(request, fileId):
                 return stream_video(request, backaddress + '/' + resume.first().waterMarkPath)
             else:
 
-                fsock = open(backaddress + '/' + resume.first().waterMarkPath, 'rb')
+                # fsock = open(backaddress + '/' + resume.first().waterMarkPath, 'rb')
 
-                response = FileResponse(fsock, content_type='application/pdf', filename="pdf.pdf")
+                response = FileResponse(open(backaddress + '/' + resume.first().waterMarkPath, 'rb'), content_type='application/pdf', filename="pdf.pdf")
         except:
             r = resume.first()
             r.waterCreateReady = False
