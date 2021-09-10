@@ -93,7 +93,7 @@
             }
         </style>
     </head>
-    <body class="is-preload">
+    <body class="is-preload" style="background-size: Cover;background:url('{%static 'images/login底圖.png' %}');">
 
         <!-- Wrapper -->
         <div id="wrapper">
@@ -121,7 +121,7 @@
                                 <th>剩餘點數</th>
                             </tr>
                             {% for history in pHistory %}
-                            <tr class="table-warning text-dark font-weight-bold">
+                            <tr class="text-dark font-weight-bold" style=" border-bottom: 1px solid black;">
                                 <td id = "history_modifier" data-th="變更者">
                                     {{history.modifier}}
                                 </td>
