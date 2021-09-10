@@ -528,3 +528,26 @@ def stream_video(request, path):
         resp['Content-Length'] = str(size)
     resp['Accept-Ranges'] = 'bytes'
     return resp
+
+#排程
+from apscheduler.schedulers.background import BackgroundScheduler
+from django_apscheduler.jobstores import DjangoJobStore, register_events,register_job
+import time
+import os
+import traceback
+scheduler = BackgroundScheduler()
+scheduler.add_jobstore(DjangoJobStore(),"default")
+# @register_job(scheduler,"interval",seconds=10,id="clear_datafile_inVPS_job",replace_existing=True)
+@register_job(scheduler,"cron",hour=2,minute=30,id="clear_datafile_inVPS_job",replace_existing=True)
+def clear_datafile_inVPS_job():
+    for existDatainVPS in personalFileData.objects.filter(waterCreateReady = 1):
+        # 1814400
+        if os.path.isfile(backaddress + '/' + existDatainVPS.waterMarkPath):
+            if (time.time() - os.path.getctime(backaddress+'/'+existDatainVPS.waterMarkPath) ) > 1814400: #創建超過21天
+                try:
+
+                    os.remove(backaddress+'/'+existDatainVPS.waterMarkPath)
+                except:
+                    logging.error(traceback.print_exc())
+register_events(scheduler)
+scheduler.start()

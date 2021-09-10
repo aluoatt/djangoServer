@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_apscheduler',
     # Add our new application
     'searchfile',
     'NutriliteSearchPage',
@@ -187,3 +188,5 @@ CLASS_CHARIMAN_MANAGER_DICT = {
             "台東": "CYTManager",
             "澎湖": "CYHManager"
 }
+
+
