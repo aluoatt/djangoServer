@@ -1,4 +1,4 @@
-<section id="one" style="background-color:steelblue;">
+<!--<section id="one" style="background-color:steelblue;">-->
 
     <div class="inner"  >
         <header class="major">
@@ -7,54 +7,54 @@
         <ul class="list-inline">
             <li >
                 {% if selectTag == "AmwayHome" %}
-                    <a href="#" class="primary" style="background-color:grey;">AmwayHome</a>
+                    <a class="classActivate" href="#" class="primary" style="background-color:grey;">AmwayHome</a>
                 {% else %}
-                    <a href="{% url 'NutriliteSearchPage' '其他' 'Amway Home' %}">Amway Home</a>
+                    <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '其他' 'Amway Home' %}">Amway Home</a>
                 {% endif %}
             </li>
             <li>
                 {% if selectTag == "G&H" %}
-                    <a href="#" class="primary" style="background-color:grey;">G&H</a>
+                    <a href="#" class="classActivate" class="primary" style="background-color:grey;">G&H</a>
                 {% else %}
-                    <a href="{% url 'NutriliteSearchPage' '其他' 'G&H' %}" >G&H</a>
+                    <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '其他' 'G&H' %}" >G&H</a>
                 {% endif %}
             </li>
 
             <li>
 
                 {% if selectTag == "Satinique" %}
-                    <a href="#" class="primary" style="background-color:grey;">Satinique</a>
+                    <a class="classActivate" href="#" class="primary" >Satinique</a>
                 {% else %}
-                    <a href="{% url 'NutriliteSearchPage' '其他' 'Satinique' %}" >Satinique</a>
+                    <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '其他' 'Satinique' %}" >Satinique</a>
                 {% endif %}
 
             </li>
 
             <li>
                 {% if selectTag == "Glister" %}
-                    <a href="#" class="primary" style="background-color:grey;">Glister</a>
+                    <a class="classActivate" href="#" class="primary" >Glister</a>
                 {% else %}
-                    <a href="{% url 'NutriliteSearchPage' '其他' 'Glister' %}">Glister</a>
+                    <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '其他' 'Glister' %}">Glister</a>
                 {% endif %}
 
             </li>
             <li>
                 {% if selectTag == "XS系列" %}
-                    <a href="#" class="primary" style="background-color:grey;">XS 系列</a>
+                    <a class="classActivate" href="#" class="primary" >XS 系列</a>
                 {% else %}
-                    <a href="{% url 'NutriliteSearchPage' '其他' 'XS 系列' %}">XS 系列</a>
+                    <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '其他' 'XS 系列' %}">XS 系列</a>
                 {% endif %}
 
             </li>
             <li >
                 {% if selectTag == "其他" %}
-                    <a href="#" class="primary" style="background-color:grey;">其他</a>
+                    <a class="classActivate" href="#" class="primary" >其他</a>
                 {% else %}
-                    <a href="{% url 'NutriliteSearchPage' '其他' '其他' %}">其他</a>
+                    <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '其他' '其他' %}">其他</a>
                 {% endif %}
 
             </li>
         </ul>
     </div>
 
-</section>
+<!--</section>-->

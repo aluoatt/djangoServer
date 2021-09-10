@@ -1,57 +1,57 @@
 {% load static %}
-<section id="" style="background-color:rgba(131 ,196,218,0.8);">
 
-    <ul class="inner"  >
+<!--<section id="" style="background-image:url('{%static 'images/標題底圖.png'  %}'); background-size: cover; background-repeat: no-repeat; ">-->
+    <div class="inner "  >
         <header class="major">
             <h2>營養</h2>
         </header>
-        <ul class="list-inline">
+        <ul class="list-inline"  >
             <li >
                 {% if selectTag == "基礎營養" %}
-                    <a href="#" class="primary" style="background-color:grey;">基礎營養</a>
+                    <a class="classActivate" href="#" class="primary">基礎營養</a>
                 {% else %}
-                    <a href="{% url 'NutriliteSearchPage' '營養' '基礎營養' %}">基礎營養</a>
+                    <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '營養' '基礎營養' %}">基礎營養</a>
                 {% endif %}
             </li>
             <li>
                 {% if selectTag == "曲線管理" %}
-                    <a href="#" class="primary" style="background-color:grey;">曲線管理</a>
+                    <a class="classActivate" href="#" class="primary" >曲線管理</a>
                 {% else %}
-                    <a href="{% url 'NutriliteSearchPage' '營養' '曲線管理' %}" >曲線管理</a>
+                    <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '營養' '曲線管理' %}" >曲線管理</a>
                 {% endif %}
             </li>
 
             <li>
 
                 {% if selectTag == "機能性營養" %}
-                    <a href="#" class="primary" style="background-color:grey;">機能性營養</a>
+                    <a class="classActivate" href="#" class="primary" >機能性營養</a>
                 {% else %}
-                    <a href="{% url 'NutriliteSearchPage' '營養' '機能性營養' %}" >機能性營養</a>
+                    <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '營養' '機能性營養' %}" >機能性營養</a>
                 {% endif %}
 
             </li>
 
             <li>
                 {% if selectTag == "疾病" %}
-                    <a href="#" class="primary" style="background-color:grey;">疾病</a>
+                    <a class="classActivate" href="#" class="primary" >疾病</a>
                 {% else %}
-                    <a href="{% url 'NutriliteSearchPage' '營養' '疾病' %}">疾病</a>
+                    <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '營養' '疾病' %}">疾病</a>
                 {% endif %}
 
             </li>
             <li>
                 {% if selectTag == "紐崔萊農場" %}
-                    <a href="#" class="primary" style="background-color:grey;">紐崔萊農場</a>
+                    <a class="classActivate" href="#" class="primary" >紐崔萊農場</a>
                 {% else %}
-                    <a href="{% url 'NutriliteSearchPage' '營養' '紐崔萊農場' %}">紐崔萊農場</a>
+                    <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '營養' '紐崔萊農場' %}">紐崔萊農場</a>
                 {% endif %}
 
             </li>
             <li >
                 {% if selectTag == "其他" %}
-                    <a href="#" class="primary" style="background-color:grey;">其他</a>
+                    <a class="classActivate" href="#" class="primary" >其他</a>
                 {% else %}
-                    <a href="{% url 'NutriliteSearchPage' '營養' '其他' %}">其他</a>
+                    <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '營養' '其他' %}">其他</a>
                 {% endif %}
 
             </li>

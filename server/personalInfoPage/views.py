@@ -3,6 +3,7 @@ from NutriliteSearchPage.models import fileDataInfo,mainClassInfo,secClassInfo,p
 from userlogin.models import UserAccountInfo,UserAccountChainYenInfo
 from NutriliteSearchPage.utils.page import Pagination
 from pointManage.models import pointHistory
+from django.contrib.auth.hashers import make_password
 # Create your views here.
 
 def personalInfoHomePage(request,selectTag):
@@ -52,3 +53,31 @@ def personalInfoPointPage(request):
     pHistory = pointHistory.objects.filter(UserAccountInfo = userAccountInfo)
 
     return render(request, 'personalInfoPages/personalInfoPointPage.html', locals())
+
+
+
+def changePasswordPage(request):
+
+    return render(request, 'personalInfoPages/changePasswordPage.html', locals())
+
+
+def changePasswordOption(request):
+    password1 = request.POST.get("id_password1")
+    password2 = request.POST.get("id_password2")
+    password_old = request.POST.get("id_password_old")
+
+    if password1 == password2:
+        userAccountInfo = UserAccountInfo.objects.get(username=request.user.username)
+        if userAccountInfo.password == make_password(password1):
+            userAccountInfo.password = make_password(password_old)
+            # userAccountInfo.save()
+            message = "成功修改密碼，五秒後跳轉到登入畫面"
+        else:
+            message = "修改失敗，五秒後跳轉到登入畫面"
+    else:
+        message = "修改失敗，五秒後跳轉到登入畫面"
+
+    # make_password(id_password1)
+    #
+
+    return render(request, 'personalInfoPages/changePasswordOptionResult.html', locals())
