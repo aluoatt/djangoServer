@@ -4,12 +4,13 @@
 	html5up.net | @ajlkn
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
-<html>
+{% load static %}
+<html >
 	<head>
 		<title>ChainYen System</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		{% load static %}
+
 		<link href="{%static 'favicon.ico' %}" rel="shortcut icon">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
@@ -21,25 +22,51 @@
 			.list-inline{display:block;}
             .list-inline li{display:inline-block;}
             .list-inline li:after{content:'|'; margin:0 10px;}
+
+			.searchBar-inline{display:block;}
+            .searchBar-inline li{display:inline-block;}
+            /*.searchBar-inline li:after{content:'|'; margin:0 10px;}*/
+
+			p {color:black;}
+			b {color:black;}
+			.button {
+				border: 1px solid black;
+				color:black;
+			}
+			.page{
+				color:black;
+				background-color:transparent;
+			}
+			.classActivate {
+				background-color:black;
+				color:white;
+			}
+			.classNoActivate{
+				background-color:white;
+				color:black;
+			}
+
 		</style>
 	</head>
-	<body class="is-preload">
+	<body class="is-preload" >
 
 		<!-- Wrapper -->
-			<div id="wrapper">
+			<div id="wrapper" >
 
 				<!-- Header -->
 					{% include 'baseHeader.html' %}
 
 				<!-- Menu -->
 					{% include 'baseMenu.html' %}
-				<p> </p>
+
 				<!-- Banner -->
 				{% include 'searchbar.html' %}
 				<!-- Note: The "styleN" class below should match that of the header element. -->
 
 				<!-- Main -->
-					<div id="main">
+					<div id="main" >
+						<section id="" style="background-image:url('{%static 'images/標題底圖.png'  %}'); background-size: cover; background-repeat: no-repeat; ">
+
 						{% if topic == "營養" %}
 							{% include 'searchPagesHeader/nutSearchPageHead.html' %}
 						{% elif topic == "美容" %}
@@ -55,13 +82,15 @@
 						{%elif topic == "總部會議/活動" %}
 							{% include 'searchPagesHeader/meetingSearchPageHead.html' %}
 						{% endif %}
-
-							<section id="two"  class="spotlights">
+							</section>
+							<section id="two"  class="spotlights" style="background-size: Cover;background:url('{%static 'images/login底圖.png' %}');">
 
 								<div class="inner"  >
 									{% for fileData in fileDatas%}
-									<div style="background-color:rgb(47,53,83);">
-									<h3><u>{{fileData.title}}</u></h3>
+
+<!--									style="background-color:rgb(231,209,179);">-->
+									<div style=" border-bottom: 1px solid black;">
+									<h3 ><b>{{fileData.title}}</b></h3>
 
 
 											<p>{{fileData.describe}}</p>
@@ -75,7 +104,7 @@
 												<li>
 
 														{% if fileData.id in ownFileList %}
-														<button type="button" class="button" onclick="searPageViewFileSubmit({{ fileData.id }})">
+														<button  type="button" class="button" onclick="searPageViewFileSubmit({{ fileData.id }})">
 															  點選觀看
 														</button>
 
@@ -96,11 +125,8 @@
 									{% if pageisNotNull is False %}
 									<p>沒有資料...</p>
 									{% endif %}
-								</div>
-
-
-							</section>
-							{% if pageisNotNull %}
+								{% if pageisNotNull %}
+									<br>
 							<div class="dataTables_paginate paging_simple_numbers pull-right inner">
 									<ul class="pagination ">
 										{{ pagination.page_html|safe }}
@@ -109,6 +135,10 @@
 							</div>
 							{% endif %}
 
+								</div>
+
+
+							</section>
 
 						<!-- Two -->
 

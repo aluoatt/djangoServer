@@ -205,26 +205,28 @@
                 　　
                 <th>會員編號</th>
                 　　
-                <th>性別</th>
+<!--                <th>性別</th>-->
                 　　
-                <th>電話</th>
+<!--                <th>電話</th>-->
                 　　
-                <th>職務</th>
+<!--                <th>職務</th>-->
                 　　
-                <th>獎銜</th>
+<!--                <th>獎銜</th>-->
                 　　
                 <th>教室</th>
                 　　
                 <th>上手白金</th>
                 　　
-                <th>上手鑽石</th>
+<!--                <th>上手鑽石</th>-->
                 　　
                 　　
                 <th>點數</th>
-                　　
+
+            　　 <th>狀態</th>
+
                 <th>修改</th>
                 　　
-                <th>修改歷史紀錄</th>
+                <th>修改紀錄</th>
                 　
                 </tr>
                 {% for UserAccount in searchUserAccountInfo %}
@@ -238,19 +240,19 @@
                     {{UserAccount.useraccountamwayinfo_set.first.amwayNumber}}
                 </td>
                 　　
-                <td id = "{{UserAccount.id}}_gender" data-th="性別">
+                <td id = "{{UserAccount.id}}_gender" style="display:none" data-th="性別">
                     {{UserAccount.gender}}
                 </td>
                 　　
-                <td id = "{{UserAccount.id}}_phone" data-th="電話">
+                <td id = "{{UserAccount.id}}_phone" style="display:none" data-th="電話">
                     {{UserAccount.phone}}
                 </td>
                 　　
-                <td id = "{{UserAccount.id}}_jobTitle" data-th="職務">
+                <td id = "{{UserAccount.id}}_jobTitle" style="display:none" data-th="職務">
                     {{UserAccount.useraccountchainyeninfo_set.first.jobTitle.jobTitle}}
                 </td>
                 　　
-                <td id = "{{UserAccount.id}}_amwayAward" data-th="獎銜">
+                <td id = "{{UserAccount.id}}_amwayAward" style="display:none" data-th="獎銜">
                      {{UserAccount.useraccountamwayinfo_set.first.amwayAward.amwayAward}}
                 </td>
                     　　
@@ -260,18 +262,26 @@
                     　　
                 <td id = "{{UserAccount.id}}_amwayDD" data-th="上手白金">
                     {{UserAccount.useraccountamwayinfo_set.first.amwayDD.main}}
-
                 </td>
+
                 <input type="hidden" value ="{{UserAccount.useraccountamwayinfo_set.first.amwayDD.amwayNumber}}" id="{{UserAccount.id}}_amwayDD_number">
                 <input type="hidden" value ="{{UserAccount.dataPermissionsLevel}}" id="{{UserAccount.id}}_dataPermissionsLevel">
 
                     　　
-                <td id = "{{UserAccount.id}}_amwayDiamond" data-th="上手鑽石">
+                <td id = "{{UserAccount.id}}_amwayDiamond" style="display:none" data-th="上手鑽石">
                     {{registerDims|getdimName:UserAccount.useraccountamwayinfo_set.first.amwayDD.amwayDiamond}}
                 </td>
                     　　 　　 　　
                 <td id = "{{UserAccount.id}}_point" data-th="點數">
                     {{UserAccount.useraccountchainyeninfo_set.first.point}}
+                </td>
+
+                <td id = "{{UserAccount.id}}_accountStatus" data-th="狀態">
+                    {% if UserAccount.is_active %}
+                    正常
+                    {% else %}
+                    凍結
+                    {% endif %}
                 </td>
                     　　
                 <td id = "{{UserAccount.id}}_modify" data-th="修改">
@@ -281,12 +291,17 @@
                     </button>
                 </td>
                     　　
-                <td id = "{{UserAccount.id}}_history" data-th="修改歷史紀錄">
-                    <button type="button" class="button small"	data-toggle="modal"
-							data-target="#accountHistory" onclick="accountHistory('{{UserAccount.id}}')">
+<!--                <td id = "{{UserAccount.id}}_history" data-th="修改歷史紀錄">-->
+<!--                    <button type="button" class="button small"	data-toggle="modal"-->
+<!--							data-target="#accountHistory" onclick="accountHistory('{{UserAccount.id}}')">-->
+<!--                            查看-->
+<!--                    </button>-->
+                    <td id = "{{UserAccount.id}}_modify_history" data-th="修改紀錄">
+                        <button class="button_history small" type="button" data-toggle="modal" data-target="#pointModal">
                             查看
-                    </button>
-                </td>
+                        </button>
+                    </td>
+<!--                </td>-->
 
                 </tr>
                 {% endfor %}
@@ -382,10 +397,19 @@
             <input id = "modal_dataPermissionsLevel" style="font-size:12px;border: 1px solid #ccc;"  type="text">
           </label>
           {% endif %}
+          {% if perms.userlogin.can_freeze_account %}
+          <label  style="color: black"><mark style="color: red">帳號狀態:</mark>
+              <select id="modal_accountStatus" name="modal_accountStatus"style="font-size:12px; disable">
+                    <option id="正常">正常</option>
+                    <option id="帳號凍結">帳號凍結</option>
+              </select>
+          </label>
+          {% endif %}
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-          <input id="auditAcceptCurrentId"hidden type="text">
+          <input id="auditAcceptCurrentId" hidden type="text">
         <button id="auditFinalAcceptBtn" type="button" class="btn btn-primary" data-dismiss="modal" onclick="modifySubmit('{{ csrf_token }}')" >確定修改</button>
       </div>
     </div>
@@ -393,23 +417,50 @@
 </div>
 <!--</form>-->
 <!-- Modal 歷史查看-->
-<div class="modal fade" id="accountHistory" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 style="color: black" class="modal-title" >修改的歷史紀錄</h3>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
+ <!-- Modal -->
+        <div class="modal fade" id="pointModal" tabindex="-1" aria-labelledby="pointModalLabel" aria-hidden="true" style="width:100%">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content" style="background-color: #2a2f4a;" style="width:100%;">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="pointModalLabel">點數歷史紀錄</h5>
+                    </div>
+                    <div class="modal-body table-responsive">
+                        <table id="example" class="display table-bordered " style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>變更者</th>
+                                    <th>修改日期</th>
+                                    <th>變更欄位</th>
+                                    <th>原始值</th>
+                                    <th>修改後</th>
+
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!--<div class="modal fade" id="accountHistory" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">-->
+<!--  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-header">-->
+<!--        <h3 style="color: black" class="modal-title" >修改的歷史紀錄</h3>-->
+<!--        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--      </div>-->
+<!--      <div class="modal-body">-->
 
 
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal" >關閉</button>
-      </div>
-    </div>
-  </div>
-</div>
+<!--      </div>-->
+<!--      <div class="modal-footer">-->
+<!--        <button type="button" class="btn btn-primary" data-dismiss="modal" >關閉</button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
 <!-- Scripts -->
 <script src="{%static 'assets/js/jquery.min.js' %}"></script>
 <script src="{%static 'assets/js/jquery.scrolly.min.js' %}"></script>
@@ -419,7 +470,7 @@
 <script src="{%static 'assets/js/util.js' %}"></script>
 <script src="{%static 'assets/js/main.js' %}"></script>
 <script src="{%static 'assets/js/cyMain.js' %}"></script>
-<!--<script src="{%static 'assets/js/cyMain.js' %}"></script>-->
+<script src="{%static 'assets/js/accountModify.js' %}"></script>
 <script src="{%static 'assets/js/viewPageAjax.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
@@ -480,6 +531,16 @@ function accountManagerConfirm(id){
     document.getElementById("modal_amwayDiamond").value  =document.getElementById(id+"_amwayDiamond").innerHTML.trim()
     document.getElementById("modal_amwayDD_name").style.color = "black";
     document.getElementById("modal_dataPermissionsLevel").value = document.getElementById(id+"_dataPermissionsLevel").value
+    document.getElementById("modal_accountStatus").value = document.getElementById(id+"_accountStatus").innerHTML
+
+    if (document.getElementById(id+"_accountStatus").innerHTML.trim() == "正常"){
+        document.getElementById("正常").selected = true;
+        document.getElementById("帳號凍結").selected = false;
+    }
+    else{
+        document.getElementById("正常").selected = false;
+        document.getElementById("帳號凍結").selected = true;
+    }
 
     document.getElementById("userid_user").value = id
 
@@ -500,7 +561,8 @@ function modifySubmit(csrftoken){
                     "amwayDD":$('#amwayDD').val(),
                     "modal_amwayDD_name":$('#modal_amwayDD_name').val(),
                     "modal_amwayDiamond":$('#modal_amwayDiamond').val(),
-                    "modal_dataPermissionsLevel":$('#modal_dataPermissionsLevel').val()
+                    "modal_dataPermissionsLevel":$('#modal_dataPermissionsLevel').val(),
+                    "modal_accountStatus":$('#modal_accountStatus').val()
                     };
     $.ajax({
         url: requestURL,
@@ -524,7 +586,7 @@ function modifySubmit(csrftoken){
             document.getElementById(userid+"_amwayDD").innerHTML = $('#modal_amwayDD_name').val();
             document.getElementById(userid+"_amwayDiamond").innerHTML = $('#modal_amwayDiamond').val();
             document.getElementById(userid+"_dataPermissionsLevel").innerHTML = $('#modal_dataPermissionsLevel').val();
-
+            document.getElementById(userid+"_accountStatus").innerHTML = $('#modal_accountStatus').val();
 
         }
         else{
@@ -578,5 +640,8 @@ function managerCheckDD(csrftoken){
 
 </script>
 
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.0/fc-3.3.3/r-2.2.9/datatables.min.css"/>
+
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.0/fc-3.3.3/r-2.2.9/datatables.min.js"></script>
 </body>
 </html>

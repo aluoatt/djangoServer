@@ -1,4 +1,4 @@
-<section id="one" style="background-color:steelblue;">
+<!--<section id="one" style="background-color:steelblue;">-->
 
     <div class="inner"  >
         <header class="major">
@@ -7,47 +7,47 @@
         <ul class="list-inline">
             <li >
                 {% if selectTag == "基礎保養" %}
-                    <a href="#" class="primary" style="background-color:grey;">基礎保養</a>
+                    <a lass="classActivate" href="#" class="primary" >基礎保養</a>
                 {% else %}
-                    <a href="{% url 'NutriliteSearchPage' '美容' '基礎保養' %}">基礎保養</a>
+                    <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '美容' '基礎保養' %}">基礎保養</a>
                 {% endif %}
             </li>
             <li>
                 {% if selectTag == "整體造型" %}
-                    <a href="#" class="primary" style="background-color:grey;">整體造型</a>
+                    <a lass="classActivate" href="#" class="primary" >整體造型</a>
                 {% else %}
-                    <a href="{% url 'NutriliteSearchPage' '美容' '曲線管理' %}" >整體造型</a>
+                    <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '美容' '曲線管理' %}" >整體造型</a>
                 {% endif %}
             </li>
 
             <li>
 
                 {% if selectTag == "醫美相關" %}
-                    <a href="#" class="primary" style="background-color:grey;">醫美相關</a>
+                    <a lass="classActivate" href="#" class="primary" >醫美相關</a>
                 {% else %}
-                    <a href="{% url 'NutriliteSearchPage' '美容' '醫美相關' %}" >醫美相關</a>
+                    <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '美容' '醫美相關' %}" >醫美相關</a>
                 {% endif %}
 
             </li>
 
             <li>
                 {% if selectTag == "迷思破解" %}
-                    <a href="#" class="primary" style="background-color:grey;">迷思破解</a>
+                    <a lass="classActivate" href="#" class="primary">迷思破解</a>
                 {% else %}
-                    <a href="{% url 'NutriliteSearchPage' '美容' '迷思破解' %}">迷思破解</a>
+                    <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '美容' '迷思破解' %}">迷思破解</a>
                 {% endif %}
 
             </li>
 
             <li >
                 {% if selectTag == "其他" %}
-                    <a href="#" class="primary" style="background-color:grey;">其他</a>
+                    <a lass="classActivate" href="#" class="primary" >其他</a>
                 {% else %}
-                    <a href="{% url 'NutriliteSearchPage' '美容' '其他' %}">其他</a>
+                    <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '美容' '其他' %}">其他</a>
                 {% endif %}
 
             </li>
         </ul>
     </div>
 
-</section>
+<!--</section>-->

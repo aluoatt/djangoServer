@@ -1,4 +1,4 @@
-<section id="one" style="background-color:steelblue;">
+<!--<section id="one" style="background-color:steelblue;">-->
 
     <div class="inner"  >
         <header class="major">
@@ -7,28 +7,28 @@
         <ul class="list-inline">
             <li >
                 {% if selectTag == "空氣清淨機" %}
-                    <a href="#" class="primary" style="background-color:grey;">空氣清淨機</a>
+                    <a class="classActivate"  href="#" class="primary" >空氣清淨機</a>
                 {% else %}
-                    <a href="{% url 'NutriliteSearchPage' '科技' '空氣清淨機' %}">空氣清淨機</a>
+                    <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '科技' '空氣清淨機' %}">空氣清淨機</a>
                 {% endif %}
             </li>
             <li>
                 {% if selectTag == "淨水器" %}
-                    <a href="#" class="primary" style="background-color:grey;">淨水器</a>
+                    <a class="classActivate"  href="#" class="primary" 淨水器</a>
                 {% else %}
-                    <a href="{% url 'NutriliteSearchPage' '科技' '淨水器' %}" >淨水器</a>
+                    <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '科技' '淨水器' %}" >淨水器</a>
                 {% endif %}
             </li>
 
             <li >
                 {% if selectTag == "其他" %}
-                    <a href="#" class="primary" style="background-color:grey;">其他</a>
+                    <a class="classActivate" href="#" class="primary" >其他</a>
                 {% else %}
-                    <a href="{% url 'NutriliteSearchPage' '科技' '其他' %}">其他</a>
+                    <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '科技' '其他' %}">其他</a>
                 {% endif %}
 
             </li>
         </ul>
     </div>
 
-</section>
+<!--</section>-->

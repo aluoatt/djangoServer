@@ -6,8 +6,8 @@
         <form action="{% url 'personalInfoHomePage' selectTag='全部' %}" method="post">{% csrf_token %}
             <input class="primary small " type="submit" value="瀏覽已兌換資料">
         </form>
-        <form action="" method="post">{% csrf_token %}
-            <input class="primary small " type="submit" value="修改個人資料">
+        <form action="{% url 'changePasswordPage' %}" method="post">{% csrf_token %}
+            <input class="primary small " type="submit" value="修改個人密碼">
         </form>
         <form action="{% url 'personalInfoPointPage' %}" method="get">{% csrf_token %}
             <input class="primary small " type="submit" value="管理個人點數">

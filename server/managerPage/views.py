@@ -3,6 +3,7 @@ import json
 from django.http import HttpResponse
 from django.contrib.auth.models import Permission
 import traceback
+from django.core import serializers
 
 
 # Create your views here.
@@ -251,6 +252,13 @@ def modalAccountModifyPOST(request):
         if request.user.has_perm('userlogin.can_Change_class'):
             classRoom = json.loads(request.body.decode('utf-8'))["classRoom"]
 
+        if request.user.has_perm('userlogin.can_freeze_account'):
+            accountStatus = json.loads(request.body.decode('utf-8'))["modal_accountStatus"]
+            if accountStatus == "正常":
+                accountStatus = True
+            else:
+                accountStatus = False
+
         amwayAward = json.loads(request.body.decode('utf-8'))["modal_amwayAward"]
         amwayDD = json.loads(request.body.decode('utf-8'))["amwayDD"]
 
@@ -266,7 +274,6 @@ def modalAccountModifyPOST(request):
             r.user = user
 
         if r.gender != gender:
-            print(gender)
             AccountModifyHistory(UserAccountInfo=r,
                                  modifier=managerName,
                                  recordDate=datetime.datetime.now(),
@@ -295,6 +302,28 @@ def modalAccountModifyPOST(request):
                                      RevisedData=int(dataPermissionsLevel)).save()
 
                 r.dataPermissionsLevel = int(dataPermissionsLevel)
+
+        if request.user.has_perm('userlogin.can_freeze_account'):
+
+            if r.is_active != accountStatus:
+                if accountStatus:
+
+                    AccountModifyHistory(UserAccountInfo=r,
+                                         modifier=managerName,
+                                         recordDate=datetime.datetime.now(),
+                                         modifyFielddName="資料權限等級",
+                                         originFieldData="凍結",
+                                         RevisedData="正常").save()
+                else:
+                    AccountModifyHistory(UserAccountInfo=r,
+                                        modifier=managerName,
+                                        recordDate=datetime.datetime.now(),
+                                        modifyFielddName="帳號狀態",
+                                        originFieldData="正常",
+                                        RevisedData="凍結").save()
+
+                r.is_active = accountStatus
+
 
         r2 = UserAccountChainYenInfo.objects.get(UserAccountInfo = int(userid))
         if request.user.has_perm('userlogin.can_Change_JobTitle'):
@@ -546,3 +575,15 @@ def managerPointManagerPage(request):
     return render(request, 'managerPages/managerPointManagerPage.html', locals())
 
 
+@permission_required('userlogin.seeManagerPointPage', login_url='/accounts/userlogin/')
+def getAccountModifyHistory(request):
+    res = HttpResponse()
+    # try:
+    userAccountInfo = UserAccountInfo.objects.get(id=request.POST['username'])
+    pHistory = AccountModifyHistory.objects.filter(UserAccountInfo=userAccountInfo)
+    res.status_code = 200
+    res.content = serializers.serialize("json", pHistory)
+    # except:
+    #     res.status_code = 503
+
+    return res

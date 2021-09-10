@@ -423,6 +423,55 @@ def returnPDF(request, fileId):
         return response
 
 
+def returnFileStatus(request, fileId):
+    # Get the applicant's resume
+    userAc = UserAccountInfo.objects.get(username=request.user)
+    resume = personalFileData.objects.filter(fileDataID=fileId, ownerAccount=userAc)
+
+    if resume.count() != 1:
+        return HttpResponse("error", content_type="text/plain")
+
+    UserAccount = UserAccountInfo.objects.get(username=request.user)
+
+    if UserAccount.dataPermissionsLevel < resume.first().fileDataID.permissionsLevel:
+        return HttpResponse("error", content_type="text/plain")
+
+    if resume.first().waterCreateReady == 0:
+
+        if resume.first().exchangeDate < (datetime.datetime.now() - datetime.timedelta(days=1)):
+
+            if regetPersonalFile(request, fileId):
+
+                return HttpResponse("not ready", content_type="text/plain")
+            else:
+                return HttpResponse("error", content_type="text/plain")
+        return HttpResponse("not ready", content_type="text/plain")
+    else:
+
+        if os.path.isfile(backaddress + '/' + resume.first().waterMarkPath):
+            if (resume.first().fileDataID.fileType.id == 1):
+                response = HttpResponse("success", content_type="text/plain")
+                # return stream_video(request, backaddress + '/' + resume.first().waterMarkPath)
+            else:
+
+                fsock = open(backaddress + '/' + resume.first().waterMarkPath, 'rb')
+
+                # response = FileResponse(fsock, content_type='application/pdf', filename="pdf.pdf")
+                response = HttpResponse("success", content_type="text/plain")
+        else:
+            r = resume.first()
+            r.waterCreateReady = False
+            r.exchangeDate = datetime.datetime.now()
+            r.save()
+            if regetPersonalFile(request, fileId):
+
+                return HttpResponse("not ready", content_type="text/plain")
+            else:
+                return HttpResponse("error", content_type="text/plain")
+            return HttpResponse("error", content_type="text/plain")
+
+        return response
+
 range_re = re.compile(r'bytes\s*=\s*(\d+)\s*-\s*(\d*)', re.I)
 
 

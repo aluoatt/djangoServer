@@ -16,6 +16,25 @@
 		<link rel="stylesheet" href="{%static 'assets/css/main.css' %}" />
 
 		<noscript><link rel="stylesheet" href="{%static 'assets/css/noscript.css' %}" /></noscript>
+
+		<style type="text/css">
+			p {color:black;}
+
+			b {color:black;}
+			.button {
+				border: 1px solid black;
+				color:black;
+			}
+			.page{
+				color:black;
+				background-color:transparent;
+			}
+
+			.searchBar-inline{display:block;}
+            .searchBar-inline li{display:inline-block;}
+
+		</style>
+
 	</head>
 	<body class="is-preload">
 
@@ -27,7 +46,6 @@
 
 				<!-- Menu -->
 					{% include 'baseMenu.html' %}
-
 				<!-- Banner -->
 				{% include 'searchbar.html' %}
 				<!-- Note: The "styleN" class below should match that of the header element. -->
@@ -35,14 +53,13 @@
 				<!-- Main -->
 					<div id="main">
 
-
-							<section id="two"  class="spotlights">
+							<section id="two"  class="spotlights" style="background-size: Cover;background:url('{%static 'images/login底圖.png' %}');">
 
 								<div class="inner"  >
 									{% if hasKeywordData %}
 									{% for fileData in fileDatas%}
-									<div style="background-color:rgb(47,53,83);">
-									<h3><u>{{fileData.title}}</u></h3>
+									<div style="border-bottom: 1px solid black;">
+									<h3><b>{{fileData.title}}</b></h3>
 
 
 											<p>{{fileData.describe}}</p>
@@ -77,10 +94,9 @@
 									{%else%}
 									<h3>查無資料...</h3>
 									{%endif%}
-								</div>
 
-							</section>
-							{% if pageisNotNull %}
+									{% if pageisNotNull %}
+									<br>
 							<div class="dataTables_paginate paging_simple_numbers pull-right inner">
 									<ul class="pagination ">
 										{{ pagination.page_html|safe }}
@@ -88,6 +104,12 @@
 
 							</div>
 							{% endif %}
+
+
+								</div>
+
+							</section>
+
 
 
 						<!-- Two -->

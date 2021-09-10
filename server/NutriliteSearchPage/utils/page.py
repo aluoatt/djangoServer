@@ -1,6 +1,6 @@
 class Pagination(object):
 
-  def __init__(self,current_page_num,all_count,request,per_page_num=10,pager_count=11,keywords=None,timelim=None):
+  def __init__(self,current_page_num,all_count,request,per_page_num=10,pager_count=5,keywords=None,timelim=None):
     """
     封裝分頁相關資料
     :param current_page_num: 當前訪問頁的數字
@@ -97,12 +97,12 @@ class Pagination(object):
         if i == self.current_page_num:
           temp = '<li class="active"><a href="?%s" rel="external nofollow" rel="external nofollow" class="page active" >%s</a></li>' % (self.params.urlencode(),i)
         else:
-          temp = '<li><a href="?%s" rel="external nofollow" rel="external nofollow" class="page">%s</a></li>' % (self.params.urlencode(),i,)
+          temp = '<li><a style="color:black;"  href="?%s" rel="external nofollow" rel="external nofollow" class="page">%s</a></li>' % (self.params.urlencode(),i,)
       else:
         if i == self.current_page_num:
           temp = '<li class="active"><a href="?%s" rel="external nofollow" rel="external nofollow" class="page active" >%s</a></li>' % (self.params.urlencode(),i)
         else:
-          temp = '<li><a href="?%s" rel="external nofollow" rel="external nofollow" class="page">%s</a></li>' % (self.params.urlencode(),i)
+          temp = '<li><a style="color:black;" href="?%s" rel="external nofollow" rel="external nofollow" class="page">%s</a></li>' % (self.params.urlencode(),i)
 
       page_html_list.append(temp)
     page_html_list.append("&nbsp &nbsp")

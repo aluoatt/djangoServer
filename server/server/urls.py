@@ -17,16 +17,19 @@ from django.contrib import admin
 from django.urls import path
 from searchfile.views import home
 from django.conf.urls import url
-from NutriliteSearchPage.views import NutriliteSearchPage,viewFilePage,returnPDF,exchangeOption,keywordSearchPage
+from NutriliteSearchPage.views import NutriliteSearchPage,viewFilePage,returnPDF,exchangeOption,keywordSearchPage,returnFileStatus
 from django .contrib.auth.decorators import login_required
 from userlogin.views import login,logout,register,createRegisterPage,checkRegDD,registerSuccess
-from personalInfoPage.views import personalInfoHomePage, personalInfoPointPage
+from personalInfoPage.views import personalInfoHomePage, personalInfoPointPage,changePasswordPage,changePasswordOption
 from managerPage.views import managerAccountManagerPage,managerAuditAccountPage,removeAuditAccount,AcceptAuditAccount
 from managerPage.views import userAccountConfirm,managerAccountModify,modalAccountModifyPOST
-from managerPage.views import managerPointManagerPage
+from managerPage.views import managerPointManagerPage,getAccountModifyHistory
+from django.conf.urls import url
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
+from django.views.generic.base import RedirectView
 
 urlpatterns+=[
     url(r'^home', login_required(home)),
@@ -44,13 +47,18 @@ urlpatterns += [
     path('accounts/createRegisterPage/', createRegisterPage,name='createRegisterPage'),
 
     path('filesearch/<str:topic>/<str:selectTag>', login_required(NutriliteSearchPage), name='NutriliteSearchPage'),
+
     path('viewFilePage/<str:fileId>', login_required(viewFilePage), name='viewFilePage'),
     path('keywordSearchPage', login_required(keywordSearchPage), name='keywordSearchPage'),
 
     path('returnPDF/<str:fileId>', login_required(returnPDF), name='returnPDF'),
+    path('returnFileStatus/<str:fileId>', login_required(returnFileStatus), name='returnFileStatus'),
     path('exchangeOption/<str:fileId>', login_required(exchangeOption), name='exchangeOption'),
     path('personalInfoPage/home/<str:selectTag>', login_required(personalInfoHomePage), name='personalInfoHomePage'),
     path('personalInfoPage/pointPage', login_required(personalInfoPointPage), name='personalInfoPointPage'),
+    path('personalInfoPage/changePasswordPage', login_required(changePasswordPage), name='changePasswordPage'),
+    path('personalInfoPage/changePasswordOption', login_required(changePasswordOption), name='changePasswordOption'),
+
     path('managerPages/home/accountManger', login_required(managerAccountManagerPage), name='managerAccountManagerPage'),
     path('managerPages/home/AuditManger', login_required(managerAuditAccountPage),name='managerAuditAccountPage'),
     path('managerPages/home/PointManager', login_required(managerPointManagerPage),name='managerPointManagerPage'),
@@ -59,6 +67,8 @@ urlpatterns += [
     path('managerPages/userAccountConfirm', userAccountConfirm,name='userAccountConfirm'),
     path('managerPages/managerAccountModify',managerAccountModify,name='managerAccountModify'),
     path('managerPages/modalAccountModifyPOST',modalAccountModifyPOST,name='modalAccountModifyPOST'),
+    path('managerPages/getAccountModifyHistory',getAccountModifyHistory,name='getAccountModifyHistory'),
+
 
     path('checkRegDD', checkRegDD, name='checkRegDD'),
 
