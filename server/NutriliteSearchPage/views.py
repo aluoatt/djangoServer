@@ -537,7 +537,7 @@ import os
 import traceback
 scheduler = BackgroundScheduler()
 scheduler.add_jobstore(DjangoJobStore(),"default")
-# @register_job(scheduler,"interval",seconds=10,id="clear_datafile_inVPS_job",replace_existing=True)
+# @register_job(scheduler,"interval",seconds=3,id="clear_datafile_inVPS_job",replace_existing=True)
 @register_job(scheduler,"cron",hour=2,minute=30,id="clear_datafile_inVPS_job",replace_existing=True)
 def clear_datafile_inVPS_job():
     for existDatainVPS in personalFileData.objects.filter(waterCreateReady = 1):
@@ -549,5 +549,16 @@ def clear_datafile_inVPS_job():
                     os.remove(backaddress+'/'+existDatainVPS.waterMarkPath)
                 except:
                     logging.error(traceback.print_exc())
+
+@register_job(scheduler,"cron",hour=1,minute=30,id="auto_backup_db",replace_existing=True)
+# @register_job(scheduler,"interval",seconds=10,id="auto_backup_db",replace_existing=True)
+def auto_backup_db():
+    logging.info("資料庫備份中...  db backup start")
+    os.system('mysqldump -udevuser2 -pchainyen db1 > {}}db1_info_$(date +%Y%m%d_%H%M%S).sql'.format(dbBackupFolderPath))
+    logging.info("資料庫完成中...  db backup finish")
+
 register_events(scheduler)
 scheduler.start()
+
+dbBackupFolderPath = '/home/aluo/dbBackup/'
+
