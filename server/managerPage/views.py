@@ -580,7 +580,7 @@ def getAccountModifyHistory(request):
     res = HttpResponse()
     # try:
     userAccountInfo = UserAccountInfo.objects.get(id=request.POST['username'])
-    pHistory = AccountModifyHistory.objects.filter(UserAccountInfo=userAccountInfo)
+    pHistory = AccountModifyHistory.objects.filter(UserAccountInfo=userAccountInfo).order_by('-recordDate')
     res.status_code = 200
     res.content = serializers.serialize("json", pHistory)
     # except:

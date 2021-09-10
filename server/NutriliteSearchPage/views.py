@@ -16,7 +16,7 @@ from django.db.models import Q
 import datetime
 from dateutil.relativedelta import relativedelta
 from django.http.response import StreamingHttpResponse
-import pytz
+from pointManage.models import pointHistory
 
 backaddress = "/home/aluo/backEnd"
 
@@ -192,6 +192,13 @@ def exchangeOption(request, fileId):
         if not alreadyExchange:
             UserAccountChainYen.point = UserAccountChainYen.point - targetFile.point
             UserAccountChainYen.save()
+
+            pHistory = pointHistory(UserAccountInfo=UserAccount, modifier="系統",
+                                    recordDate=datetime.datetime.now(), reason='兌換資料',
+                                    addPoint="", reducePoint=targetFile.point, transferPoint="",
+                                    resultPoint=UserAccountChainYen.point)
+            pHistory.save()
+
     if not alreadyExchange:
         personalFileData(fileDataID=targetFile,
                          ownerAccount=UserAccount,

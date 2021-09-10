@@ -39,7 +39,7 @@ def personalInfoHomePage(request,selectTag):
     pagination = Pagination(current_page_num, page_count, request, per_page_num=10)
     # 處理之後的資料
     fileDatas = fileDatas[pagination.start:pagination.end]
-
+    selectPage = "瀏覽已兌換資料"
     content = {
         "fileDatas": fileDatas, "pagination": pagination, }
 
@@ -50,7 +50,9 @@ def personalInfoHomePage(request,selectTag):
 def personalInfoPointPage(request):
 
     userAccountInfo = UserAccountInfo.objects.get(username = request.user.username)
-    pHistory = pointHistory.objects.filter(UserAccountInfo = userAccountInfo)
+    pHistory = pointHistory.objects.filter(UserAccountInfo = userAccountInfo).order_by('-recordDate')
+
+    selectPage = "管理個人點數"
 
     return render(request, 'personalInfoPages/personalInfoPointPage.html', locals())
 
