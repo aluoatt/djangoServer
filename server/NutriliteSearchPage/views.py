@@ -18,7 +18,7 @@ from dateutil.relativedelta import relativedelta
 from django.http.response import StreamingHttpResponse
 from pointManage.models import pointHistory
 
-backaddress = "/home/aluo/backEnd"
+backaddress = "/home/chainyen/production/backEnd"
 
 
 # Create your views here.
@@ -561,11 +561,14 @@ def clear_datafile_inVPS_job():
 # @register_job(scheduler,"interval",seconds=10,id="auto_backup_db",replace_existing=True)
 def auto_backup_db():
     logging.info("資料庫備份中...  db backup start")
-    os.system('mysqldump -udevuser2 -pchainyen db1 > {}}db1_info_$(date +%Y%m%d_%H%M%S).sql'.format(dbBackupFolderPath))
+    try:
+        os.system('mysqldump -udevuser2 -pchainyen db1 > {}}db1_info_$(date +%Y%m%d_%H%M%S).sql'.format(dbBackupFolderPath))
+    except:
+        logging.info("失敗...  db backup start")
     logging.info("資料庫完成中...  db backup finish")
 
 register_events(scheduler)
 scheduler.start()
 
-dbBackupFolderPath = '/home/aluo/dbBackup/'
+dbBackupFolderPath = '/home/chainyen/production/dbBackup'
 
