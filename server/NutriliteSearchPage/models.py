@@ -10,7 +10,7 @@ class fileDataInfo(models.Model):
     PDF = models.CharField(max_length=255,verbose_name='PDF路徑',null=True,blank=True)
     file = models.CharField(max_length=255,verbose_name='file路徑')
     fileType = models.ForeignKey("fileTypeInfo",verbose_name='檔案格式',on_delete=models.PROTECT)
-    sourceForm = models.ForeignKey("sourceFromInfo",verbose_name='資料來源',on_delete=models.PROTECT)
+    sourceFrom = models.ForeignKey("sourceFromInfo",verbose_name='資料來源',on_delete=models.PROTECT)
     sourceURL = models.CharField(max_length=255,verbose_name='來源網址',null=True,blank=True)
     sourceScreenshot = models.CharField(max_length=255,verbose_name='來源示意圖路徑',null=True,blank=True)
     characterName = models.CharField(max_length=20,verbose_name='421主角姓名',null=True,blank=True)

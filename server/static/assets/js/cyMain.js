@@ -47,7 +47,7 @@ function registerCheckDD(csrftoken){
         else{
             document.getElementById("DDnotExist").style.display = "";
             document.getElementById("DDnotExist").innerHTML = returnData.DDname
-            document.getElementById("DDnotExist").style.color = "#EBEB00";
+            document.getElementById("DDnotExist").style.color = "black";
             document.getElementById("amwayDiamond").value = returnData.diamond
 
         }

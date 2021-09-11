@@ -23,7 +23,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "/static/static")
 SECRET_KEY = 'django-insecure-x%#0uep5b^^gqkfctv1=w6nasd$-j$eam*u*!#)7k-3dp)6t-4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 # celery
@@ -99,9 +99,9 @@ WSGI_APPLICATION = 'server.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'db1', # DB名稱
-        'USER': 'devuser2', # 使用者帳號
-        'PASSWORD': 'chainyen', # 使用者密碼
+        'NAME': 'djangoserver', # DB名稱
+        'USER': 'djangoUser', # 使用者帳號
+        'PASSWORD': 'chainyen@fmp6u04', # 使用者密碼
         'HOST': '127.0.0.1',
         'PORT': '3306',
         'OPTIONS': {
@@ -152,6 +152,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
+    '/home/chainyen/production/djangoserver/lib/python3.8/site-packages/django/contrib/admin/static'
     # another directory ...
 ]
 # Default primary key field type
@@ -169,9 +170,9 @@ EMAIL_HOST = 'smtp.gmail.com'  #SMTP伺服器
 EMAIL_PORT = 587  #TLS通訊埠號
 EMAIL_USE_TLS = True  #開啟TLS(傳輸層安全性)
 EMAIL_HOST_USER = 'ChainYenRetrieve@gmail.com'  #寄件者電子郵件
-EMAIL_HOST_PASSWORD = 'dxuzkjluwqxbryox'  #Gmail應用程式的密碼
+EMAIL_HOST_PASSWORD = 'qvkfdogfqfucbpbv'  #Gmail應用程式的密碼
 CONFIRM_DAYS = 3
-MYIP = "http://1.34.134.127:12000"
+MYIP = "https://172.104.127.254:15168"
 
 CLASS_CHARIMAN_MANAGER_DICT = {
             "台北":"CYPManager",

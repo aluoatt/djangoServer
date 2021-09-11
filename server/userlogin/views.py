@@ -28,6 +28,11 @@ def login(request):
         auth.login(request, user)
         userAccountInfo = UserAccountInfo.objects.get(username=request.user)
         UserAccountChainYen = UserAccountChainYenInfo.objects.get(UserAccountInfo=userAccountInfo.id)
+        if UserAccountChainYen.point - 1 <= 0:
+            auth.logout(request)
+            pwderror = False
+            pointNotEnought = True
+            return render(request, 'login.html', locals())
         UserAccountChainYen.point -= 1
         UserAccountChainYen.save()
         pHistory = pointHistory(UserAccountInfo=userAccountInfo, modifier="系統",
