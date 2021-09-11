@@ -74,14 +74,16 @@
 									{% if pwderror %}
 										 <p style="color: red;">輸入的資料有誤</p>
 									{% endif %}
+									{% if pointNotEnought %}
+										 <p style="color: red;">點數不足</p>
+									{% endif %}
+
                                     <input style="color:black;box-shadow: inset 0 0 0 2px #000000;" type="submit" value="登入" class="button"/>
 
                                 </form>
 
 							</div>
-							{% if perms.login.can_see_register %}
-								<a class="button scrolly" href="{% url 'register' %}">註冊</a>
-							{% endif %}
+
 						</div>
 					</section>
 				</div>

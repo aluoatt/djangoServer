@@ -5,5 +5,7 @@ register = template.Library()
 
 @register.filter
 def getdimName(obj,number):
-
-    return obj.filter(amwayNumber=int(number)).first().main
+    try:
+        return obj.filter(amwayNumber=int(number)).first().main
+    except:
+        return "NULL"
