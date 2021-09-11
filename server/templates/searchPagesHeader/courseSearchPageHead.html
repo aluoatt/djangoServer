@@ -7,14 +7,14 @@
         <ul class="list-inline">
             <li >
                 {% if selectTag == "成功領導人" %}
-                    <a class="classActivate" href="#" class="primary" style="background-color:grey;">成功領導人</a>
+                    <a class="classActivate" href="#" class="primary" >成功領導人</a>
                 {% else %}
                     <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '演講廳' '成功領導人' %}">成功領導人</a>
                 {% endif %}
             </li>
             <li>
                 {% if selectTag == "公司創辦人" %}
-                    <a class="classActivate" href="#" class="primary" style="background-color:grey;">公司創辦人</a>
+                    <a class="classActivate" href="#" class="primary">公司創辦人</a>
                 {% else %}
                     <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '演講廳' '公司創辦人' %}" >公司創辦人</a>
                 {% endif %}
@@ -25,7 +25,7 @@
                 {% if selectTag == "名人講堂" %}
                     <a class="classActivate" href="#" class="primary" >名人講堂</a>
                 {% else %}
-                    <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '演講廳' '機能性營養' %}" >名人講堂</a>
+                    <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '演講廳' '名人講堂' %}" >名人講堂</a>
                 {% endif %}
 
             </li>
@@ -42,7 +42,7 @@
                 {% if selectTag == "培訓資料" %}
                     <a class="classActivate" href="#" class="primary" >培訓資料</a>
                 {% else %}
-                    <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '演講廳' '紐崔萊農場' %}">培訓資料</a>
+                    <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '演講廳' '培訓資料' %}">培訓資料</a>
                 {% endif %}
 
             </li>

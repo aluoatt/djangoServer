@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_apscheduler',
     # Add our new application
     'searchfile',
     'NutriliteSearchPage',
@@ -157,10 +158,10 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-#
-SESSION_COOKIE_AGE = 60 * 60  # 設置session過期時間為30分鐘
+#60 * 60
+SESSION_COOKIE_AGE = 60*60*24  # 設置session過期時間為30分鐘
 # SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # 當瀏覽器被關閉的時候將session失效，但是不能刪除數據庫的session數據
-SESSION_SAVE_EVERY_REQUEST = True  # 每次請求都要保存一下session
+SESSION_SAVE_EVERY_REQUEST = False  # 每次請求都要保存一下session
 
 # SMTP Configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -187,3 +188,5 @@ CLASS_CHARIMAN_MANAGER_DICT = {
             "台東": "CYTManager",
             "澎湖": "CYHManager"
 }
+
+

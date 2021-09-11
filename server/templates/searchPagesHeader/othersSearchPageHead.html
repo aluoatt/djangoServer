@@ -6,15 +6,15 @@
         </header>
         <ul class="list-inline">
             <li >
-                {% if selectTag == "AmwayHome" %}
-                    <a class="classActivate" href="#" class="primary" style="background-color:grey;">AmwayHome</a>
+                {% if selectTag == "Amway Home" %}
+                    <a class="classActivate" href="#" class="primary" >Amway Home</a>
                 {% else %}
                     <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '其他' 'Amway Home' %}">Amway Home</a>
                 {% endif %}
             </li>
             <li>
                 {% if selectTag == "G&H" %}
-                    <a href="#" class="classActivate" class="primary" style="background-color:grey;">G&H</a>
+                    <a href="#" class="classActivate" class="primary" >G&H</a>
                 {% else %}
                     <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '其他' 'G&H' %}" >G&H</a>
                 {% endif %}
@@ -39,7 +39,7 @@
 
             </li>
             <li>
-                {% if selectTag == "XS系列" %}
+                {% if selectTag == "XS 系列" %}
                     <a class="classActivate" href="#" class="primary" >XS 系列</a>
                 {% else %}
                     <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '其他' 'XS 系列' %}">XS 系列</a>

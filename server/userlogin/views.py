@@ -7,10 +7,11 @@ from django.contrib import auth
 from django.http import HttpResponseRedirect, HttpResponseNotFound, HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import permission_required
-from userlogin.models import amwayAwardInfo ,chainYenJobTitleInfo ,chainYenClassInfo , UserAccountInfo
+from userlogin.models import amwayAwardInfo ,chainYenJobTitleInfo ,chainYenClassInfo , UserAccountInfo,UserAccountChainYenInfo
 from userlogin.models import TempUserAccountInfo ,TempUserAccountAmwayInfo ,TempUserAccountChainYenInfo,registerDDandDimInfo
+from pointManage.models import pointHistory
 from django.contrib.auth.hashers import make_password
-
+import datetime
 import logging
 
 key = "Ja8asdfnjQnasdfd72D"
@@ -25,6 +26,15 @@ def login(request):
     user = auth.authenticate(username=username + idnumber, password=password)
     if user is not None and user.is_active:
         auth.login(request, user)
+        userAccountInfo = UserAccountInfo.objects.get(username=request.user)
+        UserAccountChainYen = UserAccountChainYenInfo.objects.get(UserAccountInfo=userAccountInfo.id)
+        UserAccountChainYen.point -= 1
+        UserAccountChainYen.save()
+        pHistory = pointHistory(UserAccountInfo=userAccountInfo, modifier="系統",
+                                recordDate=datetime.datetime.now(), reason='登入扣點',
+                                addPoint="", reducePoint="1", transferPoint="",
+                                resultPoint=UserAccountChainYen.point)
+        pHistory.save()
         return HttpResponseRedirect('/home/')
     else:
         if username != '':

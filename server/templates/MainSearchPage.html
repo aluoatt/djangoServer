@@ -25,7 +25,6 @@
 
 			.searchBar-inline{display:block;}
             .searchBar-inline li{display:inline-block;}
-            /*.searchBar-inline li:after{content:'|'; margin:0 10px;}*/
 
 			p {color:black;}
 			b {color:black;}
@@ -51,7 +50,7 @@
 	<body class="is-preload" >
 
 		<!-- Wrapper -->
-			<div id="wrapper" >
+			<div id="wrapper"  >
 
 				<!-- Header -->
 					{% include 'baseHeader.html' %}
@@ -123,7 +122,9 @@
 									</div>
 									{% endfor %}
 									{% if pageisNotNull is False %}
+									<div style="height:40vh; " >
 									<p>沒有資料...</p>
+									</div>
 									{% endif %}
 								{% if pageisNotNull %}
 									<br>

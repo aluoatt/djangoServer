@@ -3,7 +3,7 @@ from NutriliteSearchPage.models import fileDataInfo,mainClassInfo,secClassInfo,p
 from userlogin.models import UserAccountInfo,UserAccountChainYenInfo
 from NutriliteSearchPage.utils.page import Pagination
 from pointManage.models import pointHistory
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password,check_password
 # Create your views here.
 
 def personalInfoHomePage(request,selectTag):
@@ -39,7 +39,7 @@ def personalInfoHomePage(request,selectTag):
     pagination = Pagination(current_page_num, page_count, request, per_page_num=10)
     # 處理之後的資料
     fileDatas = fileDatas[pagination.start:pagination.end]
-
+    selectPage = "瀏覽已兌換資料"
     content = {
         "fileDatas": fileDatas, "pagination": pagination, }
 
@@ -50,7 +50,9 @@ def personalInfoHomePage(request,selectTag):
 def personalInfoPointPage(request):
 
     userAccountInfo = UserAccountInfo.objects.get(username = request.user.username)
-    pHistory = pointHistory.objects.filter(UserAccountInfo = userAccountInfo)
+    pHistory = pointHistory.objects.filter(UserAccountInfo = userAccountInfo).order_by('-recordDate')
+
+    selectPage = "管理個人點數"
 
     return render(request, 'personalInfoPages/personalInfoPointPage.html', locals())
 
@@ -68,14 +70,16 @@ def changePasswordOption(request):
 
     if password1 == password2:
         userAccountInfo = UserAccountInfo.objects.get(username=request.user.username)
-        if userAccountInfo.password == make_password(password1):
-            userAccountInfo.password = make_password(password_old)
-            # userAccountInfo.save()
+
+        if check_password(password_old,userAccountInfo.password):
+            userAccountInfo.password = make_password(password1)
+
+            userAccountInfo.save()
             message = "成功修改密碼，五秒後跳轉到登入畫面"
         else:
-            message = "修改失敗，五秒後跳轉到登入畫面"
+            message = "修改失敗，舊密碼錯誤，五秒後跳轉到登入畫面"
     else:
-        message = "修改失敗，五秒後跳轉到登入畫面"
+        message = "修改失敗，發生錯誤，五秒後跳轉到登入畫面"
 
     # make_password(id_password1)
     #

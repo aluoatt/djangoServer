@@ -10,12 +10,25 @@
 		<link rel="stylesheet" href="{%static 'assets/css/main.css' %}" />
 		<noscript><link rel="stylesheet" href="{%static 'assets/css/noscript.css' %}" /></noscript>
         <style type="text/css">
-            label {
-             color: #BFFFFF        /* 透過 CSS 重新定義元素的排列方式 */
+            /*label{*/
+            /* color: #BFFFFF        !* 透過 CSS 重新定義元素的排列方式 *!*/
+            /*}*/
+            h2 {color:black;}
+            p .inputText{
+                color:black;
+                background-color: rgba(244, 244, 255, 0.4);
             }
+            #regbtn{
+                color:black;
+                border: 1px solid black;
+            }
+            label{
+              color: black;
+            }
+
         </style>
 </head>
-<body class="is-preload">
+<body class="is-preload" style="background-size: Cover;background:url('{%static 'images/login底圖.png' %}');">
 
 <!-- Wrapper -->
 			<div id="wrapper">
@@ -39,7 +52,7 @@
                                     <div name="step1">
                                     <p>
                                         <label >會員編號:</label>
-                                        <input type="text" name="accountName" maxlength="150" autocapitalize="none"
+                                        <input class="inputText" type="text" name="accountName" maxlength="150" autocapitalize="none"
                                                                     autocomplete="accountName" autofocus="" required="" id="accountName"
                                                                     value="{{accountName}}" placeholder="安麗會員編號"
                                                                     pattern="^[0-9]*$"
@@ -48,14 +61,14 @@
                                     </p>
                                     <p>
                                         <label>身分證後四碼:</label>
-                                        <input type="text" name="IDnumber" maxlength="150" autocapitalize="none"
+                                        <input class="inputText"  type="text" name="IDnumber" maxlength="150" autocapitalize="none"
                                                                      autocomplete="IDnumber" autofocus="" required="" id="IDnumber"
                                                                      value="{{IDnumber}}" pattern="[0-9]{4}"
                                         oninput="setCustomValidity('');" oninvalid="setCustomValidity('格式錯誤，請檢查');">
                                     </p>
                                     <p>
                                         <label for="id_password1">密碼:</label>
-                                        <input type="password" name="password1" autocomplete="new-password"
+                                        <input class="inputText"  type="password" name="password1" autocomplete="new-password"
                                                                                     required="" id="id_password1" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$"
                                                oninput="setCustomValidity('');" oninvalid="setCustomValidity('請輸入正確的密碼格式:請包含英文大小寫及數字且為8到20碼');"
                                                placeholder="請包含英文大小寫及數字且為8到20碼"
@@ -66,7 +79,7 @@
 
                                     <p>
                                         <label for="id_password2">再次確認密碼:</label>
-                                        <input type="password" name="password2"
+                                        <input class="inputText"  type="password" name="password2"
                                                autocomplete="new-password" required=""
                                                id="id_password2"
                                                oninput="setCustomValidity('');"
@@ -82,26 +95,26 @@
                                     <div name="step2">
                                     <p>
                                         <label>姓名:</label>
-                                        <input type="text" name="username" maxlength="150" autocapitalize="none"
+                                        <input class="inputText"  type="text" name="username" maxlength="150" autocapitalize="none"
                                                                  autocomplete="username" autofocus="" required="" id="username" value="{{username}}">
                                     </p>
 
                                     <p>
                                         <label>性別:</label>
                                         <input type="radio" id="男" name="gander" value="男" required {% if gander == "男" %} checked {% endif %}>
-                                        <label for="男">男</label>
+                                        <label style="color: black" class="radiobtn"  for="男">男</label>
                                         <input type="radio" id="女" name="gander" value="女" {% if gander == "女" %} checked {% endif %}>
-                                        <label for="女">女</label><br>
+                                        <label style="color: black" class="radiobtn" for="女">女</label><br>
                                     </p>
 
                                     <p>
                                         <label>電話:</label>
-                                        <input type="text" name="phone" autocomplete="none"
+                                        <input class="inputText" type="text" name="phone" autocomplete="none"
                                                                  required="" id="phone" value="{{phone}}">
                                     </p>
                                     <p>
                                         <label>e-mail:</label>
-                                        <input type="text" name="e_mail" autocomplete="none"
+                                        <input class="inputText" type="text" name="e_mail" autocomplete="none"
                                                                  required="" id="e_mail" value="{{e_mail}}" placeholder="請務必填寫正確，否則無法註冊"
                                         pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
                                     </p>
@@ -110,7 +123,7 @@
                                     <div name="step3">
                                     <p>
                                         <label>職務:</label>
-                                        <select id="chainYenJobTitle" name="chainYenJobTitle">
+                                        <select class="inputText" id="chainYenJobTitle" name="chainYenJobTitle">
                                             {% for ChainYenJobTitle in ChainYenJobTitles %}
                                                 <option value="{{ChainYenJobTitle.id}}" {% if chainYenJobTitle == ChainYenJobTitle.id %} checked {% endif %}>{{ ChainYenJobTitle.jobTitle }}</option>
                                             {% endfor %}
@@ -118,7 +131,7 @@
                                     </p>
                                     <p>
                                         <label>獎銜:</label>
-                                        <select id="amwayAward" name="amwayAward">
+                                        <select class="inputText" id="amwayAward" name="amwayAward">
                                             {% for award in amwayawards %}
                                                 <option value="{{award.id}}" {% if amwayAward == award.amwayAward %} checked {% endif %}>{{ award.amwayAward }}</option>
                                             {% endfor %}
@@ -127,7 +140,7 @@
                                     </p>
                                     <p>
                                         <label>上手白金編號:</label>
-                                        <input type="text" name="amwayDD" autocomplete="none"
+                                        <input class="inputText" type="text" name="amwayDD" autocomplete="none"
                                                                  required="required" id="amwayDD" value="{{amwayDD}}"
                                                onchange="registerCheckDD('{{ csrf_token }}')"
 
@@ -137,7 +150,7 @@
 
                                     <p>
                                         <label>上手鑽石:</label>
-                                        <input placeholder="請先填寫上手白金編號" type="text" name="amwayDiamond" autocomplete="none"
+                                        <input class="inputText" placeholder="請先填寫上手白金編號" type="text" name="amwayDiamond" autocomplete="none"
                                                                  required="required" id="amwayDiamond" value="{{amwayDiamond}}" disabled>
                                     </p>
                                     </div>
@@ -145,7 +158,7 @@
                                     <div name="step4">
                                     <p>
                                         <label>教室:</label>
-                                        <select id="ChainYenClass" name="ChainYenClass">
+                                        <select class="inputText" id="ChainYenClass" name="ChainYenClass">
                                         {% for ChainYenClassInfo in ChainYenClassInfos %}
 
                                             <option value="{{ChainYenClassInfo.id}}" {% if ChainYenClass == ChainYenClassInfo.ClassRoomName %} checked {% endif %}>{{ ChainYenClassInfo.ClassRoomName }}</option>
@@ -153,10 +166,10 @@
                                         </select>
                                     </p>
                                     <p><label>是否為愛馬小組:</label>
-                                        <input type="radio" id="是" name="EM" value="True" required {% if EM == "True" %} checked {% endif %}>
-                                        <label for="是">是</label>
-                                        <input type="radio" id="否" name="EM" value="False" {% if EM == "False" %} checked {% endif %}>
-                                        <label for="否">否</label>
+                                        <input class="inputText" type="radio" id="是" name="EM" value="True" required {% if EM == "True" %} checked {% endif %}>
+                                        <label style="color: black" for="是">是</label>
+                                        <input class="inputText" type="radio" id="否" name="EM" value="False" {% if EM == "False" %} checked {% endif %}>
+                                        <label style="color:black" for="否">否</label>
                                         <br>
                                     </p>
                                     </div>
@@ -168,7 +181,7 @@
                                 <p></p>
 
 
-                                <input type="submit" value="註冊">
+                                <input id="regbtn" type="submit" value="註冊">
                             </form>
 
 

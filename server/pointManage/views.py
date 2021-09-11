@@ -64,7 +64,7 @@ def getPointHistory(request):
     res = HttpResponse()
     try:
         userAccountInfo = UserAccountInfo.objects.get(username = request.POST['username'])
-        pHistory = pointHistory.objects.filter(UserAccountInfo = userAccountInfo)
+        pHistory = pointHistory.objects.filter(UserAccountInfo = userAccountInfo).order_by('-recordDate')
         res.status_code = 200
         res.content =  serializers.serialize("json", pHistory)
     except:

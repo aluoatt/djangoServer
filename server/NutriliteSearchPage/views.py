@@ -16,7 +16,7 @@ from django.db.models import Q
 import datetime
 from dateutil.relativedelta import relativedelta
 from django.http.response import StreamingHttpResponse
-import pytz
+from pointManage.models import pointHistory
 
 backaddress = "/home/aluo/backEnd"
 
@@ -192,6 +192,13 @@ def exchangeOption(request, fileId):
         if not alreadyExchange:
             UserAccountChainYen.point = UserAccountChainYen.point - targetFile.point
             UserAccountChainYen.save()
+
+            pHistory = pointHistory(UserAccountInfo=UserAccount, modifier="系統",
+                                    recordDate=datetime.datetime.now(), reason='兌換資料',
+                                    addPoint="", reducePoint=targetFile.point, transferPoint="",
+                                    resultPoint=UserAccountChainYen.point)
+            pHistory.save()
+
     if not alreadyExchange:
         personalFileData(fileDataID=targetFile,
                          ownerAccount=UserAccount,
@@ -405,9 +412,9 @@ def returnPDF(request, fileId):
                 return stream_video(request, backaddress + '/' + resume.first().waterMarkPath)
             else:
 
-                fsock = open(backaddress + '/' + resume.first().waterMarkPath, 'rb')
+                # fsock = open(backaddress + '/' + resume.first().waterMarkPath, 'rb')
 
-                response = FileResponse(fsock, content_type='application/pdf', filename="pdf.pdf")
+                response = FileResponse(open(backaddress + '/' + resume.first().waterMarkPath, 'rb'), content_type='application/pdf', filename="pdf.pdf")
         except:
             r = resume.first()
             r.waterCreateReady = False
@@ -528,3 +535,37 @@ def stream_video(request, path):
         resp['Content-Length'] = str(size)
     resp['Accept-Ranges'] = 'bytes'
     return resp
+
+#排程
+from apscheduler.schedulers.background import BackgroundScheduler
+from django_apscheduler.jobstores import DjangoJobStore, register_events,register_job
+import time
+import os
+import traceback
+scheduler = BackgroundScheduler()
+scheduler.add_jobstore(DjangoJobStore(),"default")
+# @register_job(scheduler,"interval",seconds=3,id="clear_datafile_inVPS_job",replace_existing=True)
+@register_job(scheduler,"cron",hour=2,minute=30,id="clear_datafile_inVPS_job",replace_existing=True)
+def clear_datafile_inVPS_job():
+    for existDatainVPS in personalFileData.objects.filter(waterCreateReady = 1):
+        # 1814400
+        if os.path.isfile(backaddress + '/' + existDatainVPS.waterMarkPath):
+            if (time.time() - os.path.getctime(backaddress+'/'+existDatainVPS.waterMarkPath) ) > 1814400: #創建超過21天
+                try:
+
+                    os.remove(backaddress+'/'+existDatainVPS.waterMarkPath)
+                except:
+                    logging.error(traceback.print_exc())
+
+@register_job(scheduler,"cron",hour=1,minute=30,id="auto_backup_db",replace_existing=True)
+# @register_job(scheduler,"interval",seconds=10,id="auto_backup_db",replace_existing=True)
+def auto_backup_db():
+    logging.info("資料庫備份中...  db backup start")
+    os.system('mysqldump -udevuser2 -pchainyen db1 > {}}db1_info_$(date +%Y%m%d_%H%M%S).sql'.format(dbBackupFolderPath))
+    logging.info("資料庫完成中...  db backup finish")
+
+register_events(scheduler)
+scheduler.start()
+
+dbBackupFolderPath = '/home/aluo/dbBackup/'
+

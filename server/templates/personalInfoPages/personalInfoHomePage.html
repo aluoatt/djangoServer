@@ -32,9 +32,28 @@
             .list-inline{display:block;}
             .list-inline li{display:inline-block;}
             .list-inline li:after{content:'|'; margin:0 10px;}
+            p {color:black;}
+			b {color:black;}
+			.button {
+				border: 1px solid black;
+				color:black;
+			}
+			.page{
+				color:black;
+				background-color:transparent;
+			}
+			.classActivate {
+				background-color:black;
+				color:white;
+			}
+			.classNoActivate{
+				background-color:white;
+				color:black;
+			}
+
         </style>
     </head>
-    <body class="is-preload">
+    <body class="is-preload" style="background-size: Cover;background:url('{%static 'images/login底圖.png' %}');">
 
         <!-- Wrapper -->
         <div id="wrapper">
@@ -48,80 +67,81 @@
             <!-- Main -->
 
             <div id="main" class="alt">
-                <div class="inner">
+                <div class="inner" style=" border-bottom: 1px solid black;">
                     {% include 'personalInfoPages/personalInfoHomePageSearchBar.html' %}
                     <ul class="list-inline">
                         <li >
                             {% if selectTag == "全部" %}
-                            <a href="#" class="primary" style="background-color:grey;">全部</a>
+                            <a href="#" class="classActivate" class="primary" >全部</a>
                             {% else %}
-                            <a href="{% url 'personalInfoHomePage' '全部' %}">全部</a>
+                            <a class="classNoActivate" href="{% url 'personalInfoHomePage' '全部' %}">全部</a>
                             {% endif %}
                         </li>
                         <li>
                             {% if selectTag == "營養" %}
-                            <a href="#" class="primary" style="background-color:grey;">營養</a>
+                            <a href="#" class="classActivate" class="primary" >營養</a>
                             {% else %}
-                            <a href="{% url 'personalInfoHomePage' '營養' %}" >營養</a>
+                            <a class="classNoActivate" href="{% url 'personalInfoHomePage' '營養' %}" >營養</a>
                             {% endif %}
                         </li>
 
                         <li>
 
                             {% if selectTag == "美容" %}
-                            <a href="#" class="primary" style="background-color:grey;">美容</a>
+                            <a href="#" class="classActivate" class="primary" >美容</a>
                             {% else %}
-                            <a href="{% url 'personalInfoHomePage' '美容' %}" >美容</a>
+                            <a class="classNoActivate" href="{% url 'personalInfoHomePage' '美容' %}" >美容</a>
                             {% endif %}
 
                         </li>
 
                         <li>
                             {% if selectTag == "科技" %}
-                            <a href="#" class="primary" style="background-color:grey;">科技</a>
+                            <a href="#" class="classActivate" class="primary" >科技</a>
                             {% else %}
-                            <a href="{% url 'personalInfoHomePage' '科技' %}">科技</a>
+                            <a class="classNoActivate" href="{% url 'personalInfoHomePage' '科技' %}">科技</a>
                             {% endif %}
 
                         </li>
                         <li>
                             {% if selectTag == "金鍋" %}
-                            <a href="#" class="primary" style="background-color:grey;">金鍋</a>
+                            <a href="#" class="classActivate" class="primary" >金鍋</a>
                             {% else %}
-                            <a href="{% url 'personalInfoHomePage' '金鍋' %}">金鍋</a>
+                            <a class="classNoActivate" href="{% url 'personalInfoHomePage' '金鍋' %}">金鍋</a>
                             {% endif %}
 
                         </li>
                         <li >
                             {% if selectTag == "其他" %}
-                            <a href="#" class="primary" style="background-color:grey;">其他</a>
+                            <a href="#" class="classActivate" class="primary" >其他</a>
                             {% else %}
-                            <a href="{% url 'personalInfoHomePage' '其他' %}">其他</a>
+                            <a class="classNoActivate" href="{% url 'personalInfoHomePage' '其他' %}">其他</a>
                             {% endif %}
 
                         </li>
                         <li >
                             {% if selectTag == "總部會議/活動" %}
-                            <a href="#" class="primary" style="background-color:grey;">總部會議/活動</a>
+                            <a href="#" class="classActivate" class="primary" >總部會議/活動</a>
                             {% else %}
-                            <a href="{% url 'personalInfoHomePage' '總部會議' %}">總部會議/活動</a>
+                            <a class="classNoActivate" href="{% url 'personalInfoHomePage' '總部會議' %}">總部會議/活動</a>
                             {% endif %}
 
                         </li>
                         <li >
                             {% if selectTag == "演講廳" %}
-                            <a href="#" class="primary" style="background-color:grey;">演講廳</a>
+                            <a href="#" class="primary" >演講廳</a>
                             {% else %}
-                            <a href="{% url 'personalInfoHomePage' '演講廳' %}">演講廳</a>
+                            <a class="classNoActivate" href="{% url 'personalInfoHomePage' '演講廳' %}">演講廳</a>
                             {% endif %}
 
                         </li>
                     </ul>
                 </div>
-                <section id="one" class="spotlights">
+                <section id="one" class="spotlights" >
 
                     <div class="inner">
                         {% for fileData in fileDatas %}
+                        <div style=" border-bottom: 1px solid black;">
                         <!--									<header class="major">-->
                         <h3><b>{{fileData.fileDataID.title}}</b></h3>
                         <!--											</header>-->
@@ -142,7 +162,7 @@
 
                             </li>
                         </ul>
-                        <hr>
+                        </div>
                         {% endfor %}
                     </div>
 
