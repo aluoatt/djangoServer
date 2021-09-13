@@ -107,7 +107,7 @@
                 <div class="row align-items-center">
                     <li style="list-style-type:none;">
                         <label>編號:
-                            <input onmousedown="setEmptyByTagId('amwayNumbers_input')" onkeyup="accountManagerFilter()" style="color: black;" list="amwayNumbers" class="small" id="amwayNumbers_input" name="amwayNumbers_input"></label>
+                            <input onmousedown="setEmptyByTagIdaccountManagerFilter('amwayNumbers_input')" onkeyup="accountManagerFilter()" style="color: black;" list="amwayNumbers" class="small" id="amwayNumbers_input" name="amwayNumbers_input"></label>
                         <datalist id="amwayNumbers">
                             {% for searchUserAccount in searchUserAccountInfo %}
 
@@ -118,7 +118,7 @@
                     </li>
                     <li style="list-style-type:none;">
                         <label>姓名:
-                            <input onmousedown="setEmptyByTagId('user_input')" onkeyup="accountManagerFilter()" style="color: black;" list="users" class="small" id="user_input" name="amwayNumbers_input"></label>
+                            <input onmousedown="setEmptyByTagIdaccountManagerFilter('user_input')" onkeyup="accountManagerFilter()" style="color: black;" list="users" class="small" id="user_input" name="amwayNumbers_input"></label>
                         <datalist id="users">
                             {% for searchUserAccount in searchUserAccountInfo %}
 
@@ -129,7 +129,7 @@
                     </li>
                     <li style="list-style-type:none;">
                         <label>職務:
-                            <input onmousedown="setEmptyByTagId('jobtitles_input')" onkeyup="accountManagerFilter()" style="color: black;" list="jobtitles" class="small" id="jobtitles_input" name="jobtitles_input"></label>
+                            <input onmousedown="setEmptyByTagIdaccountManagerFilter('jobtitles_input')" onkeyup="accountManagerFilter()" style="color: black;" list="jobtitles" class="small" id="jobtitles_input" name="jobtitles_input"></label>
                         <datalist id="jobtitles">
 
                             {% for jobtitle in jobTitles %}
@@ -139,7 +139,7 @@
                     </li>
                     <li style="list-style-type:none;">
                         <label>獎銜:
-                            <input onmousedown="setEmptyByTagId('amwayAwards_input')" onkeyup="accountManagerFilter()" style="color: black;" list="amwayAwards" class="small" id="amwayAwards_input" name="amwayAwards"></label>
+                            <input onmousedown="setEmptyByTagIdaccountManagerFilter('amwayAwards_input')" onkeyup="accountManagerFilter()" style="color: black;" list="amwayAwards" class="small" id="amwayAwards_input" name="amwayAwards"></label>
                         <datalist id="amwayAwards">
                             {% for amwayAward in amwayAwards %}
                             <option value="{{amwayAward.amwayAward}}">
@@ -148,7 +148,7 @@
                     </li>
                     <li style="list-style-type:none;">
                         <label>教室:
-                            <input  onmousedown="setEmptyByTagId('chainYenClasses_input')" onkeyup="accountManagerFilter()" style="color: black;" list="chainYenClasses" class="small"
+                            <input  onmousedown="setEmptyByTagIdaccountManagerFilter('chainYenClasses_input')" onkeyup="accountManagerFilter()" style="color: black;" list="chainYenClasses" class="small"
                                    name="chainYenClasses" id="chainYenClasses_input"></label>
                         <datalist id="chainYenClasses">
                             {% for chainYenClass in chainYenClasses %}
@@ -158,7 +158,7 @@
                     </li>
                     <li style="list-style-type:none;">
                         <label>白金:
-                            <input onmousedown="setEmptyByTagId('registerDDs_input')" onkeyup="accountManagerFilter()" style="color: black;" list="registerDDs" class="small" id="registerDDs_input" name="registerDDs"></label>
+                            <input onmousedown="setEmptyByTagIdaccountManagerFilter('registerDDs_input')" onkeyup="accountManagerFilter()" style="color: black;" list="registerDDs" class="small" id="registerDDs_input" name="registerDDs"></label>
                         <datalist id="registerDDs">
                             {% for registerDD in registerDDs %}
                             {% if registerDD.sec == Null %}
@@ -173,7 +173,7 @@
                     </li>
                     <li style="list-style-type:none;">
                         <label>鑽石:
-                            <input onmousedown="setEmptyByTagId('registerDims_input')" onkeyup="accountManagerFilter()" style="color: black;" list="registerDims" id="registerDims_input" class="small" name="registerDims"></label>
+                            <input onmousedown="setEmptyByTagIdaccountManagerFilter('registerDims_input')" onkeyup="accountManagerFilter()" style="color: black;" list="registerDims" id="registerDims_input" class="small" name="registerDims"></label>
                         <datalist id="registerDims">
                             {% for registerDim in registerDims %}
                             {% if registerDim.sec == Null %}
@@ -188,7 +188,7 @@
                     </li>
                     <li style="list-style-type:none;">
                         <label>狀態:
-                            <input onmousedown="setEmptyByTagId('accountStatus_input')" onkeyup="accountManagerFilter()" style="color: black;" list="accountStatus" id="accountStatus_input" class="small" name="accountStatus"></label>
+                            <input onmousedown="setEmptyByTagIdaccountManagerFilter('accountStatus_input')" onkeyup="accountManagerFilter()" style="color: black;" list="accountStatus" id="accountStatus_input" class="small" name="accountStatus"></label>
                         <datalist id="accountStatus">
 
                             <option value="正常">

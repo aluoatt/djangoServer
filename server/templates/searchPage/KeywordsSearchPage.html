@@ -32,7 +32,25 @@
 
 			.searchBar-inline{display:block;}
             .searchBar-inline li{display:inline-block;}
+			#keywords::-webkit-input-placeholder {
+				color: rgba(255, 255, 255, 0.4) !important;
+				opacity: 1.0;
+			}
 
+			#keywords:-moz-placeholder {
+				color: rgba(255, 255, 255, 0.2) !important;
+				opacity: 1.0;
+			}
+
+			#keywords::-moz-placeholder {
+				color: rgba(255, 255, 255, 0.2) !important;
+				opacity: 1.0;
+			}
+
+			#keywords:-ms-input-placeholder {
+				color: rgba(255, 255, 255, 0.2) !important;
+				opacity: 1.0;
+			}
 		</style>
 
 	</head>
@@ -59,9 +77,10 @@
 									{% if hasKeywordData %}
 									{% for fileData in fileDatas%}
 									<div style="border-bottom: 1px solid black;">
-									<h3><b>{{fileData.title}}</b></h3>
+									<h3 style="margin-bottom: 0px"><b>{{fileData.title}}</b></h3>
 
-
+										    <details style="margin-bottom: 30px;color:#CE0000">
+												<summary>查看更多...</summary>
 											<p>{{fileData.describe}}</p>
 											<p>
 											{% for keywords in fileData.filedatakeywords_set.all %}
@@ -88,7 +107,7 @@
 														{% endif %}
 												</li>
 											</ul>
-										<hr>
+											</details>
 									</div>
 									{% endfor %}
 									{%else%}

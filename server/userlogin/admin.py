@@ -1,6 +1,7 @@
 from django.contrib import admin
 from userlogin.models import chainYenClassInfo,UserAccountInfo, UserAccountAmwayInfo, UserAccountChainYenInfo, amwayAwardInfo
-from userlogin.models import registerDDandDimInfo,AccountModifyHistory,ConfirmString
+from userlogin.models import registerDDandDimInfo,AccountModifyHistory,\
+    ConfirmString,chainYenJobTitleInfo,loginHistory
 from userlogin.models import TempUserAccountInfo,TempUserAccountAmwayInfo,TempUserAccountChainYenInfo
 from django.utils.translation import gettext_lazy
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
@@ -119,6 +120,13 @@ class ConfirmStringAdmin(admin.ModelAdmin):
     list_display = ('user_name', 'c_time', 'code')
     search_fields = ['user_name']
 
+class chainYenJobTitleInfoAdmin(admin.ModelAdmin):
+    list_display = ('jobTitle', 'rank')
+    search_fields = ['jobTitle']
+
+class loginHistoryAdmin(admin.ModelAdmin):
+    list_display = ('user', 'date','ip')
+    search_fields = ['user']
 # Register your models here.
 admin.site.register(UserAccountInfo,usrloginAdmin)
 admin.site.register(UserAccountAmwayInfo,UserAccountAmwayInfoAdmin)
@@ -131,3 +139,5 @@ admin.site.register(TempUserAccountInfo,TempUserAccountInfoAdmin)
 admin.site.register(TempUserAccountAmwayInfo,TempUserAccountAmwayInfoAdmin)
 admin.site.register(TempUserAccountChainYenInfo,TempUserAccountChainYenInfoAdmin)
 admin.site.register(ConfirmString,ConfirmStringAdmin)
+admin.site.register(chainYenJobTitleInfo,chainYenJobTitleInfoAdmin)
+admin.site.register(loginHistory,loginHistoryAdmin)

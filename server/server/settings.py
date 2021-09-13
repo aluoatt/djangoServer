@@ -23,7 +23,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "/static/static")
 SECRET_KEY = 'django-insecure-x%#0uep5b^^gqkfctv1=w6nasd$-j$eam*u*!#)7k-3dp)6t-4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 # celery
@@ -96,20 +96,34 @@ WSGI_APPLICATION = 'server.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'djangoserver', # DB名稱
+#         'USER': 'djangoUser', # 使用者帳號
+#         'PASSWORD': 'chainyen@fmp6u04', # 使用者密碼
+#         'HOST': '127.0.0.1',
+#         'PORT': '3306',
+#         'OPTIONS': {
+#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+#             'charset':'utf8mb4'
+#         },
+#     }
+# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'djangoserver', # DB名稱
-        'USER': 'djangoUser', # 使用者帳號
-        'PASSWORD': 'chainyen@fmp6u04', # 使用者密碼
+        'NAME': 'db1', # DB名稱
+        'USER': 'devuser2', # 使用者帳號
+        'PASSWORD': 'chainyen', # 使用者密碼
         'HOST': '127.0.0.1',
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            'charset':'utf8mb4'
         },
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

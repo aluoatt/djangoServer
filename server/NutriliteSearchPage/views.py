@@ -562,7 +562,8 @@ def clear_datafile_inVPS_job():
 def auto_backup_db():
     logging.info("資料庫備份中...  db backup start")
     try:
-        os.system('mysqldump -udevuser2 -pchainyen db1 > {}}db1_info_$(date +%Y%m%d_%H%M%S).sql'.format(dbBackupFolderPath))
+
+        os.system('mysqldump -udjangoUser -pchainyen@fmp6u04 djangoserver > {}/djangoserver_info_$(date +%Y%m%d_%H%M%S).sql'.format(dbBackupFolderPath))
     except:
         logging.info("失敗...  db backup start")
     logging.info("資料庫完成中...  db backup finish")

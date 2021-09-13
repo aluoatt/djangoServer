@@ -166,32 +166,35 @@
                         </datalist>
                     </li>
                     {% if perms.userlogin.can_see_register %}
-                    <li style="list-style-type:none;">
+<!--                    <li style="list-style-type:none;">-->
 
-								<a class="button scrolly small" href="{% url 'createRegisterPage' %}">註冊頁面</a>
+<!--&lt;!&ndash;								<a class="button scrolly small" href="{% url 'createRegisterPage' %}">產生註冊頁面</a>&ndash;&gt;-->
+<!--                                <input class="button small" onclick="createRegister()" value="產生註冊網址">-->
 
-                    </li>
+<!--                    </li>-->
+
                     {% endif %}
                 </div>
+                <input class="button small" onclick="createRegister()" value="產生註冊網址">
                 <table class="rwd-table" id="myTable">
 　
                 <tr>
                 　　
                 <th>姓名</th>
                 　　
-                <th>會員編號</th>
+<!--                <th>會員編號</th>-->
                 　　
 <!--                <th>帳號</th>-->
 
                 <th>信箱</th>
 
-                <th>性別</th>
+<!--                <th>性別</th>-->
                 　　
                 <th>電話</th>
                 　　
                 <th>職務</th>
                 　　
-                <th>獎銜</th>
+<!--                <th>獎銜</th>-->
                 　　
                 <th>教室</th>
                 　　
@@ -214,7 +217,7 @@
                     {{AccountChainYen.UserAccountInfo.user}}
                 </td>
                 　　
-                <td id = "{{AccountChainYen.UserAccountInfo.id}}_amwayNumber" data-th="會員編號">
+                <td style="display:none" id = "{{AccountChainYen.UserAccountInfo.id}}_amwayNumber" data-th="會員編號">
                     {{AccountChainYen.UserAccountInfo.tempuseraccountamwayinfo_set.first.amwayNumber}}
                 </td>
 <!--                <td id = "{{AccountChainYen.UserAccountInfo.id}}_username" data-th="帳號">-->
@@ -223,7 +226,7 @@
                 <td id = "{{AccountChainYen.UserAccountInfo.id}}_email"  data-th="信箱">
                     {{AccountChainYen.UserAccountInfo.email}}
                 </td>
-                <td id = "{{AccountChainYen.UserAccountInfo.id}}_gender"  data-th="性別">
+                <td style="display:none" id = "{{AccountChainYen.UserAccountInfo.id}}_gender"  data-th="性別">
                     {{AccountChainYen.UserAccountInfo.gender}}
                 </td>
                 　　
@@ -235,7 +238,7 @@
                     {{AccountChainYen.jobTitle.jobTitle}}
                 </td>
                 　　
-                <td id = "{{AccountChainYen.UserAccountInfo.id}}_amwayAward" data-th="獎銜">
+                <td style="display:none" id = "{{AccountChainYen.UserAccountInfo.id}}_amwayAward" data-th="獎銜">
                     {{AccountChainYen.UserAccountInfo.tempuseraccountamwayinfo_set.first.amwayAward.amwayAward}}
                 </td>
                     　　
@@ -356,6 +359,27 @@
     </div>
   </div>
 </div>
+
+<div class='modal my-modal-alert' id='my-modal-alert'>
+            <div class='modal-dialog boxBodySmall'>
+                <div class='modal-content'>
+                    <div class='modal-header boxHeader'>
+<!--                        <button type='button' class='close boxClose' data-dismiss='modal'>-->
+<!--                            <span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span>-->
+<!--                        </button>-->
+                    </div>
+                    <div class='modal-body' id='modal-body-alert'>
+                        <div style="color:black" id='modal_message'>已將註冊頁面的網址複製到剪貼簿</div>
+                        <span style="color:black" id='num'></span>
+                    </div>
+<!--                    <div class='modal-footer boxFooter' id='modal-footer'>-->
+<!--                        <button type='button' class='btn btn-default boxButton' data-dismiss='modal'>關閉</button>-->
+<!--                        <button type='button' class='btn btn-primary boxButton'>保存</button>-->
+<!--                    </div>-->
+                </div>
+            </div>
+</div>
+<!--<input type="text" hidden value="" id="regurl">-->
 <!---->
 <script src="{%static 'assets/js/jquery.min.js' %}"></script>
 <script src="{%static 'assets/js/jquery.scrolly.min.js' %}"></script>
@@ -372,6 +396,108 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
+<script src="{%static 'assets/js/jquery-ui.min.js' %}" ></script>
+<script>
+    /**
+ * Copy a string to clipboard
+ * @param  {String} string         The string to be copied to clipboard
+ * @return {Boolean}               returns a boolean correspondent to the success of the copy operation.
+ */
+function copyToClipboard(string) {
+  let textarea;
+  let result;
 
+  try {
+    textarea = document.createElement('textarea');
+    textarea.setAttribute('readonly', true);
+    textarea.setAttribute('contenteditable', true);
+    textarea.style.position = 'fixed'; // prevent scroll from jumping to the bottom when focus is set.
+    textarea.value = string;
+
+    document.body.appendChild(textarea);
+
+    textarea.focus();
+    textarea.select();
+
+    const range = document.createRange();
+    range.selectNodeContents(textarea);
+
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+
+    textarea.setSelectionRange(0, textarea.value.length);
+    result = document.execCommand('copy');
+  } catch (err) {
+    console.error(err);
+    result = null;
+  } finally {
+    document.body.removeChild(textarea);
+  }
+
+  // manual copy fallback using prompt
+  if (!result) {
+    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+    const copyHotkey = isMac ? '⌘C' : '請複製下列網址';
+    result = prompt(` ${copyHotkey}`, string); // eslint-disable-line no-alert
+    if (!result) {
+      return false;
+    }
+  }
+  return true;
+}
+    function createRegister(){
+
+    var requestURL = "{% url 'createRegisterPage' %}";
+    $.ajax({
+        url: requestURL,
+        headers: {'X-CSRFToken': '{{ csrf_token }}'},
+        type: "POST",
+        method: "POST",
+        dataType: "json",
+        contentType: "application/json;charset=utf-8",
+        success: function (returnData) {
+
+
+            copyToClipboard(returnData.result)
+
+            showModal()
+
+
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+
+
+
+        }
+    });
+    }
+</script>
+<script>
+            var clearFlag = 0;
+            var count = 1;//设置3秒后自动消失
+            var showModal = function(){
+                $("#my-modal-alert").toggle();//显示模态框
+
+                $("#my-modal-alert").draggable({//设置模态框可拖动（需要引入jquery-ui.min.js）
+                    handle: ".modal-header"
+                });
+
+                clearFlag = self.setInterval("autoClose()",200);//每过一秒调用一次autoClose方法
+            }
+
+            var autoClose = function(){
+                if(count>0){
+                    // $("#num").html(count + "秒後窗口關閉");
+                    count--;
+                }else if(count<=0){
+                    window.clearInterval(clearFlag);
+                    $("#num").html("");
+                    $("#my-modal-alert").fadeOut("slow");
+                    count = 3;
+                    $("#my-modal-alert").toggle();
+                }
+            }
+        </script>
 </body>
 </html>

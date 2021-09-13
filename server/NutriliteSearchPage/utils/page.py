@@ -75,12 +75,12 @@ class Pagination(object):
     # page_html_list.append(first_page)
     if self.keywords == None:
       if self.current_page_num <= 1:
-        prev_page = '<li class="disabled"><a href="#" rel="external nofollow" rel="external nofollow" class="button small">上一頁</a></li>'
+        prev_page = '<li class="disabled"><a style="pointer-events: none;" href="#" rel="external nofollow" rel="external nofollow" class="button small">上一頁</a></li>'
       else:
         prev_page = '<li><a href="?page=%s" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" class="button small">上一頁</a></li>' % (self.current_page_num - 1,)
     else:
       if self.current_page_num <= 1:
-        prev_page = '<li class="disabled"><a href="#" rel="external nofollow" rel="external nofollow" class="button small">上一頁</a></li>'
+        prev_page = '<li class="disabled"><a style="pointer-events: none;" href="#" rel="external nofollow" rel="external nofollow" class="button small">上一頁</a></li>'
       else:
         prev_page = '<li><a href="?page=%s&keyword=%s&timelim=%s" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" class="button small">上一頁</a></li>' % (self.current_page_num - 1,self.keywords,self.timelim)
     page_html_list.append(prev_page)
@@ -108,12 +108,12 @@ class Pagination(object):
     page_html_list.append("&nbsp &nbsp")
     if self.keywords == None:
       if self.current_page_num >= self.all_pager:
-        next_page = '<li class="disabled"><a href="#" rel="external nofollow" rel="external nofollow" class="button small">下一頁</a></li>'
+        next_page = '<li class="disabled"><a style="pointer-events: none;" href="#" rel="external nofollow" rel="external nofollow" class="button small">下一頁</a></li>'
       else:
         next_page = '<li><a href="?page=%s" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" class="button small">下一頁</a></li>' % (self.current_page_num + 1,)
     else:
       if self.current_page_num >= self.all_pager:
-        next_page = '<li class="disabled"><a href="#" rel="external nofollow" rel="external nofollow" class="button small">下一頁</a></li>'
+        next_page = '<li class="disabled"><a style="pointer-events: none;" href="#" rel="external nofollow" rel="external nofollow" class="button small">下一頁</a></li>'
       else:
         next_page = '<li><a href="?page=%s&keyword=%s&timelim=%s" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" class="button small">下一頁</a></li>' % (self.current_page_num + 1,self.keywords,self.timelim,)
     page_html_list.append(next_page)

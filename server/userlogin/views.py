@@ -1,14 +1,15 @@
 import json
 
 from django.shortcuts import render, redirect
-
+from django.conf import settings
 # Create your views here.
 from django.contrib import auth
 from django.http import HttpResponseRedirect, HttpResponseNotFound, HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import permission_required
 from userlogin.models import amwayAwardInfo ,chainYenJobTitleInfo ,chainYenClassInfo , UserAccountInfo,UserAccountChainYenInfo
-from userlogin.models import TempUserAccountInfo ,TempUserAccountAmwayInfo ,TempUserAccountChainYenInfo,registerDDandDimInfo
+from userlogin.models import TempUserAccountInfo ,TempUserAccountAmwayInfo ,\
+    TempUserAccountChainYenInfo,registerDDandDimInfo,loginHistory
 from pointManage.models import pointHistory
 from django.contrib.auth.hashers import make_password
 import datetime
@@ -40,6 +41,7 @@ def login(request):
                                 addPoint="", reducePoint="1", transferPoint="",
                                 resultPoint=UserAccountChainYen.point)
         pHistory.save()
+        loginHistory.objects.create(user=request.user, ip=request.META['HTTP_X_FORWARDED_FOR'])
         return HttpResponseRedirect('/home/')
     else:
         if username != '':
@@ -158,8 +160,8 @@ def registerSuccess(request,status):
 def createRegisterPage(request):
     token = generate_token(key, 3600)
 
-    return redirect('/accounts/register/' + token)
-
+    # return redirect('/accounts/register/' + token)
+    return HttpResponse(json.dumps({"result":settings.MYIP+'/accounts/register/' + token}), content_type="application/json")
 #找DD是否存在
 def checkRegDD(request):
     response_data = {}

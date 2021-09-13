@@ -144,7 +144,9 @@
                         <div style=" border-bottom: 1px solid black;">
                         <!--									<header class="major">-->
                         <h3><b>{{fileData.fileDataID.title}}</b></h3>
-                        <!--											</header>-->
+
+                        <details style="margin-bottom: 30px;color:#CE0000">
+                                            <summary>查看更多...</summary>
                         <p>{{fileData.fileDataID.describe}}</p>
                         <p>
                         {% for keywords in fileData.fileDataID.filedatakeywords_set.all %}
@@ -162,6 +164,7 @@
 
                             </li>
                         </ul>
+                        </details>
                         </div>
                         {% endfor %}
                     </div>
