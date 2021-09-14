@@ -24,7 +24,7 @@ class fileDataInfo(models.Model):
     permissionsLevel = models.IntegerField(verbose_name='權限等級')
     DBClass = models.ForeignKey("DBClassInfo",verbose_name='資料庫類別',on_delete=models.PROTECT)
     downloadAble = models.BooleanField(verbose_name='是否可以下載')
-    likes = models.IntegerField(verbose_name="按讚數")
+    likes = models.IntegerField(default=0,verbose_name="按讚數")
 
     class Meta:
         verbose_name = "檔案管理"
