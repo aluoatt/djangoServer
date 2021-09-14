@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from NutriliteSearchPage.models import fileDataInfo,mainClassInfo,secClassInfo,personalFileData,personalExchangeFileLog
-from userlogin.models import UserAccountInfo,UserAccountChainYenInfo
+from userlogin.models import UserAccountInfo,UserAccountChainYenInfo, UserAccountAmwayInfo, registerDDandDimInfo
 from NutriliteSearchPage.utils.page import Pagination
 from pointManage.models import pointHistory
 from django.contrib.auth.hashers import make_password,check_password
@@ -50,8 +50,30 @@ def personalInfoHomePage(request,selectTag):
 def personalInfoPointPage(request):
 
     userAccountInfo = UserAccountInfo.objects.get(username = request.user.username)
+
+    #紀錄
     pHistory = pointHistory.objects.filter(UserAccountInfo = userAccountInfo).order_by('-recordDate')
 
+    #轉讓: 白金小組 & 鑽石小組
+    myTeam = []
+    userAccountAmway = UserAccountAmwayInfo.objects.get(UserAccountInfo = userAccountInfo)
+    awardRank = userAccountAmway.amwayAward.rank
+    amNumber  = userAccountAmway.amwayNumber
+    #白金
+    if awardRank >= 15 and awardRank < 60:
+        myDDInfo = registerDDandDimInfo.objects.get(amwayNumber = amNumber)
+        myTeam = UserAccountAmwayInfo.objects.filter(amwayDD = myDDInfo).values('UserAccountInfo').exclude(username = request.user.username)
+    #鑽石
+    elif awardRank >= 60:
+        myDDInfo = registerDDandDimInfo.objects.get(amwayNumber = amNumber)
+        accountIDList = UserAccountAmwayInfo.objects.filter(amwayDD = myDDInfo).values('UserAccountInfo')
+        myTeam = UserAccountInfo.objects.filter(id__in=accountIDList).exclude(username = request.user.username)
+        myTeamDD = registerDDandDimInfo.objects.filter(amwayDiamond = str(amNumber))
+        for myDD in myTeamDD:
+            accountIDList = UserAccountAmwayInfo.objects.filter(amwayDD = myDD).values('UserAccountInfo')
+            myTeam = myTeam + UserAccountInfo.objects.filter(id__in=accountIDList).exclude(username = request.user.username)
+    else:
+        myTeam = []
     selectPage = "管理個人點數"
 
     return render(request, 'personalInfoPages/personalInfoPointPage.html', locals())

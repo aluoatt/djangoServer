@@ -1,12 +1,12 @@
 from django.shortcuts import render
-from userlogin.models import UserAccountInfo
+from userlogin.models import UserAccountInfo, registerDDandDimInfo
 from django.contrib.auth.decorators import permission_required
-from userlogin.models import UserAccountInfo, UserAccountChainYenInfo
+from userlogin.models import UserAccountInfo, UserAccountChainYenInfo, UserAccountAmwayInfo
 from django.db.models import F, Value
 from django.http import HttpResponse
 from pointManage.models import pointHistory
 from django.core import serializers
-import datetime
+import datetime, json
 # Create your views here.
 
 @permission_required('userlogin.seeManagerPointPage', login_url='/accounts/userlogin/')
@@ -67,6 +67,75 @@ def getPointHistory(request):
         pHistory = pointHistory.objects.filter(UserAccountInfo = userAccountInfo).order_by('-recordDate')
         res.status_code = 200
         res.content =  serializers.serialize("json", pHistory)
+    except:
+        res.status_code = 503
+
+    return res
+
+
+def transferPoint(request):
+    res = HttpResponse()
+    try:
+
+        fromUser = request.user.username
+        toUser = request.POST['username']
+        pointTransfer = int(request.POST['point'])
+
+        #Do not hack me
+        if pointTransfer <= 0:
+            res.status_code = 404
+            res.content = "do not try to hack me <3"
+            return res
+
+        #TODO restrict the transfer outside self Team when someone hack this API
+        fromUserAccount = UserAccountInfo.objects.get(username = fromUser)
+        fromUserAmwayAccount = UserAccountAmwayInfo.objects.get(UserAccountInfo = fromUserAccount)
+        fromUserAmwayNumber = fromUserAmwayAccount.amwayNumber
+        toUserAccount = UserAccountInfo.objects.get(username = toUser)
+        toUserAmwayAccountInfo = UserAccountAmwayInfo.objects.get(UserAccountInfo=toUserAccount)
+        toUserDDInfo = toUserAmwayAccountInfo.amwayDD
+
+        #Do not hack me
+        if not (toUserDDInfo.amwayNumber  == fromUserAmwayNumber or 
+                toUserDDInfo.amwayDiamond == fromUserAmwayNumber):
+            res.status_code = 404
+            res.content = "do not try to hack me <3"
+            return res
+        
+        #扣點
+        userAccountInfo = UserAccountInfo.objects.get(username = fromUser)
+        accountChainyen = UserAccountChainYenInfo.objects.get(UserAccountInfo = userAccountInfo)
+        fromResultPoint = accountChainyen.point - pointTransfer
+        accountChainyen.point = F('point') - pointTransfer
+        accountChainyen.save()
+
+        modifier = request.user.user
+        pHistory = pointHistory(UserAccountInfo = userAccountInfo, modifier = modifier,
+                                recordDate = datetime.datetime.now(), reason = '轉讓點數',
+                                addPoint = "", reducePoint = "", transferPoint = "-" + str(pointTransfer),
+                                resultPoint = fromResultPoint)
+
+        #加點
+        userAccountInfo = UserAccountInfo.objects.get(username = toUser)
+        accountChainyen = UserAccountChainYenInfo.objects.get(UserAccountInfo = userAccountInfo)
+        toResultPoint = accountChainyen.point + int(pointTransfer)
+        accountChainyen.point = F('point') + int(pointTransfer)
+        accountChainyen.save()
+
+        res.status_code = 200
+        res.content = json.dumps({
+            "fromUser": fromUser,
+            "toUser": toUser,
+            "fromResultPoint": fromResultPoint,
+            "toResultPoint": toResultPoint
+        })
+
+        modifier = request.user.user
+        pHistory = pointHistory(UserAccountInfo = userAccountInfo, modifier = modifier,
+                                recordDate = datetime.datetime.now(), reason = '轉讓點數',
+                                addPoint = "", reducePoint = "", transferPoint = "+" + str(pointTransfer),
+                                resultPoint = toResultPoint)
+        pHistory.save()
     except:
         res.status_code = 503
 

@@ -23,7 +23,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "/static/static")
 SECRET_KEY = 'django-insecure-x%#0uep5b^^gqkfctv1=w6nasd$-j$eam*u*!#)7k-3dp)6t-4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 # celery
@@ -153,7 +153,6 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
-    '/home/chainyen/production/djangoserver/lib/python3.8/site-packages/django/contrib/admin/static'
     # another directory ...
 ]
 # Default primary key field type

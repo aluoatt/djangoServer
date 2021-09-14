@@ -12,6 +12,8 @@ class Server(models.Model):
             ("seeManagerAccountManagerPage", "seeManagerAccountManagerPage"),
             ("seeManagerAuditAccountPage", "seeManagerAuditAccountPage"),
             ("seeManagerPointPage", "seeManagerPointPage"),
+            ("seeManagerArticlePage", "seeManagerArticlePage"),
+            ("seeManagerStatisticPage", "seeManagerStatisticPage"),
             ("ALLAuditManager", "ALLAuditManager"),
             ("CYPManager", "CYPManager"),
             ("CYLManager", "CYLManager"),

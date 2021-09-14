@@ -6,188 +6,112 @@
 -->
 
 <html>
-    <head>
-        <title>ChainYen System</title>
-        <meta charset="utf-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
 
-        {% load static %}
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-                               integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<head>
+    <title>ChainYen System</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
-        <link rel="stylesheet" href="{%static 'assets/css/main.css' %}"/>
+    {% load static %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-        <noscript>
-            <link rel="stylesheet" href="{%static 'assets/css/noscript.css' %}"/>
-        </noscript>
-        <style type="text/css">
-            html, body, #pdf_viewer {
-                width: 100%;
-                height: 100%;
-                margin: 0;
-                padding: 0;
-            }
-        </style>
-        <style type="text/css">
-            .rwd-table {
-                /*background: #fff;*/
-                overflow: hidden;
-            }
+    <link rel="stylesheet" href="{%static 'assets/css/main.css' %}" />
 
-            .rwd-table tr:nth-of-type(2n){
-                /*background: #eee;*/
-            }
-            .rwd-table th,
-            .rwd-table td {
-                margin: 0.5em 1em;
-            }
-            .rwd-table {
-                min-width: 100%;
-            }
+    <noscript>
+        <link rel="stylesheet" href="{%static 'assets/css/noscript.css' %}" />
+    </noscript>
+    <style type="text/css">
+        html,
+        body,
+        #pdf_viewer {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    
+</head>
 
-            .rwd-table th {
-                display: none;
-            }
+<body class="is-preload" style="background-size: Cover;background:url('{%static 'images/login底圖.png' %}');">
 
-            .rwd-table td {
-                display: block;
-            }
 
-            .rwd-table td:before {
-                content: attr(data-th) " : ";
-                font-weight: bold;
-                width: 6.5em;
-                display: inline-block;
-            }
+    <!-- Wrapper -->
+    <div id="wrapper">
 
-            .rwd-table th, .rwd-table td {
-                text-align: left;
-            }
+        <!-- Header -->
+        {% include 'baseHeader.html' %}
 
-            .rwd-table th, .rwd-table td:before {
-                color: #FF2D2D;
-                font-weight: bold;
-                /*background-color:#BEBEBE	;*/
-            }
+        <!-- Menu -->
+        {% include 'baseMenu.html' %}
 
-            @media (min-width: 480px) {
-                .rwd-table td:before {
-                    display: none;
-                }
-                .rwd-table th, .rwd-table td {
-                    display: table-cell;
-                    padding: 0.25em 0.5em;
-                }
-                .rwd-table th:first-child,
-                .rwd-table td:first-child {
-                    padding-left: 0;
-                }
-                .rwd-table th:last-child,
-                .rwd-table td:last-child {
-                    padding-right: 0;
-                }
-                .rwd-table th,
-                .rwd-table td {
-                    padding: 1em !important;
-                }
-            }
-        </style>
-    </head>
-    <body class="is-preload" style="background-size: Cover;background:url('{%static 'images/login底圖.png' %}');">
+        <!-- Main -->
 
-        <!-- Wrapper -->
-        <div id="wrapper">
-
-            <!-- Header -->
-            {% include 'baseHeader.html' %}
-
-            <!-- Menu -->
-            {% include 'baseMenu.html' %}
-
-            <!-- Main -->
-
-            <div id="main" class="alt">
-                <section id="one" class="spotlights">
-                    <div class="inner">
-                        {% include 'personalInfoPages/personalInfoHomePageSearchBar.html' %}
-                        <table id = "myTable" class="rwd-table table-bordered text-center" style="border:dark;">
-                            <tr class="text-center">
-                                <th>變更者</th>
-                                <th>修改日期</th>
-                                <th>增點</th>
-                                <th>扣點</th>
-                                <th>轉讓</th>
-                                <th>原因</th>
-                                <th>剩餘點數</th>
-                            </tr>
-                            {% for history in pHistory %}
-                            <tr class="text-dark font-weight-bold" style=" border-bottom: 1px solid black;">
-                                <td id = "history_modifier" data-th="變更者">
-                                    {{history.modifier}}
-                                </td>
-                                　　
-                                <td id = "history_recordDate" data-th="修改日期">
-                                    {{history.recordDate}}
-                                </td>
-                                　　
-                                <td id = "history_addPoint" data-th="增點">
-                                    {{history.addPoint}}
-                                </td>
-                                　　
-                                <td id = "history_reducepoint" data-th="扣點">
-                                    {{history.reducePoint}}
-                                </td>
-                                　　
-                                <td id = "history_transferPoint" data-th="轉讓">
-                                    {{history.transferPoint}}
-                                </td>
-                                　　
-                                <td id = "history_reason" data-th="原因">
-                                    {{history.reason}}
-                                </td>
-
-                                <td id = "history_resultPoint" data-th="剩餘點數">
-                                    {{history.resultPoint}}
-                                </td>
-                                　　
-                            </tr>
-                            {% endfor %}
-
-                        </table>
+        <div id="main" class="alt">
+            <section id="one" class="spotlights">
+                <div class="inner">
+                    {% include 'personalInfoPages/personalInfoHomePageSearchBar.html' %}
+                    <nav>
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            <a class="nav-link active btn-warning" id="nav-home-tab" data-toggle="tab" href="#nav-home"
+                                role="tab" aria-controls="nav-home" aria-selected="true">
+                                點數紀錄
+                            </a>
+                            <a class="nav-link btn-warning ml-1" id="nav-profile-tab" data-toggle="tab"
+                                href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">
+                                轉讓點數
+                            </a>
+                            <a class="nav-link btn-warning ml-1" id="nav-contact-tab" data-toggle="tab"
+                                href="#nav-contact" role="tab" aria-controls="nav-contact"
+                                aria-selected="false">
+                                兌換點數
+                            </a>
+                        </div>
+                    </nav>
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
+                            aria-labelledby="nav-home-tab">
+                            {% include 'personalInfoPages/personalInfoPointPageHistory.html' %}
+                        </div>
+                        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                            {% include 'personalInfoPages/personalInfoPointPageTransfer.html' %}
+                        </div>
+                        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                            {% include 'personalInfoPages/personalInfoPointPageExchange.html' %}
+                        </div>
                     </div>
-            </div>
-
-                </section>
-                {% if pageisNotNull %}
-                <div class="dataTables_paginate paging_simple_numbers pull-right inner">
-                    <ul class="pagination ">
-                        {{ pagination.page_html|safe }}
-                    </ul>
                 </div>
-                {% endif %}
-
-
         </div>
 
+        </section>
+        {% if pageisNotNull %}
+        <div class="dataTables_paginate paging_simple_numbers pull-right inner">
+            <ul class="pagination ">
+                {{ pagination.page_html|safe }}
+            </ul>
         </div>
+        {% endif %}
+    </div>
+
+    </div>
 
 
-        <!-- Scripts -->
-        <script src="{%static 'assets/js/jquery.min.js' %}"></script>
-        <script src="{%static 'assets/js/jquery.scrolly.min.js' %}"></script>
-        <script src="{%static 'assets/js/jquery.scrollex.min.js' %}"></script>
-        <script src="{%static 'assets/js/browser.min.js' %}"></script>
-        <script src="{%static 'assets/js/breakpoints.min.js' %}"></script>
-        <script src="{%static 'assets/js/util.js' %}"></script>
-        <script src="{%static 'assets/js/main.js' %}"></script>
-        <script src="{%static 'assets/js/cyMain.js' %}"></script>
-        <script src="{%static 'assets/js/viewPageAjax.js' %}"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-                integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-                crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-                integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-                crossorigin="anonymous"></script>
+    <!-- Scripts -->
+    <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.scrolly.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.scrollex.min.js' %}"></script>
+    <script src="{% static 'assets/js/browser.min.js' %}"></script>
+    <script src="{% static 'assets/js/breakpoints.min.js' %}"></script>
+    <script src="{% static 'assets/js/util.js' %}"></script>
+    <script src="{% static 'assets/js/main.js' %}"></script>
+    <script src="{% static 'assets/js/cyMain.js' %}"></script>
+    <script src="{% static 'assets/js/viewPageAjax.js' %}"></script>
+    <script src="{% static 'assets/js/popper.min.js' %}"></script>
+    <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/js/personPointManager.js' %}"></script>
+    <script src="{% static 'assets/js/bootbox/bootbox.min.js' %}"></script>
+    <script src="{% static 'assets/js/bootbox/bootbox.locales.min.js' %}"></script>
+</body>
 
-    </body>
 </html>
