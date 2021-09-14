@@ -206,9 +206,15 @@ class AccountModifyHistory(models.Model):
         verbose_name = "帳號更動歷史紀錄"
         verbose_name_plural = "帳號更動歷史紀錄"
 
-# from userlogin.models import amwayAwardInfo
-# r = amwayAwardInfo.objects.create(rank=0,amwayAward="暫無")
-# r = amwayAwardInfo.objects.create(rank=1,amwayAward="白金")
-# r.save()
 
-# r = chainYenClassInfo.objects.create(rank=0,ClassRoomName="台北",ClassRoomCode = "CYP")
+class loginHistory(models.Model):
+    user= models.ForeignKey(UserAccountInfo, on_delete=models.CASCADE,verbose_name="登入帳號")
+    date= models.DateTimeField(auto_now_add= True,verbose_name="登入時間")
+    ip = models.CharField(verbose_name="ip", max_length=100)
+
+    class Meta:
+        verbose_name = "登入紀錄"
+        verbose_name_plural = "登入紀錄"
+
+    def __str__(self):
+        return str(self.user) + ': ' + str(self.date)

@@ -131,7 +131,7 @@ for i in range(2,sheet.max_row):
 
         if "＃" in keywords:
             keywords = keywords.replace("＃", "#")
-        keywords = keywords.split("#")
+        keywords = keywords.split("#")[1:]
         for keyword in keywords:
             fDataKeyword = fileDataKeywords(fileDataInfoID = fileData, keyword = keyword)
             fDataKeyword.save()

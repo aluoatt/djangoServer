@@ -190,7 +190,7 @@ function auditFilter() {
           if (amwayNumbersValue.toUpperCase().indexOf(amwayNumbers_input) > -1
               && amwayAwardsValue.toUpperCase().indexOf(amwayAwards_input) > -1
               && chainYenClassesValue.toUpperCase().indexOf(chainYenClasses_input) > -1
-              && registerDDsValue.toUpperCase().indexOf(registerDDs_input) > -1
+              && registerDDsValue.toUpperCase().indexOf(registerDDs_input.split("/")[0]) > -1
               && registerDimsValue.toUpperCase().indexOf(registerDims_input.split("/")[0]) > -1
           ) {
               tr[i].style.display = "";
@@ -224,6 +224,7 @@ function accountManagerFilter() {
         registerDims = tr[i].getElementsByTagName("td")[8];
 
 
+
         if (amwayNumbers) {
             amwayNumbersValue = amwayNumbers.textContent || amwayNumbers.innerText;
             amwayAwardsValue = amwayAwards.textContent || amwayAwards.innerText;
@@ -233,10 +234,12 @@ function accountManagerFilter() {
             jobtitlesValue = jobtitles.textContent || jobtitles.innerText;
             userValue = user.textContent || user.innerText;
 
+
+
             if (amwayNumbersValue.toUpperCase().indexOf(amwayNumbers_input) > -1
                 && amwayAwardsValue.toUpperCase().indexOf(amwayAwards_input) > -1
                 && chainYenClassesValue.toUpperCase().indexOf(chainYenClasses_input) > -1
-                && registerDDsValue.toUpperCase().indexOf(registerDDs_input) > -1
+                && registerDDsValue.toUpperCase().indexOf(registerDDs_input.split("/")[0]) > -1
                 && registerDimsValue.toUpperCase().indexOf(registerDims_input.split("/")[0]) > -1
                 && jobtitlesValue.toUpperCase().indexOf(jobtitles_input) > -1
                 && userValue.toUpperCase().indexOf(user_input) > -1
@@ -254,3 +257,10 @@ function setEmptyByTagId(TagId) {
     document.getElementById(TagId).value = ""
     auditFilter()
 }
+
+function setEmptyByTagIdaccountManagerFilter(TagId) {
+
+    document.getElementById(TagId).value = ""
+    accountManagerFilter()
+}
+

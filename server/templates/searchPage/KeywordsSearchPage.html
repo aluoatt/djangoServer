@@ -32,7 +32,34 @@
 
 			.searchBar-inline{display:block;}
             .searchBar-inline li{display:inline-block;}
+			#keywords::-webkit-input-placeholder {
+				color: rgba(255, 255, 255, 0.4) !important;
+				opacity: 1.0;
+			}
 
+			#keywords:-moz-placeholder {
+				color: rgba(255, 255, 255, 0.2) !important;
+				opacity: 1.0;
+			}
+
+			#keywords::-moz-placeholder {
+				color: rgba(255, 255, 255, 0.2) !important;
+				opacity: 1.0;
+			}
+
+			#keywords:-ms-input-placeholder {
+				color: rgba(255, 255, 255, 0.2) !important;
+				opacity: 1.0;
+			}
+			div.like{
+			color:#337ab7;
+			cursor:pointer;
+			display:inline-block;
+			padding:0.5em 0.3em;
+		}
+			@font-face{font-family:'Glyphicons Halflings';src:url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.eot');src:url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.woff') format('woff'),url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.ttf') format('truetype'),url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');}.glyphicon{position:relative;top:1px;display:inline-block;font-family:'Glyphicons Halflings';font-style:normal;font-weight:normal;line-height:1;-webkit-font-smoothing:antialiased;}
+
+			.glyphicon-thumbs-up:before{content:"\e125";}
 		</style>
 
 	</head>
@@ -59,16 +86,20 @@
 									{% if hasKeywordData %}
 									{% for fileData in fileDatas%}
 									<div style="border-bottom: 1px solid black;">
-									<h3><b>{{fileData.title}}</b></h3>
+									<h3 style="margin-bottom: 0px"><b>{{fileData.title}}</b></h3>
 
-
+										    <details style="margin-bottom: 30px;color:#CE0000">
+												<summary>查看更多...</summary>
 											<p>{{fileData.describe}}</p>
 											<p>
 											{% for keywords in fileData.filedatakeywords_set.all %}
 												#{{keywords.keyword}}
 											{% endfor %}
 											</p>
-
+											<div class="like">
+												<span class="glyphicon glyphicon-thumbs-up"></span>
+												<span class="liked-num">{{fileData.likes}}</span>
+											</div>
 											<ul class="actions">
 												<li>
 
@@ -88,7 +119,7 @@
 														{% endif %}
 												</li>
 											</ul>
-										<hr>
+											</details>
 									</div>
 									{% endfor %}
 									{%else%}

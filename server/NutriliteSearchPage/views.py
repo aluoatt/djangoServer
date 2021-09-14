@@ -341,8 +341,9 @@ def regetPersonalFile(request, fileId):
 def viewFilePage(request, fileId):
     targetFile = fileDataInfo.objects.get(id=int(fileId))
     UserAccount = UserAccountInfo.objects.get(username=request.user)
-    alreadyExchange = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id).count() > 0
-
+    personalFile = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id)
+    alreadyExchange = personalFile.count() > 0
+    aleardyLike = personalFile.first().like
     if request.user == "administrator":
         permission = True
         pointEnough = True
@@ -562,7 +563,8 @@ def clear_datafile_inVPS_job():
 def auto_backup_db():
     logging.info("資料庫備份中...  db backup start")
     try:
-        os.system('mysqldump -udevuser2 -pchainyen db1 > {}}db1_info_$(date +%Y%m%d_%H%M%S).sql'.format(dbBackupFolderPath))
+
+        os.system('mysqldump -udjangoUser -pchainyen@fmp6u04 djangoserver > {}/djangoserver_info_$(date +%Y%m%d_%H%M%S).sql'.format(dbBackupFolderPath))
     except:
         logging.info("失敗...  db backup start")
     logging.info("資料庫完成中...  db backup finish")

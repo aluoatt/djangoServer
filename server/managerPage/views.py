@@ -138,9 +138,9 @@ def managerAccountManagerPage(request):
     # 教室表
     chainYenClasses = chainYenClassInfo.objects.all().order_by('rank')
     # 白金表
-    registerDDs = registerDDandDimInfo.objects.filter(amwayAward__rank__gte=15)
+    registerDDs = registerDDandDimInfo.objects.filter(amwayAward__rank__gte=15).order_by('amwayNumber')
     # 鑽石表
-    registerDims = registerDDandDimInfo.objects.filter(amwayAward__rank__gte=60)
+    registerDims = registerDDandDimInfo.objects.filter(amwayAward__rank__gte=60).order_by('amwayNumber')
 
     q1 = Q()
     q1.connector = 'OR'
@@ -195,7 +195,7 @@ def managerAccountManagerPage(request):
     if registerDDandDimInfo.objects.filter(amwayNumber = UserAccount.useraccountamwayinfo_set.first().amwayNumber).count() > 0:
         for UserAccountAmway in UserAccountAmwayInfo.objects.filter(amwayDD=UserAccount.useraccountamwayinfo_set.first().amwayNumber):
             q2.children.append(("id", UserAccountAmway.UserAccountInfo.id))
-    searchUserAccountInfo = UserAccountInfo.objects.filter(q2)
+    searchUserAccountInfo = UserAccountInfo.objects.filter(q2).order_by('username')
 
     return render(request, 'managerPages/managerAccountManagerPage.html', locals())
 
@@ -212,9 +212,9 @@ def managerAccountModify(request):
     # 教室表
     chainYenClasses = chainYenClassInfo.objects.all().order_by('rank')
     # 白金表
-    registerDDs = registerDDandDimInfo.objects.filter(amwayAward__rank__gte=15)
+    registerDDs = registerDDandDimInfo.objects.filter(amwayAward__rank__gte=15).order_by('amwayNumber')
     # 鑽石表
-    registerDims = registerDDandDimInfo.objects.filter(amwayAward__rank__gte=60)
+    registerDims = registerDDandDimInfo.objects.filter(amwayAward__rank__gte=60).order_by('amwayNumber')
 
     TempUserAccountChainYen = TempUserAccountChainYenInfo.objects.all()
     # print(TempUserAccount)
@@ -404,9 +404,9 @@ def managerAuditAccountPage(request):
     # 教室表
     chainYenClasses = chainYenClassInfo.objects.all().order_by('rank')
     # 白金表
-    registerDDs = registerDDandDimInfo.objects.filter(amwayAward__rank__gte=15)
+    registerDDs = registerDDandDimInfo.objects.filter(amwayAward__rank__gte=15).order_by('amwayNumber')
     # 鑽石表
-    registerDims = registerDDandDimInfo.objects.filter(amwayAward__rank__gte=60)
+    registerDims = registerDDandDimInfo.objects.filter(amwayAward__rank__gte=60).order_by('amwayNumber')
 
     TempUserAccountChainYen = TempUserAccountChainYenInfo.objects.all()
     # print(TempUserAccount)
@@ -513,9 +513,9 @@ def managerPointManagerPage(request):
     # 教室表
     chainYenClasses = chainYenClassInfo.objects.all().order_by('rank')
     # 白金表
-    registerDDs = registerDDandDimInfo.objects.filter(amwayAward__rank__gte=15)
+    registerDDs = registerDDandDimInfo.objects.filter(amwayAward__rank__gte=15).order_by('amwayNumber')
     # 鑽石表
-    registerDims = registerDDandDimInfo.objects.filter(amwayAward__rank__gte=60)
+    registerDims = registerDDandDimInfo.objects.filter(amwayAward__rank__gte=60).order_by('amwayNumber')
 
     q1 = Q()
     q1.connector = 'OR'
@@ -575,7 +575,7 @@ def managerPointManagerPage(request):
     return render(request, 'managerPages/managerPointManagerPage.html', locals())
 
 
-@permission_required('userlogin.seeManagerPointPage', login_url='/accounts/userlogin/')
+@permission_required('userlogin.seeManagerAccountManagerPage', login_url='/accounts/userlogin/')
 def getAccountModifyHistory(request):
     res = HttpResponse()
     # try:

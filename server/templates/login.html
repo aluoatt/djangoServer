@@ -52,7 +52,7 @@
 								<h2 style="color:black"><br>群雁資訊檢索系統</h2>
 							</header>
 							<div class="content">
-                                <form action="" method="post">{% csrf_token %}
+                                <form id="loginForm" action="" method="post">{% csrf_token %}
                                     <label style="color:black" for="username">會員編號:</label>
 									<div class="row">
 										<div class=" col-sm-4">
@@ -78,7 +78,7 @@
 										 <p style="color: red;">點數不足</p>
 									{% endif %}
 
-                                    <input style="color:black;box-shadow: inset 0 0 0 2px #000000;" type="submit" value="登入" class="button"/>
+                                    <input style="color:black;box-shadow: inset 0 0 0 2px #000000;" type="button" value="登入" class="button" onclick="confirmSubmit()"/>
 
                                 </form>
 
@@ -97,6 +97,14 @@
 			<script src="{%static 'assets/js/breakpoints.min.js' %}"></script>
 			<script src="{%static 'assets/js/util.js' %}"></script>
 			<script src="{%static 'assets/js/main.js' %}"></script>
+			<script>
+				function confirmSubmit() {
+				  if (confirm("登入將扣一點，您確定登入嗎?")) {
+					document.getElementById("loginForm").submit();
+				  }
+				  return false;
+				}
+			</script>
 
 	</body>
 </html>
