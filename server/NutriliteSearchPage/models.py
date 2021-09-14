@@ -24,6 +24,7 @@ class fileDataInfo(models.Model):
     permissionsLevel = models.IntegerField(verbose_name='權限等級')
     DBClass = models.ForeignKey("DBClassInfo",verbose_name='資料庫類別',on_delete=models.PROTECT)
     downloadAble = models.BooleanField(verbose_name='是否可以下載')
+    likes = models.IntegerField(verbose_name="按讚數")
 
     class Meta:
         verbose_name = "檔案管理"
@@ -95,6 +96,7 @@ class personalFileData(models.Model):
     costPoint = models.IntegerField(verbose_name='花費點數')
     waterCreateReady = models.BooleanField(default=0,verbose_name='浮水印是否完成')
     waterMarkPath = models.CharField(max_length=200,verbose_name='浮水印檔案路徑', null=True,blank=True)
+    like = models.BooleanField(default=0,verbose_name='是否按讚')
     class Meta:
         verbose_name = "個人持有資料管理"
         verbose_name_plural = "個人持有資料管理"
@@ -106,126 +108,3 @@ class personalExchangeFileLog(models.Model):
     class Meta:
         verbose_name = "個人兌換紀錄"
         verbose_name_plural = "個人兌換紀錄"
-#建立主類別表內容
-# from NutriliteSearchPage.models import mainClassInfo
-# inputDataList = ["營養","美容","科技","金鍋","其他","總部會議/活動","演講廳"]
-# for data in inputDataList:
-#     r = mainClassInfo.objects.create(mainClassName=data)
-#     r.save()
-#
-# #建立次類別表內容
-# from NutriliteSearchPage.models import secClassInfo
-# inputDataList = ["其他","基礎營養","曲線管理","機能性營養","疾病","紐崔萊農場",
-#                  "基礎保養","整體造型","醫美相關","迷思破解",
-#                  "空氣清淨機","淨水器",
-#                  "金鍋","不沾鍋","食譜","AmwayHome","G&H","Satinique","Glister","XS系列",
-#                  "教室課程","基礎會議","菁英會議","老師有約","每月之星",
-#                  "成功領導人","公司創辦人","名人講堂","公司介紹","培訓資料"
-#                  ]
-# for data in inputDataList:
-#     r = secClassInfo.objects.create(secClassName=data)
-#     r.save()
-#
-# #建立資料來源表內容
-# from NutriliteSearchPage.models import sourceFromInfo
-# inputDataList = ["個人製作","教室製作","總部製作","行動大學","YouTube","公司資料","其他"]
-# for data in inputDataList:
-#     r = sourceFromInfo.objects.create(sourceFromName=data)
-#     r.save()
-
-#建立檔案類型對應表內容
-# from NutriliteSearchPage.models import fileTypeInfo
-# inputDataList = ["影音檔","PDF","PPT","WORD","圖片/照片","純文字檔","其他"]
-# for data in inputDataList:
-#     r = fileTypeInfo.objects.create(fileTypeName=data)
-#     r.save()
-#假資料測試
-# from NutriliteSearchPage.models import fileDataInfo,fileDataKeywords,mainClassInfo,secClassInfo,sourceFromInfo,fileTypeInfo,DBClassInfo
-# r = fileDataInfo(
-#     mainClass = mainClassInfo.objects.get(id=1),
-#     secClass = secClassInfo.objects.get(id=2),
-#     describe = "測試資料這是描述",
-#     PDF = "1Cvx9Nfp7M-YP9jXp1gVmSPBmeBplX08b",
-#     file = "15cweTBeTFKbXFft-vAe5_6r849FRAUxM",
-#     fileType = fileTypeInfo.objects.get(id=5),
-#     sourceForm = sourceFromInfo.objects.get(id=2),
-#     sourceURL = None,
-#     sourceScreenshot = None,
-#     characterName = None,
-#     characterClass = None,
-#     characterDD = None,
-#     occurrenceDate = "2021-08-01 00:00:00",
-#     lastModify = "2021-08-16 00:00:00",
-#     visible = 1,
-#     permissionsLevel = 0)
-# r.save()
-#
-# k = fileDataKeywords(
-#     fileDataInfoID = r,
-#     keyword = "關鍵字A",
-# )
-# k.save()
-# k = fileDataKeywords(
-#     fileDataInfoID = r,
-#     keyword = "keywordB",
-# )
-# k.save()
-
-# r = fileDataInfo(
-#     mainClass = mainClassInfo.objects.get(id=1),
-#     secClass = secClassInfo.objects.get(id=3),
-#     describe = "測試資料這是描述2",
-#     PDF = "1n7BL2UJUQkEXR6h4fWORQ9ZoboqR2TCl",
-#     file = "1leqOZSLAgRpN55ulnUBAZWNr5nZsthE_",
-#     fileType = fileTypeInfo.objects.get(id=5),
-#     sourceForm = sourceFromInfo.objects.get(id=2),
-#     sourceURL = None,
-#     sourceScreenshot = None,
-#     characterName = None,
-#     characterClass = None,
-#     characterDD = None,
-#     occurrenceDate = "2021-08-01 00:00:00",
-#     lastModify = "2021-08-16 00:00:00",
-#     visible = 1,
-#     permissionsLevel = 0)
-# r.save()
-#
-# k = fileDataKeywords(
-#     fileDataInfoID = r,
-#     keyword = "關鍵字A2",
-# )
-# k.save()
-# k = fileDataKeywords(
-#     fileDataInfoID = r,
-#     keyword = "keywordB2",
-# )
-# k.save()
-#影片
-# r = fileDataInfo(
-#     mainClass = mainClassInfo.objects.get(id=1),
-#     secClass = secClassInfo.objects.get(id=4),
-#     describe = "對抗3C藍光威脅，紐崔萊晶明錠可為你層層守護",
-#     PDF = "1n7Y_L9Nj4IpfJYj5WVWU59xVtYJK7abN",
-#     file = "1n7Y_L9Nj4IpfJYj5WVWU59xVtYJK7abN",
-#     fileType = fileTypeInfo.objects.get(id=1),
-#     sourceForm = sourceFromInfo.objects.get(id=5),
-#     sourceURL = "https://www.youtube.com/watch?v=wM4vUJ7mr7g",
-#     sourceScreenshot = "https://drive.google.com/open?id=1PAvoqZ5d-iuoct62bMSBRtCHZJjrKszC",
-#     characterName = None,
-#     characterClass = None,
-#     characterDD = None,
-#     occurrenceDate = "2021-08-01 00:00:00",
-#     lastModify = "2021-08-21 00:00:00",
-#     visible = 1,
-#     permissionsLevel = 0,
-#     point=5,
-#     DBClass=DBClassInfo.objects.get(id=2))
-# r.save()
-#
-# keywordList = ["眼睛","晶明錠","3C","藍光","金盞花","歐越莓","黑醋栗","菠菜","葉黃素","花青素","類胡蘿蔔素"]
-# for i in keywordList:
-#     k = fileDataKeywords(
-#         fileDataInfoID = r,
-#         keyword =  i,
-#     )
-#     k.save()

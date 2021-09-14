@@ -23,6 +23,7 @@ class fileDataInfoAdmin(admin.ModelAdmin):
                     'needWaterMark',
                     'downloadAble',
                     'permissionsLevel',
+                    'likes'
                     )
 
     search_fields = ['title','describe']
@@ -30,6 +31,7 @@ class fileDataInfoAdmin(admin.ModelAdmin):
     inlines = [
         fileDataKeywordsInline,
     ]
+    readonly_fields = ["likes",]
 
 class DBClassInfoAdmin(admin.ModelAdmin):
     list_display = ('DBClassName',
