@@ -12,7 +12,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
 		<link href="{%static 'favicon.ico' %}" rel="shortcut icon">
+
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
 		<link rel="stylesheet" href="{%static 'assets/css/main.css' %}" />
 
@@ -63,6 +65,15 @@
 				color: rgba(255, 255, 255, 0.2) !important;
 				opacity: 1.0;
 			}
+			div.like{
+			color:#337ab7;
+			cursor:pointer;
+			display:inline-block;
+			padding:0.5em 0.3em;
+		}
+			@font-face{font-family:'Glyphicons Halflings';src:url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.eot');src:url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.woff') format('woff'),url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.ttf') format('truetype'),url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');}.glyphicon{position:relative;top:1px;display:inline-block;font-family:'Glyphicons Halflings';font-style:normal;font-weight:normal;line-height:1;-webkit-font-smoothing:antialiased;}
+
+			.glyphicon-thumbs-up:before{content:"\e125";}
 
 		</style>
 	</head>
@@ -118,7 +129,10 @@
 												#{{keywords.keyword}}
 											{% endfor %}
 											</p>
-
+											<div class="like">
+												<span class="glyphicon glyphicon-thumbs-up"></span>
+												<span class="liked-num">{{fileData.likes}}</span>
+											</div>
 											<ul class="actions">
 												<li>
 

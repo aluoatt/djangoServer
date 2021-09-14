@@ -341,8 +341,9 @@ def regetPersonalFile(request, fileId):
 def viewFilePage(request, fileId):
     targetFile = fileDataInfo.objects.get(id=int(fileId))
     UserAccount = UserAccountInfo.objects.get(username=request.user)
-    alreadyExchange = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id).count() > 0
-
+    personalFile = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id)
+    alreadyExchange = personalFile.count() > 0
+    aleardyLike = personalFile.first().like
     if request.user == "administrator":
         permission = True
         pointEnough = True

@@ -50,7 +50,15 @@
 				background-color:white;
 				color:black;
 			}
+            div.like{
+			color:#337ab7;
+			cursor:pointer;
+			display:inline-block;
+			padding:0.5em 0.3em;
+		}
+        @font-face{font-family:'Glyphicons Halflings';src:url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.eot');src:url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.woff') format('woff'),url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.ttf') format('truetype'),url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');}.glyphicon{position:relative;top:1px;display:inline-block;font-family:'Glyphicons Halflings';font-style:normal;font-weight:normal;line-height:1;-webkit-font-smoothing:antialiased;}
 
+			.glyphicon-thumbs-up:before{content:"\e125";}
         </style>
     </head>
     <body class="is-preload" style="background-size: Cover;background:url('{%static 'images/login底圖.png' %}');">
@@ -153,6 +161,10 @@
                         #{{keywords.keyword}}
                         {% endfor %}
                         </p>
+                        <div class="like">
+                            <span class="glyphicon glyphicon-thumbs-up"></span>
+                            <span class="liked-num">{{fileData.fileDataID.likes}}</span>
+                        </div>
 
                         <ul class="actions">
                             <li>

@@ -16,6 +16,7 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
 		  integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
+
 	<link rel="stylesheet" href="{%static 'assets/css/main.css' %}"/>
 
 	<noscript>
@@ -49,6 +50,18 @@
 			border: 1px solid black;
 			color:black;
 		}
+		div.like{
+			color:#337ab7;
+			cursor:pointer;
+			display:inline-block;
+			padding:0.5em 0.3em;
+		}
+		div.like .active{
+			color:#f22;
+		}
+		@font-face{font-family:'Glyphicons Halflings';src:url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.eot');src:url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.woff') format('woff'),url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.ttf') format('truetype'),url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');}.glyphicon{position:relative;top:1px;display:inline-block;font-family:'Glyphicons Halflings';font-style:normal;font-weight:normal;line-height:1;-webkit-font-smoothing:antialiased;}
+
+			.glyphicon-thumbs-up:before{content:"\e125";}
 	</style>
 </head>
 	<body class="is-preload" style="background-size: Cover;background:url('{%static 'images/login底圖.png' %}');">
@@ -105,6 +118,17 @@
 
 									{% endif %}
 									{% if alreadyExchange %}
+
+										<div class="like" onclick="likeChange(this,{{ targetFile.id }})">
+
+											{% if aleardyLike %}
+												<span class="glyphicon glyphicon-thumbs-up active"></span>
+											{% else %}
+												<span class="glyphicon glyphicon-thumbs-up"></span>
+											{% endif %}
+											<span class="liked-num">{{targetFile.likes}}</span>
+											<span>喜歡</span>
+										</div>
 										{% if targetFile.fileType.id == 1 %}
 										<p id="videoWait">影片載入中請稍候....</p>
 										<div id="myProgress">
@@ -124,6 +148,8 @@
 										</div>
 										<div id="pdf_viewer_newer" class="container" controlsList="nodownload" oncontextmenu="return false;"></div>
 										{% endif %}
+
+
 									{% endif %}
 								</div>
 
@@ -377,6 +403,48 @@
 			</script>
 			{% endif %}
 			{% endif %}
+			<script>
+				function likeChange(obj,fileid){
+					let csrftoken = '{{ csrf_token }}';
+					var requestURL = "{% url 'like_change' %}";
+					var is_like = obj.getElementsByClassName('active').length == 0
+
+					$.ajax({
+						url: requestURL,
+						headers: {'X-CSRFToken': csrftoken},
+						type: "GET",
+						data:{
+							fileid:fileid,
+							is_like:is_like
+
+						},
+
+						success: function (returnData) {
+								if (returnData.status){
+									var element = $(obj.getElementsByClassName('glyphicon'));
+									if(is_like){
+										element.addClass('active');
+									}
+									else{
+										element.removeClass('active');
+									}
+									var liked_num = $(obj.getElementsByClassName('liked-num'));
+									liked_num.text(returnData.liked_num)
+
+								}else{
+									alert("發生錯誤")
+								}
+
+						},
+						error: function (xhr, ajaxOptions, thrownError) {
+
+
+
+						}
+					});
+
+				}
+			</script>
 
 	</body>
 </html>

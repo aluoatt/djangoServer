@@ -41,7 +41,10 @@ def login(request):
                                 addPoint="", reducePoint="1", transferPoint="",
                                 resultPoint=UserAccountChainYen.point)
         pHistory.save()
-        loginHistory.objects.create(user=request.user, ip=request.META['HTTP_X_FORWARDED_FOR'])
+        try:
+            loginHistory.objects.create(user=request.user, ip=request.META['HTTP_X_FORWARDED_FOR'])
+        except :
+            pass
         return HttpResponseRedirect('/home/')
     else:
         if username != '':

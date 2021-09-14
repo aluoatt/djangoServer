@@ -25,7 +25,7 @@ from managerPage.views import managerAccountManagerPage,managerAuditAccountPage,
 from managerPage.views import userAccountConfirm,managerAccountModify,modalAccountModifyPOST
 from managerPage.views import managerPointManagerPage,getAccountModifyHistory
 from django.conf.urls import url
-
+from addlikes.views import like_change
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
@@ -68,7 +68,7 @@ urlpatterns += [
     path('managerPages/managerAccountModify',managerAccountModify,name='managerAccountModify'),
     path('managerPages/modalAccountModifyPOST',modalAccountModifyPOST,name='modalAccountModifyPOST'),
     path('managerPages/getAccountModifyHistory',getAccountModifyHistory,name='getAccountModifyHistory'),
-
+    path('like_change',like_change,name='like_change'),
 
     path('checkRegDD', checkRegDD, name='checkRegDD'),
 
