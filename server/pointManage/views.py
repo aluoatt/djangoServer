@@ -106,6 +106,10 @@ def transferPoint(request):
         userAccountInfo = UserAccountInfo.objects.get(username = fromUser)
         accountChainyen = UserAccountChainYenInfo.objects.get(UserAccountInfo = userAccountInfo)
         fromResultPoint = accountChainyen.point - pointTransfer
+        if fromResultPoint < 0:
+            res.status_code = 404
+            res.content = "point not enough"
+            return res
         accountChainyen.point = F('point') - pointTransfer
         accountChainyen.save()
 

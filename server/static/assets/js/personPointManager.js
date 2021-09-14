@@ -10,6 +10,16 @@ $(document).ready(() => {
                 point = 1
             else
                 point = 10
+            validPoint = Number($(".selfPoint").html());
+            if ( (validPoint-point) < 0 ){
+                bootbox.alert({
+                    message: "您的點數不足",
+                    locale: "zh-TW",
+                    centerVertical: true,
+                });
+                return;
+            }
+            
             formData.append("point", point)
             $.ajax({
                 'url': location.origin + "/pointManage/transferPoint",
@@ -28,7 +38,7 @@ $(document).ready(() => {
                 }
             });
 
-        } else if (action === "transferPoint") {
+         } else if (action === "transferPoint") {
             bootbox.prompt({
                 title: "請輸入您要轉讓的點數",
                 inputType: 'number',
@@ -43,9 +53,17 @@ $(document).ready(() => {
                             message: "請輸入大於 0 的數字",
                             locale: "zh-TW",
                             centerVertical: true,
-
                         }
                         );
+                        return;
+                    }
+                    validPoint = Number($(".selfPoint").html());
+                    if ( (validPoint-point) < 0 ){
+                        bootbox.alert({
+                            message: "您的點數不足",
+                            locale: "zh-TW",
+                            centerVertical: true,
+                        });
                         return;
                     }
                     formData = new FormData();
