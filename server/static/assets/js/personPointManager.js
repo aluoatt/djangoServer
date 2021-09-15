@@ -48,7 +48,7 @@ $(document).ready(() => {
                 callback: (point) => {
                     if (!point)
                         return
-                    if (point < 0) {
+                    if (point <= 0) {
                         bootbox.alert({
                             message: "請輸入大於 0 的數字",
                             locale: "zh-TW",
