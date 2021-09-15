@@ -49,33 +49,41 @@ def personalInfoHomePage(request,selectTag):
 
 def personalInfoPointPage(request):
 
-    userAccountInfo = UserAccountInfo.objects.get(username = request.user.username)
+    username = request.user.username
+    userAccountInfo = UserAccountInfo.objects.get(username = username)
 
     #紀錄
     pHistory = pointHistory.objects.filter(UserAccountInfo = userAccountInfo).order_by('-recordDate')
 
-    #轉讓: 白金小組 & 鑽石小組
-    myTeam = []
-    userAccountAmway = UserAccountAmwayInfo.objects.get(UserAccountInfo = userAccountInfo)
-    awardRank = userAccountAmway.amwayAward.rank
-    amNumber  = userAccountAmway.amwayNumber
-    #白金
-    if awardRank >= 15 and awardRank < 60:
-        myDDInfo = registerDDandDimInfo.objects.get(amwayNumber = amNumber)
-        myTeam = UserAccountAmwayInfo.objects.filter(amwayDD = myDDInfo).values('UserAccountInfo').exclude(username = request.user.username)
-    #鑽石
-    elif awardRank >= 60:
-        myDDInfo = registerDDandDimInfo.objects.get(amwayNumber = amNumber)
-        accountIDList = UserAccountAmwayInfo.objects.filter(amwayDD = myDDInfo).values('UserAccountInfo')
-        myTeam = UserAccountInfo.objects.filter(id__in=accountIDList).exclude(username = request.user.username)
-        myTeamDD = registerDDandDimInfo.objects.filter(amwayDiamond = str(amNumber))
-        for myDD in myTeamDD:
-            accountIDList = UserAccountAmwayInfo.objects.filter(amwayDD = myDD).values('UserAccountInfo')
-            myTeam = myTeam + UserAccountInfo.objects.filter(id__in=accountIDList).exclude(username = request.user.username)
-    else:
+    try:
+        #轉讓: 白金小組 & 鑽石小組
         myTeam = []
-    selectPage = "管理個人點數"
+        userAccountAmway = UserAccountAmwayInfo.objects.get(UserAccountInfo = userAccountInfo)
+        awardRank = userAccountAmway.amwayAward.rank
+        amNumber  = userAccountAmway.amwayNumber
 
+        #白金
+        if awardRank >= 15 and awardRank < 60:
+            myDDInfo = registerDDandDimInfo.objects.get(amwayNumber = amNumber)
+            accountIDList = UserAccountAmwayInfo.objects.filter(amwayDD = myDDInfo).values('UserAccountInfo')
+            myTeam = UserAccountInfo.objects.filter(id__in=accountIDList).exclude(username = request.user.username)
+        #鑽石
+        elif awardRank >= 60:
+            myDDInfo = registerDDandDimInfo.objects.get(amwayNumber = amNumber)
+            accountIDList = UserAccountAmwayInfo.objects.filter(amwayDD = myDDInfo).values('UserAccountInfo')
+            myTeam = UserAccountInfo.objects.filter(id__in=accountIDList).exclude(username = request.user.username)
+            myTeamDD = registerDDandDimInfo.objects.filter(amwayDiamond = str(amNumber))
+            for myDD in myTeamDD:
+                accountIDList = UserAccountAmwayInfo.objects.filter(amwayDD = myDD).values('UserAccountInfo')
+                if accountIDList:
+                    ddTeam = UserAccountInfo.objects.filter(id__in = accountIDList).exclude(username = username)
+                    myTeam = myTeam.union(ddTeam)
+        else:
+            myTeam = []
+        selectPage = "管理個人點數"
+    except:
+        # 此直銷權在資料庫沒有註冊為 DD
+        myTeam = []
     return render(request, 'personalInfoPages/personalInfoPointPage.html', locals())
 
 
