@@ -118,6 +118,7 @@ def transferPoint(request):
                                 recordDate = datetime.datetime.now(), reason = '轉讓點數',
                                 addPoint = "", reducePoint = "", transferPoint = "-" + str(pointTransfer),
                                 resultPoint = fromResultPoint)
+        pHistory.save()
 
         #加點
         userAccountInfo = UserAccountInfo.objects.get(username = toUser)
