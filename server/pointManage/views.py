@@ -97,7 +97,7 @@ def transferPoint(request):
 
         #Do not hack me
         if not (toUserDDInfo.amwayNumber  == fromUserAmwayNumber or 
-                toUserDDInfo.amwayDiamond == fromUserAmwayNumber):
+                int(toUserDDInfo.amwayDiamond) == fromUserAmwayNumber):
             res.status_code = 404
             res.content = "do not try to hack me <3"
             return res
