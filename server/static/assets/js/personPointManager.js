@@ -13,6 +13,7 @@ $(document).ready(() => {
             validPoint = Number($(".selfPoint").html());
             if ( (validPoint-point) < 0 ){
                 bootbox.alert({
+                    closeButton: false,
                     message: "您的點數不足",
                     locale: "zh-TW",
                     centerVertical: true,
@@ -40,6 +41,7 @@ $(document).ready(() => {
 
          } else if (action === "transferPoint") {
             bootbox.prompt({
+                closeButton: false,
                 title: "請輸入您要轉讓的點數",
                 inputType: 'number',
                 locale: "zh_TW",
@@ -50,6 +52,7 @@ $(document).ready(() => {
                         return
                     if (point <= 0) {
                         bootbox.alert({
+                            closeButton: false,
                             message: "請輸入大於 0 的數字",
                             locale: "zh-TW",
                             centerVertical: true,
@@ -60,6 +63,7 @@ $(document).ready(() => {
                     validPoint = Number($(".selfPoint").html());
                     if ( (validPoint-point) < 0 ){
                         bootbox.alert({
+                            closeButton: false,
                             message: "您的點數不足",
                             locale: "zh-TW",
                             centerVertical: true,

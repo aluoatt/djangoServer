@@ -108,6 +108,9 @@ $(document).ready(()=>{
             }
             
             bootbox.confirm({
+                closeButton: false,
+                backdrop: true,
+                scrollable: true,
                 title: "請輸入您要給予的點數",
                 message: formInput,
                 locale: "zh_TW",
@@ -120,6 +123,7 @@ $(document).ready(()=>{
                     point = formData.get("point");
                     if(point <= 0){
                         bootbox.alert({
+                            closeButton: false,
                             message: "請輸入大於零的點數",
                             locale: "zh-TW",
                             centerVertical: true,
@@ -135,6 +139,7 @@ $(document).ready(()=>{
                         'headers': {'X-CSRFToken': getCookie('csrftoken')},
                         'success': (res) => {
                             bootbox.alert({
+                                closeButton: false,
                                 message: "成功",
                                 locale: "zh-TW",
                                 centerVertical: true,
@@ -142,6 +147,7 @@ $(document).ready(()=>{
                         },
                         'error': (res) => {
                             bootbox.alert({
+                                closeButton: false,
                                 message: "伺服器出狀況,請聯繫系統人員",
                                 locale: "zh-TW",
                                 centerVertical: true,
