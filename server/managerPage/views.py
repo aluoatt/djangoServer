@@ -508,8 +508,16 @@ def managerPointManagerPage(request):
 
     # 職務表
     jobTitles = chainYenJobTitleInfo.objects.all()
+    jobTitleList = []
+    for jobTitle in jobTitles:
+        jobTitleList.append(jobTitle.jobTitle)
+    jobTitleList = json.dumps(jobTitleList)
     # 獎銜表
     amwayAwards = amwayAwardInfo.objects.all().order_by('rank')
+    amwayAwardList = []
+    for amAward in amwayAwards:
+        amwayAwardList.append(amAward.amwayAward)
+    amwayAwardList = json.dumps(amwayAwardList)
     # 教室表
     chainYenClasses = chainYenClassInfo.objects.all().order_by('rank')
     # 白金表

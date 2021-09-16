@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from userlogin.models import UserAccountInfo, registerDDandDimInfo
+from userlogin.models import UserAccountInfo, amwayAwardInfo, registerDDandDimInfo
 from django.contrib.auth.decorators import permission_required
-from userlogin.models import UserAccountInfo, UserAccountChainYenInfo, UserAccountAmwayInfo
+from userlogin.models import UserAccountInfo, UserAccountChainYenInfo, UserAccountAmwayInfo, chainYenJobTitleInfo
 from django.db.models import F, Value
 from django.http import HttpResponse
 from pointManage.models import pointHistory
@@ -33,6 +33,133 @@ def addPoint(request):
 
     return res
 
+@permission_required('userlogin.seeManagerPointPage', login_url='/accounts/userlogin/')
+def addPointByAll(request):
+    res = HttpResponse()
+    try:
+        point = 0
+        try:
+            point = int(request.POST["point"])
+        except:
+            point = 0
+        if point == 0:
+            res.status_code = 200
+            return res
+
+        userAccountChainyenList = UserAccountChainYenInfo.objects.all()
+        userAccountChainyenList.update(point=F('point') + point)
+
+        res.status_code = 200
+
+        modifier = request.user.user
+        for userAccountChainyen in userAccountChainyenList:
+            userAccount = userAccountChainyen.UserAccountInfo
+            resultPoint = userAccountChainyen.point
+            pHistory = pointHistory(UserAccountInfo = userAccount, modifier = modifier,
+                                    recordDate = datetime.datetime.now(), reason = '管理者加點',
+                                    addPoint = "+" + str(point), reducePoint = "", transferPoint = "",
+                                    resultPoint = resultPoint)
+            pHistory.save()
+
+    except:
+        res.status_code = 404
+
+    return res
+
+
+@permission_required('userlogin.seeManagerPointPage', login_url='/accounts/userlogin/')
+def addPointByAmwayAward(request):
+    res = HttpResponse()
+    try:
+        amwayAward = ""
+        if "amwayAward" in request.POST:
+            amwayAward = request.POST['amwayAward']
+        if amwayAward:
+            try:
+                amwayAward = amwayAwardInfo.objects.get(amwayAward=amwayAward)
+            except:
+                amwayAward = ""
+        point = 0
+        try:
+            point = int(request.POST["point"])
+        except:
+            point = 0
+        if point == 0:
+            res.status_code = 200
+            return res
+
+        if amwayAward:
+            accountIDList = UserAccountAmwayInfo.objects.filter(amwayAward = amwayAward).values('UserAccountInfo')
+            accountInfoList = UserAccountInfo.objects.filter(id__in=accountIDList).exclude(username = request.user.username)
+            userAccountChainyenList = UserAccountChainYenInfo.objects.filter(UserAccountInfo__in=accountInfoList)
+            userAccountChainyenList.update(point=F('point') + point)
+        else:
+            res.status_code = 404
+            return res
+
+        res.status_code = 200
+
+        modifier = request.user.user
+        for userAccountChainyen in userAccountChainyenList:
+            userAccount = userAccountChainyen.UserAccountInfo
+            resultPoint = userAccountChainyen.point
+            pHistory = pointHistory(UserAccountInfo = userAccount, modifier = modifier,
+                                    recordDate = datetime.datetime.now(), reason = '管理者加點',
+                                    addPoint = "+" + str(point), reducePoint = "", transferPoint = "",
+                                    resultPoint = resultPoint)
+            pHistory.save()
+
+    except:
+        res.status_code = 404
+
+    return res
+
+@permission_required('userlogin.seeManagerPointPage', login_url='/accounts/userlogin/')
+def addPointByJobTitle(request):
+    res = HttpResponse()
+    try:
+        jobTitle = ""
+        if "jobTitle" in request.POST:
+            jobTitle = request.POST['jobTitle']
+        if jobTitle:
+            try:
+                jobTitle = chainYenJobTitleInfo.objects.get(jobTitle = jobTitle)
+            except:
+                jobTitle = ""
+        
+        point = 0
+        try:
+            point = int(request.POST["point"])
+        except:
+            point = 0
+        if point == 0:
+            res.status_code = 200
+            return res
+
+        if jobTitle:
+            userAccountChainyenList = UserAccountChainYenInfo.objects.filter(jobTitle=jobTitle)
+            userAccountChainyenList.update(point=F('point') + point)
+        else:
+            res.status_code = 404
+            return res
+
+        res.status_code = 200
+
+        modifier = request.user.user
+        for userAccountChainyen in userAccountChainyenList:
+            userAccount = userAccountChainyen.UserAccountInfo
+            resultPoint = userAccountChainyen.point
+            pHistory = pointHistory(UserAccountInfo = userAccount, modifier = modifier,
+                                    recordDate = datetime.datetime.now(), reason = '管理者加點',
+                                    addPoint = "+" + str(point), reducePoint = "", transferPoint = "",
+                                    resultPoint = resultPoint)
+            pHistory.save()
+
+    except:
+        res.status_code = 503
+
+    return res
+
 
 @permission_required('userlogin.seeManagerPointPage', login_url='/accounts/userlogin/')
 def reducePoint(request):
@@ -57,6 +184,7 @@ def reducePoint(request):
         res.status_code = 503
 
     return res
+
 
 
 @permission_required('userlogin.seeManagerPointPage', login_url='/accounts/userlogin/')

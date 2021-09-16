@@ -27,6 +27,50 @@ class APITestCase(TestCase):
         res = self.c.post('/pointManage/transferPoint', {'username': '10000001000', 'point':'1'})
         self.assertEqual(res.status_code, 404)
 
+    def test_addPointByAll(self):
+        self.c = Client()
+        res = self.c.login(username= '10000001000', password = 'a')
+        self.assertEqual(res, True)
+
+        #全給
+        prePoint = UserAccountChainYenInfo.objects.first().point
+        res = self.c.post('/pointManage/addPointByAll', {'point':'5'})
+        self.assertEqual(res.status_code, 200)
+        curPoint = UserAccountChainYenInfo.objects.first().point
+        diffPoint = curPoint - prePoint
+        self.assertEqual(diffPoint, 5)
+
+        
+
+    def test_addPointByAmwayAward(self):
+        self.c = Client()
+        res = self.c.login(username= '10000001000', password = 'a')
+        self.assertEqual(res, True)
+
+        #按照獎銜給
+        amwayAward = amwayAwardInfo.objects.get(amwayAward = '直銷商')
+        userAccountInfo = UserAccountAmwayInfo.objects.filter(amwayAward=amwayAward).first().UserAccountInfo
+        prePoint = UserAccountChainYenInfo.objects.filter(UserAccountInfo=userAccountInfo).first().point
+        res = self.c.post('/pointManage/addPointByAmwayAward', {'amwayAward': '直銷商', 'point':'5'})
+        self.assertEqual(res.status_code, 200)
+        curPoint = UserAccountChainYenInfo.objects.filter(UserAccountInfo=userAccountInfo).first().point
+        diffPoint = curPoint - prePoint
+        self.assertEqual(diffPoint, 5)
+
+    def test_addPointByJobTitle(self):
+        self.c = Client()
+        res = self.c.login(username= '10000001000', password = 'a')
+        self.assertEqual(res, True)
+
+        #按照職務給
+        jobTitle = chainYenJobTitleInfo.objects.get(jobTitle = '無')
+        prePoint = UserAccountChainYenInfo.objects.filter(jobTitle=jobTitle).first().point
+        res = self.c.post('/pointManage/addPointByJobTitle', {'jobTitle': '無', 'point':'5'})
+        self.assertEqual(res.status_code, 200)
+        curPoint = UserAccountChainYenInfo.objects.filter(jobTitle=jobTitle).first().point
+        diffPoint = curPoint - prePoint
+        self.assertEqual(diffPoint, 5)
+
     def createBasicTable(self):
         sourceList = [
             '個人製作',

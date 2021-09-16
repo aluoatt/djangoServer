@@ -18,7 +18,7 @@ $(document).ready(()=>{
                 },
                 'error': (res) => {
                     alert("伺服器出狀況,請聯繫系統人員");
-            }
+                }
             });
 
         }
@@ -36,6 +36,7 @@ $(document).ready(()=>{
             $(row).addClass('font-weight-bold');
         }
     });
+
     $(".button_history").on("click", (event)=>{
         var counter = 1;
         t.clear()
@@ -75,6 +76,84 @@ $(document).ready(()=>{
         });
 
     });
+
+    $(".addPointByOption").on("click", (event)=>{
+        id = $(event.target)[0].id;
+        if(id === "addPointByAll" || id === "addPointByJobTitle" || id === "addPointByAmwayAward"){
+            action = id;
+            formInput = "";
+            formInput = $("<form>", {id:"addPointForm"});
+            pointDiv  = $("<div>", {class:"form-group"});
+            pointDiv.append($("<label>", {text:"點數"}));
+            pointDiv.append($("<input>", {type:"number", name:"point", class:"form-control",  placeholder:"Enter email"}));
+            formInput.append(pointDiv);
+            if(action === "addPointByAll"){
+                
+            }else if(action === "addPointByJobTitle"){
+                pointDiv  = $("<div>", {class:"form-check"});
+                pointDiv.append($("<input>", {type:"radio", name:"jobTitle", class:"form-check-input",  value:"會長", id: "jobTitle1", checked:true}));
+                pointDiv.append($("<label>", {text:"團長", class:"form-check-label", for:"jobTitle1"}));
+                formInput.append(pointDiv);
+                pointDiv  = $("<div>", {class:"form-check"});
+                pointDiv.append($("<input>", {type:"radio", name:"jobTitle", class:"form-check-input",  value:"團長", id: "jobTitle2"}));
+                pointDiv.append($("<label>", {text:"會長", class:"form-check-label", for:"jobTitle2"}));
+                formInput.append(pointDiv);
+            }else if(action === "addPointByAmwayAward"){
+                amwayAwardList.forEach((element, index) => {
+                    pointDiv  = $("<div>", {class:"form-check"});
+                    pointDiv.append($("<input>", {type:"radio", name:"amwayAward", class:"form-check-input",  value:element, id: "amwayAward" + index}));
+                    pointDiv.append($("<label>", {text:element, class:"form-check-label", for:"amwayAward" + index}));
+                    formInput.append(pointDiv);
+                });
+            }
+            
+            bootbox.confirm({
+                title: "請輸入您要給予的點數",
+                message: formInput,
+                locale: "zh_TW",
+                container: "body",
+                centerVertical: true,
+                callback: (res) => {
+                    if(!res)
+                        return;
+                    formData = new FormData($("#addPointForm")[0]);
+                    point = formData.get("point");
+                    if(point <= 0){
+                        bootbox.alert({
+                            message: "請輸入大於零的點數",
+                            locale: "zh-TW",
+                            centerVertical: true,
+                        });
+                        return;
+                    }
+                    $.ajax({
+                        url: location.origin + "/pointManage/" + action,
+                        'method': 'POST',
+                        'processData': false,
+                        'contentType': false,
+                        'data': formData,
+                        'headers': {'X-CSRFToken': getCookie('csrftoken')},
+                        'success': (res) => {
+                            bootbox.alert({
+                                message: "成功",
+                                locale: "zh-TW",
+                                centerVertical: true,
+                            });
+                        },
+                        'error': (res) => {
+                            bootbox.alert({
+                                message: "伺服器出狀況,請聯繫系統人員",
+                                locale: "zh-TW",
+                                centerVertical: true,
+                            });
+                        }
+                    });
+                    
+                }
+            });
+        }
+    });
+
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
