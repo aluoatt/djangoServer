@@ -17,10 +17,8 @@
 
 				<!-- Header -->
 <!--					{% include 'baseHeader.html' %}-->
-					<header id="header">
-						<a href="{% url 'home' %}" class="logo"><strong>ChainYen</strong> <span>System</span></a>
-
-					</header>
+					
+					{% include 'baseHeader.html' %}
 
 
 				<!-- Banner -->
@@ -90,13 +88,6 @@
 			</div>
 
 		<!-- Scripts -->
-			<script src="{%static 'assets/js/jquery.min.js' %}"></script>
-			<script src="{%static 'assets/js/jquery.scrolly.min.js' %}"></script>
-			<script src="{%static 'assets/js/jquery.scrollex.min.js' %}"></script>
-			<script src="{%static 'assets/js/browser.min.js' %}"></script>
-			<script src="{%static 'assets/js/breakpoints.min.js' %}"></script>
-			<script src="{%static 'assets/js/util.js' %}"></script>
-			<script src="{%static 'assets/js/main.js' %}"></script>
 			<script>
 				function confirmSubmit() {
 				  if (confirm("登入將扣一點，您確定登入嗎?")) {

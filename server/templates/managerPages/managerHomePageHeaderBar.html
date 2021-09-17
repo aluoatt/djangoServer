@@ -30,7 +30,7 @@
             </form>
             {% endif %}
         {% endif %}
-        {% if perms.userlogin.seeManagerArticleManagerPage %}
+        {% if perms.userlogin.seeManagerArticleManagerPage and false %}
             {% if tag == "ManagerArticleManagerPage" %}
             <form action="#" method="get">{% csrf_token %}
                 <input class=" " type="submit" value="文章管理">

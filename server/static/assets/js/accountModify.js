@@ -2,6 +2,9 @@ $(document).ready(()=>{
     var t = $('#example').DataTable({
         "orderClasses": false,
         "responsive": true,
+        "language": {
+            url: location.origin + '/static/assets/i18n/datatable/zh_Hant.json'
+        },
         "createdRow": function( row, data, dataIndex ){
             $(row).addClass('table-warning');
             $(row).addClass('text-dark');

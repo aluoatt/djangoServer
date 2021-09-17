@@ -5,167 +5,166 @@
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
 <html>
-	<head>
-		<title>ChainYen System</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		{% load static %}
-		<link href="{%static 'favicon.ico' %}" rel="shortcut icon">
-		<link rel="stylesheet" href="{%static 'assets/css/main.css' %}" />
-<!--		<link rel="stylesheet" href="assets/css/main.css" />-->
-		<noscript><link rel="stylesheet" href="{%static 'assets/css/noscript.css' %}" /></noscript>
-		<style type="text/css">
 
-			.searchBar-inline{display:block;}
-            .searchBar-inline li{display:inline-block;}
-			#keywords::-webkit-input-placeholder {
-				color: rgba(255, 255, 255, 0.4) !important;
-				opacity: 1.0;
-			}
+<head>
+	<title>ChainYen System</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	{% load static %}
 
-			#keywords:-moz-placeholder {
-				color: rgba(255, 255, 255, 0.2) !important;
-				opacity: 1.0;
-			}
+</head>
 
-			#keywords::-moz-placeholder {
-				color: rgba(255, 255, 255, 0.2) !important;
-				opacity: 1.0;
-			}
+<body class="is-preload">
 
-			#keywords:-ms-input-placeholder {
-				color: rgba(255, 255, 255, 0.2) !important;
-				opacity: 1.0;
-			}
+	<!-- Wrapper -->
+	<div id="wrapper">
 
-		</style>
-	</head>
-	<body class="is-preload">
+		<!-- Header -->
+		{% include 'baseHeader.html' %}
 
-		<!-- Wrapper -->
-			<div id="wrapper">
+		<!-- Menu -->
+		{% include 'baseMenu.html' %}
 
-				<!-- Header -->
-					{% include 'baseHeader.html' %}
+		<!-- Banner -->
+		<!--				style="background-color: rgba(0,0,0,0.2);"-->
+		<section style="background-image:url('{%static 'images/cyBackgroundImage.jpg' %}');background-size: Cover ;"
+			id="banner" class="major">
+			<div class="inner">
+				<header class="major">
+					<h1 style="color:black">群雁資訊檢索系統</h1>
+				</header>
 
-				<!-- Menu -->
-					{% include 'baseMenu.html' %}
+				<div class="content">
 
-				<!-- Banner -->
-<!--				style="background-color: rgba(0,0,0,0.2);"-->
-					<section  style="background-image:url('{%static 'images/cyBackgroundImage.jpg' %}');background-size: Cover ;" id="banner" class="major">
-						<div class="inner">
-							<header class="major">
-								<h1 style="color:black">群雁資訊檢索系統</h1>
-							</header>
+					<h3 style="color:black">{{name}}<br />
 
-							<div class="content">
+						{{amwayMember}}
+						<br />
+						剩餘點數:{{UserAccountChainYen.point}}
 
-								<h3 style="color:black">{{name}}<br/>
+					</h3>
+					<p style="color:black">歡迎回家<br />
+						Welcome home.</p>
 
-									{{amwayMember}}
-									<br/>
-									剩餘點數:{{UserAccountChainYen.point}}
-
-								</h3>
-								<p style="color:black">歡迎回家<br/>
-									Welcome home.</p>
-
-								<ul class="actions">
-									<li ><a style="color:black;box-shadow: inset 0 0 0 2px #000000;" href="#one" class="button next scrolly" >開始</a></li>
-								</ul>
-							</div>
-
-						</div>
-					</section>
-				<br>
-				{% include 'searchbar.html' %}
-
-				<!-- Main -->
-					<div id="main">
-
-						<!-- One -->
-							<section id="one" class="tiles">
-								<article>
-									<span class="image">
-										<img src="{% static 'images/紐崔萊營養按鈕.jpg' %}" alt="" />
-									</span>
-									<header class="major">
-										<h2><a href="{% url 'NutriliteSearchPage' '營養' '基礎營養' %}" class="link">營養</a></h2>
-										<h2>Nutrilite</h2>
-									</header>
-								</article>
-								<article>
-									<span class="image">
-										<img src="{% static 'images/美容按鈕圖片.jpg' %}" alt="" />
-									</span>
-									<header class="major">
-										<h2><a href="{% url 'NutriliteSearchPage' '美容' '基礎保養' %}" class="link">美容</a></h2>
-										<h2>Artistry</h2>
-									</header>
-								</article>
-								<article>
-									<span class="image">
-										<img src="{% static 'images/科技按鈕圖片.jpg' %}" alt="" />
-									</span>
-									<header class="major">
-										<h2><a href="{% url 'NutriliteSearchPage' '科技' '空氣清淨機' %}" class="link">科技</a></h2>
-										<h2>Technology</h2>
-									</header>
-								</article>
-
-								<article>
-									<span class="image">
-										<img src="{% static 'images/金鍋按鈕圖片.jpg' %}" alt="" />
-									</span>
-									<header class="major">
-										<h2><a href="{% url 'NutriliteSearchPage' '金鍋' '金鍋' %}" class="link">金鍋</a></h2>
-										<h2>Amway Queen</h2>
-									</header>
-								</article>
-								<article>
-									<span class="image">
-										<img src="{% static 'images/其他按鈕圖片.jpg' %}" alt="" />
-									</span>
-									<header class="major">
-										<h2><a href="{% url 'NutriliteSearchPage' '其他' 'Amway Home' %}" class="link">其他</a></h2>
-										<h2>Others</h2>
-									</header>
-								</article>
-								<article>
-									<span class="image">
-										<img src="{% static 'images/演講廳按鈕圖片.jpg' %}" alt="" />
-									</span>
-									<header class="major">
-										<h2><a href="{% url 'NutriliteSearchPage' '演講廳' '成功領導人' %}" class="link">演講廳</a></h2>
-										<h2>Course</h2>
-									</header>
-								</article>
-								<article>
-									<span class="image">
-										<img src="{% static 'images/總部會議活動按鈕圖片-2.jpg' %}" alt="" />
-									</span>
-									<header class="major">
-										<h2><a href="{% url 'NutriliteSearchPage' '總部會議' '教室課程' %}" class="link">總部會議/活動</a></h2>
-										<h2>ChainYen Meeting/Activity</h2>
-									</header>
-								</article>
-							</section>
-
-					</div>
-
-
+					<ul class="actions">
+						<li><a style="color:black;box-shadow: inset 0 0 0 2px #000000;" href="#one"
+								class="button next scrolly">開始</a></li>
+					</ul>
+				</div>
 
 			</div>
+		</section>
+		<br>
+		{% include 'searchbar.html' %}
 
-		<!-- Scripts -->
-			<script src="{%static 'assets/js/jquery.min.js' %}"></script>
-			<script src="{%static 'assets/js/jquery.scrolly.min.js' %}"></script>
-			<script src="{%static 'assets/js/jquery.scrollex.min.js' %}"></script>
-			<script src="{%static 'assets/js/browser.min.js' %}"></script>
-			<script src="{%static 'assets/js/breakpoints.min.js' %}"></script>
-			<script src="{%static 'assets/js/util.js' %}"></script>
-			<script src="{%static 'assets/js/main.js' %}"></script>
+		<!-- Main -->
+		<div id="main">
 
-	</body>
+			<!-- One -->
+			<section id="one" class="tiles">
+				<article>
+					<span class="image">
+						<img src="{% static 'images/紐崔萊營養按鈕.jpg' %}" alt="" />
+					</span>
+					<header class="major">
+						<h2><a href="{% url 'NutriliteSearchPage' '營養' '基礎營養' %}" class="link">營養</a></h2>
+						<h2>Nutrilite</h2>
+					</header>
+				</article>
+				<article>
+					<span class="image">
+						<img src="{% static 'images/美容按鈕圖片.jpg' %}" alt="" />
+					</span>
+					<header class="major">
+						<h2><a href="{% url 'NutriliteSearchPage' '美容' '基礎保養' %}" class="link">美容</a></h2>
+						<h2>Artistry</h2>
+					</header>
+				</article>
+				<article>
+					<span class="image">
+						<img src="{% static 'images/科技按鈕圖片.jpg' %}" alt="" />
+					</span>
+					<header class="major">
+						<h2><a href="{% url 'NutriliteSearchPage' '科技' '空氣清淨機' %}" class="link">科技</a></h2>
+						<h2>Technology</h2>
+					</header>
+				</article>
+
+				<article>
+					<span class="image">
+						<img src="{% static 'images/金鍋按鈕圖片.jpg' %}" alt="" />
+					</span>
+					<header class="major">
+						<h2><a href="{% url 'NutriliteSearchPage' '金鍋' '金鍋' %}" class="link">金鍋</a></h2>
+						<h2>Amway Queen</h2>
+					</header>
+				</article>
+				<article>
+					<span class="image">
+						<img src="{% static 'images/其他按鈕圖片.jpg' %}" alt="" />
+					</span>
+					<header class="major">
+						<h2><a href="{% url 'NutriliteSearchPage' '其他' 'Amway Home' %}" class="link">其他</a></h2>
+						<h2>Others</h2>
+					</header>
+				</article>
+				<article>
+					<span class="image">
+						<img src="{% static 'images/演講廳按鈕圖片.jpg' %}" alt="" />
+					</span>
+					<header class="major">
+						<h2><a href="{% url 'NutriliteSearchPage' '演講廳' '成功領導人' %}" class="link">演講廳</a></h2>
+						<h2>Course</h2>
+					</header>
+				</article>
+				<article>
+					<span class="image">
+						<img src="{% static 'images/總部會議活動按鈕圖片-2.jpg' %}" alt="" />
+					</span>
+					<header class="major">
+						<h2><a href="{% url 'NutriliteSearchPage' '總部會議' '教室課程' %}" class="link">總部會議/活動</a></h2>
+						<h2>ChainYen Meeting/Activity</h2>
+					</header>
+				</article>
+			</section>
+
+		</div>
+
+
+
+	</div>
+
+	<!-- Scripts -->
+	<style type="text/css">
+		.searchBar-inline {
+			display: block;
+		}
+
+		.searchBar-inline li {
+			display: inline-block;
+		}
+
+		#keywords::-webkit-input-placeholder {
+			color: rgba(255, 255, 255, 0.4) !important;
+			opacity: 1.0;
+		}
+
+		#keywords:-moz-placeholder {
+			color: rgba(255, 255, 255, 0.2) !important;
+			opacity: 1.0;
+		}
+
+		#keywords::-moz-placeholder {
+			color: rgba(255, 255, 255, 0.2) !important;
+			opacity: 1.0;
+		}
+
+		#keywords:-ms-input-placeholder {
+			color: rgba(255, 255, 255, 0.2) !important;
+			opacity: 1.0;
+		}
+	</style>
+
+</body>
+
 </html>

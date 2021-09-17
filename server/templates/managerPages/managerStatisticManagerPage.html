@@ -6,337 +6,127 @@
 -->
 
 <html>
+
 <head>
     <title>ChainYen System</title>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
     {% load static %}
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    
+    <style type="text/css">
+        .rwd-table {
+            /*background: #fff;*/
+            overflow: hidden;
+        }
 
-    <link rel="stylesheet" href="{%static 'assets/css/main.css' %}"/>
+        .rwd-table tr:nth-of-type(2n) {
+            /*background: #eee;*/
+        }
 
-    <noscript>
-        <link rel="stylesheet" href="{%static 'assets/css/noscript.css' %}"/>
-    </noscript>
-    		<style type="text/css">
-			.rwd-table {
-		 	 /*background: #fff;*/
-		 	 overflow: hidden;
-			}
+        .rwd-table th,
+        .rwd-table td {
+            margin: 0.5em 1em;
+        }
 
-			.rwd-table tr:nth-of-type(2n){
-			  /*background: #eee;*/
-			}
-			.rwd-table th,
-			.rwd-table td {
-			  margin: 0.5em 1em;
-			}
-			.rwd-table {
-			  min-width: 100%;
-			}
+        .rwd-table {
+            min-width: 100%;
+        }
 
-			.rwd-table th {
-			  display: none;
-			}
+        .rwd-table th {
+            display: none;
+        }
 
-			.rwd-table td {
-			  display: block;
-			}
+        .rwd-table td {
+            display: block;
+        }
 
-			.rwd-table td:before {
-			  content: attr(data-th) " : ";
-			  font-weight: bold;
-			  width: 6.5em;
-			  display: inline-block;
-			}
+        .rwd-table td:before {
+            content: attr(data-th) " : ";
+            font-weight: bold;
+            width: 6.5em;
+            display: inline-block;
+        }
 
-			.rwd-table th, .rwd-table td {
-			  text-align: left;
-			}
+        .rwd-table th,
+        .rwd-table td {
+            text-align: left;
+        }
 
-			.rwd-table th, .rwd-table td:before {
-			  color: #FF2D2D;
-			  font-weight: bold;
-                /*background-color:#BEBEBE	;*/
-			}
+        .rwd-table th,
+        .rwd-table td:before {
+            color: #FF2D2D;
+            font-weight: bold;
+            /*background-color:#BEBEBE	;*/
+        }
 
-			@media (min-width: 480px) {
-			  .rwd-table td:before {
-			    display: none;
-			  }
-			 .rwd-table th, .rwd-table td {
-			    display: table-cell;
-			    padding: 0.25em 0.5em;
-			  }
-			  .rwd-table th:first-child,
-			  .rwd-table td:first-child {
-			    padding-left: 0;
-			  }
-			  .rwd-table th:last-child,
-			  .rwd-table td:last-child {
-			    padding-right: 0;
-			  }
-			   .rwd-table th,
-			   .rwd-table td {
-			    padding: 1em !important;
-			  }
-			}
-		</style>
+        @media (min-width: 480px) {
+            .rwd-table td:before {
+                display: none;
+            }
+
+            .rwd-table th,
+            .rwd-table td {
+                display: table-cell;
+                padding: 0.25em 0.5em;
+            }
+
+            .rwd-table th:first-child,
+            .rwd-table td:first-child {
+                padding-left: 0;
+            }
+
+            .rwd-table th:last-child,
+            .rwd-table td:last-child {
+                padding-right: 0;
+            }
+
+            .rwd-table th,
+            .rwd-table td {
+                padding: 1em !important;
+            }
+        }
+    </style>
 </head>
+
 <body class="is-preload">
 
-<!-- Wrapper -->
-<div id="wrapper">
+    <!-- Wrapper -->
+    <div id="wrapper">
 
-    <!-- Header -->
-    {% include 'baseHeader.html' %}
+        <!-- Header -->
+        {% include 'baseHeader.html' %}
 
-    <!-- Menu -->
-    {% include 'baseMenu.html' %}
+        <!-- Menu -->
+        {% include 'baseMenu.html' %}
 
-    <!-- Main -->
+        <!-- Main -->
 
-    <div id="main" class="alt">
-        <!-- Modal -->
-        <div class="modal fade" id="pointModal" tabindex="-1" aria-labelledby="pointModalLabel" aria-hidden="true" style="width:100%">
-            <div class="modal-dialog modal-xl">
-                <div class="modal-content" style="background-color: #2a2f4a;" style="width:100%;">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="pointModalLabel">點數歷史紀錄</h5>
-                    </div>
-                    <div class="modal-body table-responsive">
-                        <table id="example" class="display table-bordered " style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th>變更者</th>
-                                    <th>修改日期</th>
-                                    <th>增點</th>
-                                    <th>扣點</th>
-                                    <th>轉讓</th>
-                                    <th>原因</th>
-                                    <th>剩餘點數</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" data-dismiss="modal">Close</button>
-                    </div>
+        <div id="main" class="alt">
+            <section id="one">
+                <div class="inner">
+                    {% include 'managerPages/managerHomePageHeaderBar.html' %}
                 </div>
+            </section>
+
+            <section id="two" class="spotlights">
+            </section>
+            <!-- Button trigger modal -->
+
+
+            {% if pageisNotNull %}
+            <div class="dataTables_paginate paging_simple_numbers pull-right inner">
+                <ul class="pagination ">
+                    {{ pagination.page_html|safe }}
+                </ul>
             </div>
+            {% endif %}
         </div>
-        <section id="one">
-
-            <div class="inner">
-                {% include 'managerPages/managerHomePageHeaderBar.html' %}
-                <div class="row align-items-center">
-                    <li style="list-style-type:none;">
-                        <label>編號:
-                            <input onmousedown="setEmptyByTagId('amwayNumbers_input')" onkeyup="accountManagerFilter()" style="color: black;" list="amwayNumbers" class="small" id="amwayNumbers_input" name="amwayNumbers_input"></label>
-                        <datalist id="amwayNumbers">
-                            {% for searchUserAccount in searchUserAccountInfo %}
-
-                            <option value="{{searchUserAccount.useraccountamwayinfo_set.first.amwayNumber}}">
-
-                            {% endfor %}
-                        </datalist>
-                    </li>
-                    <li style="list-style-type:none;">
-                        <label>姓名:
-                            <input onmousedown="setEmptyByTagId('user_input')" onkeyup="accountManagerFilter()" style="color: black;" list="users" class="small" id="user_input" name="amwayNumbers_input"></label>
-                        <datalist id="users">
-                            {% for searchUserAccount in searchUserAccountInfo %}
-
-                            <option value="{{searchUserAccount.user}}">
-
-                            {% endfor %}
-                        </datalist>
-                    </li>
-                    <li style="list-style-type:none;">
-                        <label>職務:
-                            <input onmousedown="setEmptyByTagId('jobtitles_input')" onkeyup="accountManagerFilter()" style="color: black;" list="jobtitles" class="small" id="jobtitles_input" name="jobtitles_input"></label>
-                        <datalist id="jobtitles">
-
-                            {% for jobtitle in jobTitles %}
-                            <option value="{{jobtitle.jobTitle}}">
-                            {% endfor %}
-                        </datalist>
-                    </li>
-                    <li style="list-style-type:none;">
-                        <label>獎銜:
-                            <input onmousedown="setEmptyByTagId('amwayAwards_input')" onkeyup="accountManagerFilter()" style="color: black;" list="amwayAwards" class="small" id="amwayAwards_input" name="amwayAwards"></label>
-                        <datalist id="amwayAwards">
-                            {% for amwayAward in amwayAwards %}
-                            <option value="{{amwayAward.amwayAward}}">
-                            {% endfor %}
-                        </datalist>
-                    </li>
-                    <li style="list-style-type:none;">
-                        <label>教室:
-                            <input  onmousedown="setEmptyByTagId('chainYenClasses_input')" onkeyup="accountManagerFilter()" style="color: black;" list="chainYenClasses" class="small"
-                                                                                                                                                                         name="chainYenClasses" id="chainYenClasses_input"></label>
-                        <datalist id="chainYenClasses">
-                            {% for chainYenClass in chainYenClasses %}
-                            <option value="{{chainYenClass.ClassRoomName}}">
-                            {% endfor %}
-                        </datalist>
-                    </li>
-                    <li style="list-style-type:none;">
-                        <label>白金:
-                            <input onmousedown="setEmptyByTagId('registerDDs_input')" onkeyup="accountManagerFilter()" style="color: black;" list="registerDDs" class="small" id="registerDDs_input" name="registerDDs"></label>
-                        <datalist id="registerDDs">
-                            {% for registerDD in registerDDs %}
-                            {% if registerDD.sec == Null %}
-
-                            <option value="{{registerDD.main}}">
-
-                            {% else %}
-                            <option value="{{registerDD.main}}/{{registerDD.sec}}">
-                            {% endif %}
-                            {% endfor %}
-                        </datalist>
-                    </li>
-                    <li style="list-style-type:none;">
-                        <label>鑽石:
-                            <input onmousedown="setEmptyByTagId('registerDims_input')" onkeyup="accountManagerFilter()" style="color: black;" list="registerDims" id="registerDims_input" class="small" name="registerDims"></label>
-                        <datalist id="registerDims">
-                            {% for registerDim in registerDims %}
-                            {% if registerDim.sec == Null %}
-
-                            <option value="{{registerDim.main}}">
-
-                            {% else %}
-                            <option value="{{registerDim.main}}/{{registerDim.sec}}">
-                            {% endif %}
-                            {% endfor %}
-                        </datalist>
-                    </li>
-                    <li style="list-style-type:none;">
-                        <label>狀態:
-                            <input onmousedown="setEmptyByTagId('accountStatus_input')" onkeyup="accountManagerFilter()" style="color: black;" list="accountStatus" id="accountStatus_input" class="small" name="accountStatus"></label>
-                        <datalist id="accountStatus">
-
-                            <option value="正常">
-
-                        </datalist>
-                    </li>
-
-                </div>
-                <div class="row">
-                    <div class="col"><button class="primary">給予鑽石點數</button></div>
-                    <div class="col"><button class="primary">給予會長點數</button></div>
-                    <div class="col"><button class="primary">給予團長點數</button></div>
-                </div>
-                <table id = "myTable" class="rwd-table">
-　
-                <tr>
-                　　
-                <th>姓名</th>
-                　　
-                <th>會員編號</th>
-                　　
-                <th>職務</th>
-                　　
-                <th>獎銜</th>
-                　　
-                <th>點數</th>
-                　　
-                <th>增點</th>
-                　　
-                <th>扣點</th>
-
-                <th>點數歷史紀錄</th>
-                　
-                </tr>
-                {% for UserAccount in searchUserAccountInfo %}
-                <tr id = "{{UserAccount.id}}_tr">
-                    　　
-                    <td id = "{{UserAccount.username}}_user" data-th="姓名">
-                        {{UserAccount.user}}
-                    </td>
-                    　　
-                    <td id = "{{UserAccount.username}}_amwayNumber" data-th="會員編號">
-                        {{UserAccount.useraccountamwayinfo_set.first.amwayNumber}}
-                    </td>
-                    　　
-                    <td id = "{{UserAccount.username}}_jobTitle" data-th="職務">
-                        {{UserAccount.useraccountchainyeninfo_set.first.jobTitle.jobTitle}}
-                    </td>
-                    　　
-                    <td id = "{{UserAccount.username}}_amwayAward" data-th="獎銜">
-                        {{UserAccount.useraccountamwayinfo_set.first.amwayAward.amwayAward}}
-                    </td>
-                    　　
-                    <td id = "{{UserAccount.username}}_point" data-th="點數">
-                        {{UserAccount.useraccountchainyeninfo_set.first.point}}
-                    </td>
-                    　　
-                    <td id = "{{UserAccount.username}}_addPoint" data-th="增點">
-                        <button class="button_modified">+10</button>
-                    </td>
-
-                    <td id = "{{UserAccount.username}}_reducePoint" data-th="扣點">
-                        <button class="button_modified">-1</button>
-                    </td>
-                    　　
-                    <td id = "{{UserAccount.username}}_getPointHistory" data-th="點數歷史紀錄">
-                        <button class="button_history" type="button" data-toggle="modal" data-target="#pointModal">
-                            查看
-                        </button>
-                    </td>
-
-                </tr>
-                {% endfor %}
-
-                </table>
-            </div>
-
-        </section>
-
-        <section id="two" class="spotlights">
-            
-
-        </section>
-        <!-- Button trigger modal -->
-
-
-        {% if pageisNotNull %}
-        <div class="dataTables_paginate paging_simple_numbers pull-right inner">
-            <ul class="pagination ">
-                {{ pagination.page_html|safe }}
-            </ul>
-
-        </div>
-        {% endif %}
-
 
     </div>
 
-</div>
 
-
-<!-- Scripts -->
-<script src="{%static 'assets/js/jquery.min.js' %}"></script>
-<script src="{%static 'assets/js/jquery.scrolly.min.js' %}"></script>
-<script src="{%static 'assets/js/jquery.scrollex.min.js' %}"></script>
-<script src="{%static 'assets/js/browser.min.js' %}"></script>
-<script src="{%static 'assets/js/breakpoints.min.js' %}"></script>
-<script src="{%static 'assets/js/util.js' %}"></script>
-<script src="{%static 'assets/js/main.js' %}"></script>
-<script src="{%static 'assets/js/cyMain.js' %}"></script>
-<script src="{%static 'assets/js/viewPageAjax.js' %}"></script>
-<script src="{%static 'assets/js/pointManager.js' %}"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-        crossorigin="anonymous"></script>
-
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.0/fc-3.3.3/r-2.2.9/datatables.min.css"/>
- 
-<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.0/fc-3.3.3/r-2.2.9/datatables.min.js"></script>
+    <!-- Scripts -->
 </body>
+
 </html>
