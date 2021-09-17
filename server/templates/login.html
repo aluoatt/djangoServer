@@ -1,29 +1,29 @@
 <!DOCTYPE html>
 {% load static %}
-<html >
+<html>
+
 <head>
-		<title>ChainYen System</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>ChainYen System</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
-		<link href="{%static 'favicon.ico' %}" rel="shortcut icon">
-		<link rel="stylesheet" href="{%static 'assets/css/main.css' %}" />
-		<noscript><link rel="stylesheet" href="{%static 'assets/css/noscript.css' %}" /></noscript>
-	</head>
-	<body class="is-preload" style="background-size: Cover;background:url('{%static 'images/login底圖.png' %}');">
+	<link href="{%static 'favicon.ico' %}" rel="shortcut icon">
+</head>
 
-		<!-- Wrapper -->
-			<div id="wrapper" >
+<body class="is-preload" style="background-size: Cover;background:url('{%static 'images/login底圖.png' %}');">
 
-				<!-- Header -->
-<!--					{% include 'baseHeader.html' %}-->
-					
-					{% include 'baseHeader.html' %}
+	<!-- Wrapper -->
+	<div id="wrapper">
+
+		<!-- Header -->
+		<!--					{% include 'baseHeader.html' %}-->
+
+		{% include 'baseHeader.html' %}
 
 
-				<!-- Banner -->
-<!--				<div style="background-image:url('{%static 'images/cyBackgroundImage.jpg' %}');">-->
-					<section id="" class="major" style="-moz-align-items: center;
+		<!-- Banner -->
+		<!--				<div style="background-image:url('{%static 'images/cyBackgroundImage.jpg' %}');">-->
+		<section id="" class="major" style="-moz-align-items: center;
 					-webkit-align-items: center;
 					-ms-align-items: center;
 					align-items: center;
@@ -44,58 +44,63 @@
 					min-height: 22em;
 					position: relative;
 					top: 0em;">
-						<div class="inner"  >
-							<header class="major">
+			<div class="inner">
+				<header class="major">
 
-								<h2 style="color:black"><br>群雁資訊檢索系統</h2>
-							</header>
-							<div class="content">
-                                <form id="loginForm" action="" method="post">{% csrf_token %}
-                                    <label style="color:black" for="username">會員編號:</label>
-									<div class="row">
-										<div class=" col-sm-4">
-                                    	<input style="color:black;background-color:white" type="text" name="username" value="" id="username"> <br/>
-										</div>
-									</div>
-									<label style="color:black" for="username">身分證後四碼:</label>
-									<div class="row">
-										<div class=" col-sm-4">
-									<input style="color:black;background-color:white" type="text" name="idnumber" value="" id="idnumber"> <br/>
-										</div>
-									</div>
-                                    <label style="color:black" for="password">用戶密碼:</label>
-									<div class="row">
-										<div class=" col-sm-4">
-                                    <input style="color:black;background-color:white" type="password" name="password" value="" id="password"> <br/>
-										</div>
-									</div>
-									{% if pwderror %}
-										 <p style="color: red;">輸入的資料有誤</p>
-									{% endif %}
-									{% if pointNotEnought %}
-										 <p style="color: red;">點數不足</p>
-									{% endif %}
-
-                                    <input style="color:black;box-shadow: inset 0 0 0 2px #000000;" type="button" value="登入" class="button" onclick="confirmSubmit()"/>
-
-                                </form>
-
+					<h2 style="color:black"><br>群雁資訊檢索系統</h2>
+				</header>
+				<div class="content">
+					<form id="loginForm" action="" method="post">{% csrf_token %}
+						<label style="color:black" for="username">會員編號:</label>
+						<div class="row">
+							<div class=" col-sm-4">
+								<input style="color:black;background-color:white;width:auto;" type="text" name="username" value=""
+									id="username"> <br />
 							</div>
-
 						</div>
-					</section>
+						<label style="color:black" for="username">身分證後四碼:</label>
+						<div class="row">
+							<div class=" col-sm-4">
+								<input style="color:black;background-color:white;width:auto;" type="text" name="idnumber" value=""
+									id="idnumber"> <br />
+							</div>
+						</div>
+						<label style="color:black" for="password">用戶密碼:</label>
+						<div class="row">
+							<div class=" col-sm-4">
+								<input style="color:black;background-color:white;width:auto;" type="password" name="password"
+									value="" id="password"> <br />
+							</div>
+						</div>
+						{% if pwderror %}
+						<p style="color: red;">輸入的資料有誤</p>
+						{% endif %}
+						{% if pointNotEnought %}
+						<p style="color: red;">點數不足</p>
+						{% endif %}
+
+						<input style="color:black;box-shadow: inset 0 0 0 2px #000000;" type="button" value="登入"
+							class="button" onclick="confirmSubmit()" />
+
+					</form>
+
 				</div>
+
 			</div>
+		</section>
+	</div>
+	</div>
 
-		<!-- Scripts -->
-			<script>
-				function confirmSubmit() {
-				  if (confirm("登入將扣一點，您確定登入嗎?")) {
-					document.getElementById("loginForm").submit();
-				  }
-				  return false;
-				}
-			</script>
+	<!-- Scripts -->
+	<script>
+		function confirmSubmit() {
+			if (confirm("登入將扣一點，您確定登入嗎?")) {
+				document.getElementById("loginForm").submit();
+			}
+			return false;
+		}
+	</script>
 
-	</body>
+</body>
+
 </html>
