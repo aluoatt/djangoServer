@@ -116,14 +116,14 @@ $(document).ready(() => {
             if (action === "addPointByAll") {
 
             } else if (action === "addPointByJobTitle") {
-                pointDiv = $("<div>", { class: "form-check" });
-                pointDiv.append($("<input>", { type: "radio", name: "jobTitle", class: "form-check-input", value: "會長", id: "jobTitle1", checked: true }));
-                pointDiv.append($("<label>", { text: "團長", class: "form-check-label", for: "jobTitle1" }));
-                formInput.append(pointDiv);
-                pointDiv = $("<div>", { class: "form-check" });
-                pointDiv.append($("<input>", { type: "radio", name: "jobTitle", class: "form-check-input", value: "團長", id: "jobTitle2" }));
-                pointDiv.append($("<label>", { text: "會長", class: "form-check-label", for: "jobTitle2" }));
-                formInput.append(pointDiv);
+                jobTitleList.forEach((element, index) => {
+                    if (element === "無")
+                        return;
+                    pointDiv = $("<div>", { class: "form-check" });
+                    pointDiv.append($("<input>", { type: "radio", name: "amwayAward", class: "form-check-input", value: element, id: "amwayAward" + index }));
+                    pointDiv.append($("<label>", { text: element, class: "form-check-label", for: "amwayAward" + index }));
+                    formInput.append(pointDiv);
+                });
             } else if (action === "addPointByAmwayAward") {
                 amwayAwardList.forEach((element, index) => {
                     pointDiv = $("<div>", { class: "form-check" });
