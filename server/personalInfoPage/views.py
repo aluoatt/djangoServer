@@ -73,11 +73,14 @@ def personalInfoPointPage(request):
             accountIDList = UserAccountAmwayInfo.objects.filter(amwayDD = myDDInfo).values('UserAccountInfo')
             myTeam = UserAccountInfo.objects.filter(id__in=accountIDList).exclude(username = request.user.username)
             myTeamDD = registerDDandDimInfo.objects.filter(amwayDiamond = str(amNumber))
+            myTeam = list(myTeam)
             for myDD in myTeamDD:
                 accountIDList = UserAccountAmwayInfo.objects.filter(amwayDD = myDD).values('UserAccountInfo')
                 if accountIDList:
                     ddTeam = UserAccountInfo.objects.filter(id__in = accountIDList).exclude(username = username)
-                    myTeam = myTeam.union(ddTeam)
+                    for item in ddTeam:
+                        if item not in myTeam:
+                            myTeam.append(item)
         else:
             myTeam = []
         selectPage = "管理個人點數"
