@@ -142,6 +142,8 @@ def managerAccountManagerPage(request):
     # 鑽石表
     registerDims = registerDDandDimInfo.objects.filter(amwayAward__rank__gte=60).order_by('amwayNumber')
 
+
+
     q1 = Q()
     q1.connector = 'OR'
     q1.children.append(("classRoom__ClassRoomName", "無"))
@@ -193,7 +195,8 @@ def managerAccountManagerPage(request):
     # UserAccountChainYen = UserAccountChainYenInfo.objects.filter(q1)
     UserAccount = UserAccountInfo.objects.get(username=request.user)
     if registerDDandDimInfo.objects.filter(amwayNumber = UserAccount.useraccountamwayinfo_set.first().amwayNumber).count() > 0:
-        for UserAccountAmway in UserAccountAmwayInfo.objects.filter(amwayDD=UserAccount.useraccountamwayinfo_set.first().amwayNumber):
+        print(UserAccountAmwayInfo.objects.filter(amwayDD=UserAccount.useraccountamwayinfo_set.first().id))
+        for UserAccountAmway in UserAccountAmwayInfo.objects.filter(amwayDD=registerDDandDimInfo.objects.get(amwayNumber = UserAccount.useraccountamwayinfo_set.first().amwayNumber).id):
             q2.children.append(("id", UserAccountAmway.UserAccountInfo.id))
     searchUserAccountInfo = UserAccountInfo.objects.filter(q2).order_by('username')
 
@@ -229,6 +232,27 @@ def managerAccountModify(request):
     if not request.user.has_perm('userlogin.CYSManager'):
         TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="新竹")
 
+    if request.user.has_perm('userlogin.CYZManager'):
+        TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="台中")
+
+    if request.user.has_perm('userlogin.CYJManager'):
+        TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="嘉義")
+    if request.user.has_perm('userlogin.CYN2Manager'):
+        TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="永康245")
+    if request.user.has_perm('userlogin.CYN1Manager'):
+        TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="永康135")
+    if request.user.has_perm('userlogin.CYMManager'):
+        TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="良美")
+    if request.user.has_perm('userlogin.CYKManager'):
+        TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="高雄")
+    if request.user.has_perm('userlogin.CYDManager'):
+        TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="屏東")
+    if request.user.has_perm('userlogin.CYWManager'):
+        TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="花蓮")
+    if request.user.has_perm('userlogin.CYTManager'):
+        TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="台東")
+    if request.user.has_perm('userlogin.CYHManager'):
+        TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="澎湖")
     return render(request, 'managerPages/managerAuditAccountManagerPage.html', locals())
 
 

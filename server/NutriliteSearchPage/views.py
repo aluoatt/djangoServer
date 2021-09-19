@@ -343,7 +343,8 @@ def viewFilePage(request, fileId):
     UserAccount = UserAccountInfo.objects.get(username=request.user)
     personalFile = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id)
     alreadyExchange = personalFile.count() > 0
-    aleardyLike = personalFile.first().like
+    if alreadyExchange:
+        aleardyLike = personalFile.first().like
     if request.user == "administrator":
         permission = True
         pointEnough = True

@@ -95,7 +95,7 @@ class personalFileData(models.Model):
     expiryDate = models.DateField(verbose_name='資料兌換時效到期日',null=True,blank=True)
     costPoint = models.IntegerField(verbose_name='花費點數')
     waterCreateReady = models.BooleanField(default=0,verbose_name='浮水印是否完成')
-    waterMarkPath = models.CharField(max_length=200,verbose_name='浮水印檔案路徑', null=True,blank=True)
+    waterMarkPath = models.CharField(max_length=400,verbose_name='浮水印檔案路徑', null=True,blank=True)
     like = models.BooleanField(default=0,verbose_name='是否按讚')
     class Meta:
         verbose_name = "個人持有資料管理"

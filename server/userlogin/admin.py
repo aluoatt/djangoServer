@@ -39,6 +39,7 @@ class usrloginAdmin(BaseUserAdmin):
         except:
             return "null"
 
+    search_fields = ['username', 'user']
     get_amwayNumber.short_description = '會員編號'
 
 class UserAccountAmwayInfoAdmin(admin.ModelAdmin):
