@@ -59,6 +59,7 @@ def logout(request):
 # @permission_required('userlogin.can_see_register', login_url='/accounts/userlogin/')
 def register(request,token):
     # try:
+        user = None
         if certify_token(key, token):
             accountName = ''
             username = ''
