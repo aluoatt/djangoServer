@@ -51,7 +51,7 @@ $(document).ready(() => {
         }
     });
 
-    var t = $('#example').DataTable({
+    window.t = $('#example').DataTable({
         "orderClasses": false,
         "responsive": true,
         "language": {
@@ -93,8 +93,14 @@ $(document).ready(() => {
                         fields['transferPoint'],
                         fields['reason'],
                         fields['resultPoint'],
-                    ]).draw(false);
+                    ]).draw(true);
                 }
+                
+                setTimeout(function(){
+                    t.draw(true);
+                    t.columns.adjust().draw();
+                    t.responsive.recalc().columns.adjust();
+                }, 10);
             },
             'error': (res) => {
                 alert("伺服器出狀況,請聯繫系統人員")
