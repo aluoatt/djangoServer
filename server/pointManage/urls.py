@@ -12,5 +12,6 @@ urlpatterns = [
     path('getSelfPointHistory', views.getSelfPointHistory, name='getSelfPointHistory'),
     path('transferPoint', views.transferPoint, name='transferPoint'),
     path('allUserAccount', views.allUserAccount, name='allUserAccount'),
+    path('getPersonalTeam', views.getPersonalTeam, name='getPersonalTeam'),
 ]
 

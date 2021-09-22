@@ -204,6 +204,32 @@ def getPointHistory(request):
 
     return res
 
+@permission_required('userlogin.seeManagerPointPage', login_url='/accounts/userlogin/')
+def allUserAccount(request):
+    res = HttpResponse()
+    try:
+        allData = []
+        allUserAccountInfo = UserAccountInfo.objects.all()
+        for user in allUserAccountInfo:
+            userAmwayAccountInfo = UserAccountAmwayInfo.objects.get(UserAccountInfo=user)
+            chainyenAccount = UserAccountChainYenInfo.objects.get(UserAccountInfo=user)
+            temp = {
+                "username": user.username,
+                "user": user.user,
+                "amwayNumber": userAmwayAccountInfo.amwayNumber,
+                "jobTitle":chainyenAccount.jobTitle.jobTitle,
+                "amwayAward": userAmwayAccountInfo.amwayAward.amwayAward,
+                "point": chainyenAccount.point
+            }
+            allData.append(temp)
+        res.status_code = 200
+        res.content =  json.dumps(allData)
+    except:
+        res.status_code = 503
+
+    return res
+
+
 def getSelfPointHistory(request):
     res = HttpResponse()
     try:
@@ -291,27 +317,55 @@ def transferPoint(request):
     return res
 
 
-def allUserAccount(request):
+def getPersonalTeam(request):
     res = HttpResponse()
+
+    username = request.user.username
+    userAccountInfo = UserAccountInfo.objects.get(username = username)
+
     try:
-        allData = []
-        allUserAccountInfo = UserAccountInfo.objects.all()
-        for user in allUserAccountInfo:
-            userAmwayAccountInfo = UserAccountAmwayInfo.objects.get(UserAccountInfo=user)
-            chainyenAccount = UserAccountChainYenInfo.objects.get(UserAccountInfo=user)
-            temp = {
-                "username": user.username,
-                "user": user.user,
-                "amwayNumber": userAmwayAccountInfo.amwayNumber,
-                "jobTitle":chainyenAccount.jobTitle.jobTitle,
-                "amwayAward": userAmwayAccountInfo.amwayAward.amwayAward,
-                "point": chainyenAccount.point
-            }
-            allData.append(temp)
-        res.status_code = 200
-        res.content =  json.dumps(allData)
+        #轉讓: 白金小組 & 鑽石小組
+        myTeam = []
+        userAccountAmway = UserAccountAmwayInfo.objects.get(UserAccountInfo = userAccountInfo)
+        awardRank = userAccountAmway.amwayAward.rank
+        amNumber  = userAccountAmway.amwayNumber
+
+        #白金
+        if awardRank >= 15 and awardRank < 60:
+            myDDInfo = registerDDandDimInfo.objects.get(amwayNumber = amNumber)
+            accountIDList = UserAccountAmwayInfo.objects.filter(amwayDD = myDDInfo).values('UserAccountInfo')
+            myTeam = UserAccountInfo.objects.filter(id__in=accountIDList).exclude(username = request.user.username)
+        #鑽石
+        elif awardRank >= 60:
+            myDDInfo = registerDDandDimInfo.objects.get(amwayNumber = amNumber)
+            accountIDList = UserAccountAmwayInfo.objects.filter(amwayDD = myDDInfo).values('UserAccountInfo')
+            myTeam = UserAccountInfo.objects.filter(id__in=accountIDList).exclude(username = request.user.username)
+            myTeamDD = registerDDandDimInfo.objects.filter(amwayDiamond = str(amNumber))
+            myTeam = list(myTeam)
+            for myDD in myTeamDD:
+                accountIDList = UserAccountAmwayInfo.objects.filter(amwayDD = myDD).values('UserAccountInfo')
+                if accountIDList:
+                    ddTeam = UserAccountInfo.objects.filter(id__in = accountIDList).exclude(username = username)
+                    for item in ddTeam:
+                        if item not in myTeam:
+                            myTeam.append(item)
+        else:
+            myTeam = []
     except:
-        res.status_code = 503
-
+        # 此直銷權在資料庫沒有註冊為 DD
+        myTeam = []
+    
+    finalTeam = []
+    for userAccount in myTeam:
+        amwayAccount = UserAccountAmwayInfo.objects.get(UserAccountInfo=userAccount)
+        chainyenAccount = UserAccountChainYenInfo.objects.get(UserAccountInfo=userAccount)
+        temp = {
+            "username": userAccount.username,
+            "user": userAccount.user,
+            "amwayNumber": amwayAccount.amwayNumber,
+            "point": chainyenAccount.point
+        }
+        finalTeam.append(temp)
+    res.status_code = 200
+    res.content = json.dumps(finalTeam)
     return res
-
