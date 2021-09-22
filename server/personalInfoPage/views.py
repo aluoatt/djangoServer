@@ -52,9 +52,6 @@ def personalInfoPointPage(request):
     username = request.user.username
     userAccountInfo = UserAccountInfo.objects.get(username = username)
 
-    #紀錄
-    pHistory = pointHistory.objects.filter(UserAccountInfo = userAccountInfo).order_by('-recordDate')
-
     try:
         #轉讓: 白金小組 & 鑽石小組
         myTeam = []

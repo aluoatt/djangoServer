@@ -191,7 +191,11 @@ def reducePoint(request):
 def getPointHistory(request):
     res = HttpResponse()
     try:
-        userAccountInfo = UserAccountInfo.objects.get(username = request.POST['username'])
+        if request.method == "POST":
+            userAccountInfo = UserAccountInfo.objects.get(username = request.POST['username'])
+        elif request.method == "GET":
+            userAccountInfo = UserAccountInfo.objects.get(username = request.user.username)
+
         pHistory = pointHistory.objects.filter(UserAccountInfo = userAccountInfo).order_by('-recordDate')
         res.status_code = 200
         res.content =  serializers.serialize("json", pHistory)

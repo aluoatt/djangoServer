@@ -1,8 +1,58 @@
 $(document).ready(() => {
+
+    myTable = $('#myTable').DataTable({
+        "orderClasses": false,
+        "responsive": true,
+        "fixedHeader": true,
+        "language": {
+            url: location.origin + '/static/assets/i18n/datatable/zh_Hant.json'
+        },
+        "createdRow": function (row, data, dataIndex) {
+            $(row).addClass('table-primary');
+            $(row).addClass('text-dark');
+            $(row).addClass('font-weight-bold');
+        }
+    });
+    myTableHead = [
+        'modifier', 'recordDate', 'addPoint', 'reducePoint', 'transferPoint',
+        'reason', 'resultPoint'
+    ]
+    $.ajax({
+        'url': location.origin + "/pointManage/getPointHistory",
+        'method': 'GET',
+        'processData': false,
+        'contentType': false,
+        'headers': { 'X-CSRFToken': getCookie('csrftoken') },
+        'success': (res) => {
+            data = JSON.parse(res)
+            for (i in data) {
+                fields = data[i]['fields']
+                myTable.row.add([
+                    fields['modifier'],
+                    fields['recordDate'],
+                    fields['addPoint'],
+                    fields['reducePoint'],
+                    fields['transferPoint'],
+                    fields['reason'],
+                    fields['resultPoint'],
+                ]).draw(true);
+            }
+
+            setTimeout(function () {
+                myTable.draw(true);
+                myTable.columns.adjust().draw();
+                myTable.responsive.recalc().columns.adjust();
+            }, 10);
+        },
+        'error': (res) => {
+            alert("伺服器出狀況,請聯繫系統人員")
+        }
+    });
+
     $(".button_transfer").on("click", (event) => {
         id = $(event.target).parent()[0].id;
         username = id.split("_")[0];
-        user = $("#" + username +"_user").html();
+        user = $("#" + username + "_user").html();
         action = id.split("_")[1];
         if (action === "transferonepoint" || action === "transfertenpoint") {
             msg = ""

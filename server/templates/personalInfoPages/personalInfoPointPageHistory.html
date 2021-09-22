@@ -1,117 +1,28 @@
-<style type="text/css">
-    .rwd-table {
-        /*background: #fff;*/
-        overflow: hidden;
-    }
-
-    .rwd-table tr:nth-of-type(2n) {
-        /*background: #eee;*/
-    }
-
-    .rwd-table th,
-    .rwd-table td {
-        margin: 0.5em 1em;
-    }
-
-    .rwd-table {
-        min-width: 100%;
-    }
-
-    .rwd-table th {
-        display: none;
-    }
-
-    .rwd-table td {
-        display: block;
-    }
-
-    .rwd-table td:before {
-        content: attr(data-th) " : ";
-        font-weight: bold;
-        width: 6.5em;
-        display: inline-block;
-    }
-
-    .rwd-table th,
-    .rwd-table td {
-        text-align: left;
-    }
-
-    .rwd-table th,
-    .rwd-table td:before {
-        color: #FF2D2D;
-        font-weight: bold;
-        /*background-color:#BEBEBE	;*/
-    }
-
-    @media (min-width: 480px) {
-        .rwd-table td:before {
-            display: none;
-        }
-
-        .rwd-table th,
-        .rwd-table td {
-            display: table-cell;
-            padding: 0.25em 0.5em;
-        }
-
-        .rwd-table th:first-child,
-        .rwd-table td:first-child {
-            padding-left: 0;
-        }
-
-        .rwd-table th:last-child,
-        .rwd-table td:last-child {
-            padding-right: 0;
-        }
-
-        .rwd-table th,
-        .rwd-table td {
-            padding: 1em !important;
-        }
-    }
-</style>
-<table id="myTable" class="rwd-table table-bordered text-center" style="border:dark;">
-    <tr class="text-center">
-        <th>變更者</th>
-        <th>修改日期</th>
-        <th>增點</th>
-        <th>扣點</th>
-        <th>轉讓</th>
-        <th>原因</th>
-        <th>剩餘點數</th>
-    </tr>
-    {% for history in pHistory %}
-    <tr class="text-dark font-weight-bold" style=" border-bottom: 1px solid black;">
-        <td id="history_modifier" data-th="變更者">
-            {{history.modifier}}
-        </td>
-        　　
-        <td id="history_recordDate" data-th="修改日期">
-            {{history.recordDate}}
-        </td>
-        　　
-        <td id="history_addPoint" data-th="增點">
-            {{history.addPoint}}
-        </td>
-        　　
-        <td id="history_reducepoint" data-th="扣點">
-            {{history.reducePoint}}
-        </td>
-        　　
-        <td id="history_transferPoint" data-th="轉讓">
-            {{history.transferPoint}}
-        </td>
-        　　
-        <td id="history_reason" data-th="原因">
-            {{history.reason}}
-        </td>
-
-        <td id="history_resultPoint" data-th="剩餘點數">
-            {{history.resultPoint}}
-        </td>
-        　　
-    </tr>
-    {% endfor %}
-
+<table id="myTable" class="display table table-light thead-dark table-bordered" style="border:dark;width:100%; white-space: nowrap;">
+    <thead class="thead-dark">
+        <tr>
+            <th>變更者</th>
+            <th>修改日期</th>
+            <th>增點</th>
+            <th>扣點</th>
+            <th>轉讓</th>
+            <th>原因</th>
+            <th>剩餘點數</th>
+        </tr>
+    </thead>
 </table>
+<style>
+    .dataTables_filter input {
+        background-color: white;
+        border-radius: 5px;
+    }
+    label{
+        color:black;
+    }
+
+    .dataTables_info{
+        color:black;
+    }
+
+    th, td {border-width:10px}
+</style>
