@@ -273,3 +273,28 @@ def transferPoint(request):
         res.status_code = 503
 
     return res
+
+
+def allUserAccount(request):
+    res = HttpResponse()
+    try:
+        allData = []
+        allUserAccountInfo = UserAccountInfo.objects.all()
+        for user in allUserAccountInfo:
+            userAmwayAccountInfo = UserAccountAmwayInfo.objects.get(UserAccountInfo=user)
+            chainyenAccount = UserAccountChainYenInfo.objects.get(UserAccountInfo=user)
+            temp = {
+                "username": user.username,
+                "user": user.user,
+                "amwayNumber": userAmwayAccountInfo.amwayNumber,
+                "jobTitle":chainyenAccount.jobTitle.jobTitle,
+                "amwayAward": userAmwayAccountInfo.amwayAward.amwayAward,
+                "point": chainyenAccount.point
+            }
+            allData.append(temp)
+        res.status_code = 200
+        res.content =  json.dumps(allData)
+    except:
+        res.status_code = 503
+
+    return res
