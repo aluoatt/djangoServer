@@ -18,7 +18,7 @@ $(document).ready(() => {
         'reason', 'resultPoint'
     ]
     $.ajax({
-        'url': location.origin + "/pointManage/getPointHistory",
+        'url': location.origin + "/pointManage/getSelfPointHistory",
         'method': 'GET',
         'processData': false,
         'contentType': false,

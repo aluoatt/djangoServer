@@ -204,6 +204,18 @@ def getPointHistory(request):
 
     return res
 
+def getSelfPointHistory(request):
+    res = HttpResponse()
+    try:
+        userAccountInfo = UserAccountInfo.objects.get(username = request.user.username)
+        pHistory = pointHistory.objects.filter(UserAccountInfo = userAccountInfo).order_by('-recordDate')
+        res.status_code = 200
+        res.content =  serializers.serialize("json", pHistory)
+    except:
+        res.status_code = 503
+
+    return res
+
 
 def transferPoint(request):
     res = HttpResponse()
@@ -302,3 +314,4 @@ def allUserAccount(request):
         res.status_code = 503
 
     return res
+

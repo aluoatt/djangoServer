@@ -9,6 +9,7 @@ urlpatterns = [
     path('addPointByJobTitle', views.addPointByJobTitle, name='addPointByJobTitle'),
     path('reducePoint', views.reducePoint, name='reducePoint'),
     path('getPointHistory', views.getPointHistory, name='getPointHistory'),
+    path('getSelfPointHistory', views.getSelfPointHistory, name='getSelfPointHistory'),
     path('transferPoint', views.transferPoint, name='transferPoint'),
     path('allUserAccount', views.allUserAccount, name='allUserAccount'),
 ]
