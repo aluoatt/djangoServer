@@ -30,9 +30,7 @@ $(document).ready(() => {
                 myTable.row.add([
                     fields['modifier'],
                     fields['recordDate'],
-                    fields['addPoint'],
-                    fields['reducePoint'],
-                    fields['transferPoint'],
+                    fields['addPoint']+fields['reducePoint']+fields['transferPoint'],
                     fields['reason'],
                     fields['resultPoint'],
                 ]).draw(true);
