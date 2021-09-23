@@ -77,10 +77,15 @@ def keywordSearchPage(request):
                 if earchIdKeywordCount_dict[keyfileInfo.fileDataInfoID.id] >= totalKeywordNum:
                     q2.children.append(("id", keyfileInfo.fileDataInfoID.id))
 
-        # if len(q2) >0 :
-        #     hasKeywordData = True
-        # else:
-        #     q2.children.append(("id", -1))
+        titleQ = Q()
+        titleQ.connector = "AND"
+        for keyword in keywords_list:
+            titleQ.children.append(("title__contains", keyword))
+
+        for titleResult in fileDataInfo.objects.filter(titleQ):
+            q2.children.append(("id", titleResult.id))
+
+
         if len(q2) > 0:
             fileDatas = fileDataInfo.objects.filter(
                 occurrenceDate__gte=limDate,
