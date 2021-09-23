@@ -14,7 +14,7 @@ from django.db.models import Q
 from userlogin.models import UserAccountInfo, UserAccountChainYenInfo, chainYenJobTitleInfo
 from userlogin.models import chainYenClassInfo, registerDDandDimInfo, amwayAwardInfo, ConfirmString,UserAccountAmwayInfo
 from django.contrib.auth.decorators import permission_required
-from userlogin.models import TempUserAccountInfo, AccountModifyHistory, TempUserAccountChainYenInfo
+from userlogin.models import TempUserAccountInfo, AccountModifyHistory, TempUserAccountChainYenInfo, TempUserAccountAmwayInfo
 
 
 # Create your views here.
@@ -789,6 +789,79 @@ def allUserAccount(request):
                 "amwayAward": userAmwayAccountInfo.amwayAward.amwayAward,
                 "point": chainyenAccount.point,
                 "accountStatus":user.is_active,
+            }
+            allData.append(temp)
+        res.status_code = 200
+        res.content =  json.dumps(allData)
+    except:
+        res.status_code = 503
+
+    return res
+
+@permission_required('userlogin.seeManagerAuditAccountPage', login_url='/accounts/userlogin/')
+def getTempUserAccount(request):
+    res = HttpResponse()
+    try:
+        TempUserAccountChainYen = TempUserAccountChainYenInfo.objects.all()
+        # print(TempUserAccount)
+        # kwargs = {}
+        # 台北
+        if not request.user.has_perm('userlogin.CYPManager'):
+            TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="台北")
+
+        if not request.user.has_perm('userlogin.CYLManager'):
+            TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="中壢")
+
+        if not request.user.has_perm('userlogin.CYSManager'):
+            TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="新竹")
+
+        if not request.user.has_perm('userlogin.CYZManager'):
+            TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="台中")
+
+        if not request.user.has_perm('userlogin.CYJManager'):
+            TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="嘉義")
+
+        if not request.user.has_perm('userlogin.CYN2Manager'):
+            TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="永康245")
+
+        if not request.user.has_perm('userlogin.CYN1Manager'):
+            TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="永康135")
+
+        if not request.user.has_perm('userlogin.CYMManager'):
+            TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="良美")
+
+        if not request.user.has_perm('userlogin.CYKManager'):
+            TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="高雄")
+
+        if not request.user.has_perm('userlogin.CYDManager'):
+            TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="屏東")
+
+        if not request.user.has_perm('userlogin.CYWManager'):
+            TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="花蓮")
+
+        if not request.user.has_perm('userlogin.CYTManager'):
+            TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="台東")
+
+        if not request.user.has_perm('userlogin.CYHManager'):
+            TempUserAccountChainYen = TempUserAccountChainYen.exclude(classRoom__ClassRoomName="澎湖")
+        allData = []
+        for tempUser in TempUserAccountChainYen:
+            user = tempUser.UserAccountInfo
+            userAmwayAccountInfo = TempUserAccountAmwayInfo.objects.get(UserAccountInfo=user)
+            chainyenAccount = tempUser
+            temp = {
+                "id":user.id,
+                "username": user.username,
+                "user": user.user,
+                "gender": user.gender,
+                "phone": user.phone,
+                "email": user.email,
+                "auditStatus":user.auditStatus,
+                "ClassRoomName": chainyenAccount.classRoom.ClassRoomName,
+                "amwayNumber": userAmwayAccountInfo.amwayNumber,
+                "jobTitle":chainyenAccount.jobTitle.jobTitle,
+                "amwayDD": userAmwayAccountInfo.amwayDD.main,
+                "amwayAward": userAmwayAccountInfo.amwayAward.amwayAward,
             }
             allData.append(temp)
         res.status_code = 200

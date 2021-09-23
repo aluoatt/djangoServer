@@ -63,30 +63,29 @@ $(document).ready(()=>{
                 dataPermissionsLevel = fields['dataPermissionsLevel']
                 //insert data for modify perpose
                 moHTML = `
-                <td id="${userid}_gender" style="display:none" data-th="性別">
-                    ${gender}
-                </td>
-                　　
-                <td id="${userid}_phone" style="display:none" data-th="電話">
-                    ${phone}
-                </td>
-                <td id="${userid}_jobTitle" style="display:none" data-th="職務">
-                    ${jobTitle}
-                </td>
-                　　
-                <td id="${userid}_amwayAward" style="display:none" data-th="獎銜">
-                    ${amwayAward}
-                </td>
-                <input type="hidden"
-                    value="${amwayNumber}"
-                    id="${userid}_amwayDD_number">
-                <input type="hidden" value="${dataPermissionsLevel}"
-                    id="${userid}_dataPermissionsLevel">
-                <td id="${userid}_amwayDiamond" style="display:none" data-th="上手鑽石">
-                    ${amwayDiamond}
-                </td>
+                    <td id="${userid}_gender" style="display:none" data-th="性別">
+                        ${gender}
+                    </td>
+                    　　
+                    <td id="${userid}_phone" style="display:none" data-th="電話">
+                        ${phone}
+                    </td>
+                    <td id="${userid}_jobTitle" style="display:none" data-th="職務">
+                        ${jobTitle}
+                    </td>
+                    　　
+                    <td id="${userid}_amwayAward" style="display:none" data-th="獎銜">
+                        ${amwayAward}
+                    </td>
+                    <input type="hidden"
+                        value="${amwayNumber}"
+                        id="${userid}_amwayDD_number">
+                    <input type="hidden" value="${dataPermissionsLevel}"
+                        id="${userid}_dataPermissionsLevel">
+                    <td id="${userid}_amwayDiamond" style="display:none" data-th="上手鑽石">
+                        ${amwayDiamond}
+                    </td>
                 `
-                x = $(moHTML)
                 $(moHTML).appendTo($("#hiddenData"));
             }
             myTable.columns().every( function (index) {
