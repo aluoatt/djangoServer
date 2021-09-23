@@ -383,17 +383,17 @@ def viewFilePage(request, fileId):
     if targetFile.downloadAble:
 
         s = render(request, 'viewFilePage.html', locals())
-        s.setdefault('Cache-Control', 'no-store')
-        s.setdefault('Expires', 0)
-        s.setdefault('Pragma', 'no-cache')
+        # s.setdefault('Cache-Control', 'no-store')
+        # s.setdefault('Expires', 0)
+        # s.setdefault('Pragma', 'no-cache')
         # return render(request, 'viewFilePage.html', locals())
 
 
     else:
         s = render(request, 'viewFilePageCantDownload.html', locals())
-        s.setdefault('Cache-Control', 'no-store')
-        s.setdefault('Expires', 0)
-        s.setdefault('Pragma', 'no-cache')
+        # s.setdefault('Cache-Control', 'no-store')
+        # s.setdefault('Expires', 0)
+        # s.setdefault('Pragma', 'no-cache')
     return s
 
 
