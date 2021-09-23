@@ -14,8 +14,12 @@ $(document).ready(() => {
         }
     });
     myTableHead = [
-        'user','amwayNumber','jobTitle','amwayAward','point',
+        'user','point' ,'jobTitle','amwayAward',
         'addPoint','reducePoint','getPointHistory'
+    ]
+    myTableHeadChinese = [
+        '直銷商','點數','職務','獎銜',
+        '加點','扣點','查看歷史'
     ]
     $.ajax({
         'url': location.origin + "/pointManage/allUserAccount",
@@ -45,6 +49,34 @@ $(document).ready(() => {
                     $(this).attr('id', username +"_" + myTableHead[index] );
                 });
             }
+            myTable.columns().every( function (index) {
+                if(index > 3){
+                    return;
+                }
+                var column = this;
+                selectHTML = `
+                <div class="col-auto">
+                    <label>${myTableHeadChinese[index]}</label>
+                    <select class="custom-select custom-select-md"><option value=""></option></select>
+                </div>
+                `
+                var select = $(selectHTML)
+                    .appendTo( $("#colSearch") );
+
+                select.find("select").on( 'change', function () {
+                    var val = $.fn.dataTable.util.escapeRegex(
+                        $(this).val()
+                    );
+
+                    column
+                        .search( val ? '^'+val+'$' : '', true, false )
+                        .draw();
+                } );
+ 
+                column.data().unique().sort().each( function ( d, j ) {
+                    select.find("select").append( '<option value="'+d+'">'+d+'</option>' )
+                } );
+            } );
             
             setTimeout(function(){
                 myTable.draw(true);
