@@ -18,7 +18,7 @@ $(document).ready(() => {
         'addPoint','reducePoint','getPointHistory'
     ]
     myTableHeadChinese = [
-        '直銷商','點數','職務','獎銜',
+        '姓名','點數','職務','獎銜',
         '加點','扣點','查看歷史'
     ]
     $.ajax({

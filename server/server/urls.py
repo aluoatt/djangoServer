@@ -82,6 +82,7 @@ from django.conf.urls import include
 
 urlpatterns += [
     path('pointManage/', include('pointManage.urls')),
+    path('managerPages/', include('managerPage.urls')),
 ]
 
 

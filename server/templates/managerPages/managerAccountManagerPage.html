@@ -6,622 +6,380 @@
 -->
 
 <html>
+
 <head>
     <title>ChainYen System</title>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     {% load poll_extras %}
     {% load static %}
     <link href="{%static 'favicon.ico' %}" rel="shortcut icon">
-    		<style type="text/css">
-			.rwd-table {
-		 	 /*background: #fff;*/
-		 	 overflow: hidden;
-			}
-
-			.rwd-table tr:nth-of-type(2n){
-			  /*background: #eee;*/
-			}
-			.rwd-table th,
-			.rwd-table td {
-			  margin: 0.5em 1em;
-			}
-			.rwd-table {
-			  min-width: 100%;
-			}
-
-			.rwd-table th {
-			  display: none;
-			}
-
-			.rwd-table td {
-			  display: block;
-			}
-
-			.rwd-table td:before {
-			  content: attr(data-th) " : ";
-			  font-weight: bold;
-			  width: 6.5em;
-			  display: inline-block;
-			}
-
-			.rwd-table th, .rwd-table td {
-			  text-align: left;
-			}
-
-			.rwd-table th, .rwd-table td:before {
-			  color: #FF2D2D;
-			  font-weight: bold;
-                /*background-color:#BEBEBE	;*/
-			}
-
-			@media (min-width: 480px) {
-			  .rwd-table td:before {
-			    display: none;
-			  }
-			 .rwd-table th, .rwd-table td {
-			    display: table-cell;
-			    padding: 0.25em 0.5em;
-			  }
-			  .rwd-table th:first-child,
-			  .rwd-table td:first-child {
-			    padding-left: 0;
-			  }
-			  .rwd-table th:last-child,
-			  .rwd-table td:last-child {
-			    padding-right: 0;
-			  }
-			   .rwd-table th,
-			   .rwd-table td {
-			    padding: 1em !important;
-			  }
-			}
-		</style>
 </head>
+
 <body class="is-preload">
 
-<!-- Wrapper -->
-<div id="wrapper">
+    <!-- Wrapper -->
+    <div id="wrapper">
 
-    <!-- Header -->
-    {% include 'baseHeader.html' %}
+        <!-- Header -->
+        {% include 'baseHeader.html' %}
 
-    <!-- Menu -->
-    {% include 'baseMenu.html' %}
+        <!-- Menu -->
+        {% include 'baseMenu.html' %}
 
-    <!-- Main -->
+        <!-- Main -->
 
-    <div id="main" class="alt">
-        <section id="one">
+        <div id="main" class="alt">
+            <section id="one">
 
-            <div class="inner">
-                {% include 'managerPages/managerHomePageHeaderBar.html' %}
-                <div class="row align-items-center">
-                    <li style="list-style-type:none;">
-                        <label>編號:
-                            <input onmousedown="setEmptyByTagIdaccountManagerFilter('amwayNumbers_input')" onkeyup="accountManagerFilter()" style="color: black;" list="amwayNumbers" class="small" id="amwayNumbers_input" name="amwayNumbers_input"></label>
-                        <datalist id="amwayNumbers">
-                            {% for searchUserAccount in searchUserAccountInfo %}
+                <div class="inner">
+                    {% include 'managerPages/managerHomePageHeaderBar.html' %}
+                    <div id="hiddenData">
 
-                                <option value="{{searchUserAccount.useraccountamwayinfo_set.first.amwayNumber}}">
+                    </div>
+                    <div id="colSearch" class="form-row align-items-center">
 
-                            {% endfor %}
-                        </datalist>
-                    </li>
-                    <li style="list-style-type:none;">
-                        <label>姓名:
-                            <input onmousedown="setEmptyByTagIdaccountManagerFilter('user_input')" onkeyup="accountManagerFilter()" style="color: black;" list="users" class="small" id="user_input" name="amwayNumbers_input"></label>
-                        <datalist id="users">
-                            {% for searchUserAccount in searchUserAccountInfo %}
+                    </div>
+                    <table id="myTable" class="display table-bordered " style="width:100%; white-space: nowrap;">
+                        　<thead>
+                            <tr>
+                                <th>姓名</th>
+                                <th>會員編號</th>
+                                <!--                <th>性別</th>-->
+                                <!--                <th>電話</th>-->
+                                <!--                <th>職務</th>-->
+                                <!--                <th>獎銜</th>-->
+                                <th>教室</th>
+                                <th>上手白金</th>
+                                <!--                <th>上手鑽石</th>-->
+                                <th>點數</th>
+                                <th>狀態</th>
+                                <th>修改</th>
+                                <th>修改紀錄</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </section>
 
-                                <option value="{{searchUserAccount.user}}">
 
-                            {% endfor %}
-                        </datalist>
-                    </li>
-                    <li style="list-style-type:none;">
-                        <label>職務:
-                            <input onmousedown="setEmptyByTagIdaccountManagerFilter('jobtitles_input')" onkeyup="accountManagerFilter()" style="color: black;" list="jobtitles" class="small" id="jobtitles_input" name="jobtitles_input"></label>
-                        <datalist id="jobtitles">
+            {% if pageisNotNull %}
+            <div class="dataTables_paginate paging_simple_numbers pull-right inner">
+                <ul class="pagination ">
+                    {{ pagination.page_html|safe }}
+                </ul>
 
-                            {% for jobtitle in jobTitles %}
-                            <option value="{{jobtitle.jobTitle}}">
-                            {% endfor %}
-                        </datalist>
-                    </li>
-                    <li style="list-style-type:none;">
-                        <label>獎銜:
-                            <input onmousedown="setEmptyByTagIdaccountManagerFilter('amwayAwards_input')" onkeyup="accountManagerFilter()" style="color: black;" list="amwayAwards" class="small" id="amwayAwards_input" name="amwayAwards"></label>
-                        <datalist id="amwayAwards">
+            </div>
+            {% endif %}
+
+
+        </div>
+
+    </div>
+    <!-- Modal 修改-->
+    <div class="modal fade" id="accountModifyConfirm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 style="color: black" class="modal-title" id="staticBackdropLabel"></h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input id="userid_user" style="font-size:12px;border: 1px solid #ccc;" type="hidden" required>
+                    <label style="color: black"><mark style="color: red">姓名:</mark>
+                        <input id="modal_user" style="font-size:12px;border: 1px solid #ccc;" type="text" required>
+                    </label>
+                    <label style="color: black"><mark style="color: red">會員編號:</mark>
+                        <input id="modal_amwayNumber" disabled style="font-size:12px;" type="text">
+                    </label>
+                    <label id="modal_gender" style="color: black"><mark style="color: red">性別:</mark>
+                        <select style="font-size:12px;border: 1px solid #ccc;" id="gender" name="gender">
+                            <option id="男" value="男">男</option>
+                            <option id="女" value="女">女</option>
+                        </select>
+                    </label>
+                    <label id="" style="color: black"><mark style="color: red">電話:</mark>
+                        <input required id="modal_phone" style="font-size:12px;border: 1px solid #ccc;" type="text">
+                    </label>
+                    <label id="modal_jobTitle" style="color: black"><mark style="color: red">職務:</mark>
+                        {% if perms.userlogin.can_Change_JobTitle %}
+                        <select id="chainYenJobTitle" name="chainYenJobTitle"
+                            style="font-size:12px;border: 1px solid #ccc;">
+                            {% else %}
+                            <select id="chainYenJobTitle" name="chainYenJobTitle" style="font-size:12px" disabled>
+                                {% endif %}
+                                {% for jobtitle in jobTitles %}
+                                <option id="{{jobtitle.jobTitle}}" value="{{jobtitle.jobTitle}}">{{jobtitle.jobTitle}}
+                                </option>
+                                {% endfor %}
+                            </select>
+                    </label>
+                    <label style="color: black"><mark style="color: red">獎銜:</mark>
+                        <select id="modal_amwayAward" name="modal_amwayAward"
+                            style="font-size:12px;border: 1px solid #ccc;">
+
                             {% for amwayAward in amwayAwards %}
-                            <option value="{{amwayAward.amwayAward}}">
-                                {% endfor %}
-                        </datalist>
-                    </li>
-                    <li style="list-style-type:none;">
-                        <label>教室:
-                            <input  onmousedown="setEmptyByTagIdaccountManagerFilter('chainYenClasses_input')" onkeyup="accountManagerFilter()" style="color: black;" list="chainYenClasses" class="small"
-                                   name="chainYenClasses" id="chainYenClasses_input"></label>
-                        <datalist id="chainYenClasses">
-                            {% for chainYenClass in chainYenClasses %}
-                            <option value="{{chainYenClass.ClassRoomName}}">
-                                {% endfor %}
-                        </datalist>
-                    </li>
-                    <li style="list-style-type:none;">
-                        <label>白金:
-                            <input onmousedown="setEmptyByTagIdaccountManagerFilter('registerDDs_input')" onkeyup="accountManagerFilter()" style="color: black;" list="registerDDs" class="small" id="registerDDs_input" name="registerDDs"></label>
-                        <datalist id="registerDDs">
-                            {% for registerDD in registerDDs %}
-                            {% if registerDD.sec == Null %}
-
-                            <option value="{{registerDD.main}}">
-
-                                {% else %}
-                            <option value="{{registerDD.main}}/{{registerDD.sec}}">
+                            <option id="{{amwayAward.amwayAward}}" value="{{amwayAward.amwayAward}}">
+                                {{amwayAward.amwayAward}}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                    <label style="color: black"><mark style="color: red">教室:</mark>
+                        {% if perms.userlogin.can_Change_class %}
+                        <select id="modal_classRoom" name="modal_classRoom"
+                            style="font-size:12px;border: 1px solid #ccc;">
+                            {% else %}
+                            <select id="modal_classRoom" name="modal_classRoom" style="font-size:12px; disable">
                                 {% endif %}
+                                {% for chainYenClass in chainYenClasses %}
+                                <option id="{{chainYenClass.ClassRoomName}}" value="{{chainYenClass.ClassRoomName}}">
+                                    {{chainYenClass.ClassRoomName}}</option>
                                 {% endfor %}
-                        </datalist>
-                    </li>
-                    <li style="list-style-type:none;">
-                        <label>鑽石:
-                            <input onmousedown="setEmptyByTagIdaccountManagerFilter('registerDims_input')" onkeyup="accountManagerFilter()" style="color: black;" list="registerDims" id="registerDims_input" class="small" name="registerDims"></label>
-                        <datalist id="registerDims">
-                            {% for registerDim in registerDims %}
-                            {% if registerDim.sec == Null %}
+                            </select>
+                    </label>
+                    <label style="color: black"><mark style="color: red">上手白金編號:</mark>
+                        <input id="amwayDD" style="font-size:12px;border: 1px solid #ccc;" type="text"
+                            onchange="managerCheckDD('{{ csrf_token }}')">
+                    </label>
 
-                            <option value="{{registerDim.main}}">
+                    <label style="color: black"><mark style="color: red">上手白金姓名:</mark>
+                        <input required id="modal_amwayDD_name" style="font-size:12px;" disabled type="text">
+                    </label>
 
-                                {% else %}
-                            <option value="{{registerDim.main}}/{{registerDim.sec}}">
-                                {% endif %}
-                                {% endfor %}
-                        </datalist>
-                    </li>
-                    <li style="list-style-type:none;">
-                        <label>狀態:
-                            <input onmousedown="setEmptyByTagIdaccountManagerFilter('accountStatus_input')" onkeyup="accountManagerFilter()" style="color: black;" list="accountStatus" id="accountStatus_input" class="small" name="accountStatus"></label>
-                        <datalist id="accountStatus">
-
-                            <option value="正常">
-
-                        </datalist>
-                    </li>
-
-                </div>
-                <table id = "myTable" class="rwd-table">
-　
-                <tr>
-                　　
-                <th>姓名</th>
-                　　
-                <th>會員編號</th>
-                　　
-<!--                <th>性別</th>-->
-                　　
-<!--                <th>電話</th>-->
-                　　
-<!--                <th>職務</th>-->
-                　　
-<!--                <th>獎銜</th>-->
-                　　
-                <th>教室</th>
-                　　
-                <th>上手白金</th>
-                　　
-<!--                <th>上手鑽石</th>-->
-                　　
-                　　
-                <th>點數</th>
-
-            　　 <th>狀態</th>
-
-                <th>修改</th>
-                　　
-                <th>修改紀錄</th>
-                　
-                </tr>
-                {% for UserAccount in searchUserAccountInfo %}
-                <tr id = "{{UserAccount.id}}_tr">
-                　　
-                <td id = "{{UserAccount.id}}_user" data-th="姓名">
-                    {{UserAccount.user}}
-                </td>
-                　　
-                <td id = "{{UserAccount.id}}_amwayNumber" data-th="會員編號">
-                    {{UserAccount.useraccountamwayinfo_set.first.amwayNumber}}
-                </td>
-                　　
-                <td id = "{{UserAccount.id}}_gender" style="display:none" data-th="性別">
-                    {{UserAccount.gender}}
-                </td>
-                　　
-                <td id = "{{UserAccount.id}}_phone" style="display:none" data-th="電話">
-                    {{UserAccount.phone}}
-                </td>
-                　　
-                <td id = "{{UserAccount.id}}_jobTitle" style="display:none" data-th="職務">
-                    {{UserAccount.useraccountchainyeninfo_set.first.jobTitle.jobTitle}}
-                </td>
-                　　
-                <td id = "{{UserAccount.id}}_amwayAward" style="display:none" data-th="獎銜">
-                     {{UserAccount.useraccountamwayinfo_set.first.amwayAward.amwayAward}}
-                </td>
-                    　　
-                <td id = "{{UserAccount.id}}_ClassRoomName" data-th="教室">
-                    {{UserAccount.useraccountchainyeninfo_set.first.classRoom.ClassRoomName}}
-                </td>
-                    　　
-                <td id = "{{UserAccount.id}}_amwayDD" data-th="上手白金">
-                    {{UserAccount.useraccountamwayinfo_set.first.amwayDD.main}}
-                </td>
-
-                <input type="hidden" value ="{{UserAccount.useraccountamwayinfo_set.first.amwayDD.amwayNumber}}" id="{{UserAccount.id}}_amwayDD_number">
-                <input type="hidden" value ="{{UserAccount.dataPermissionsLevel}}" id="{{UserAccount.id}}_dataPermissionsLevel">
-
-                    　　
-                <td id = "{{UserAccount.id}}_amwayDiamond" style="display:none" data-th="上手鑽石">
-                    {{registerDims|getdimName:UserAccount.useraccountamwayinfo_set.first.amwayDD.amwayDiamond}}
-                </td>
-                    　　 　　 　　
-                <td id = "{{UserAccount.id}}_point" data-th="點數">
-                    {{UserAccount.useraccountchainyeninfo_set.first.point}}
-                </td>
-
-                <td id = "{{UserAccount.id}}_accountStatus" data-th="狀態">
-                    {% if UserAccount.is_active %}
-                    正常
-                    {% else %}
-                    凍結
+                    <label style="color: black"><mark style="color: red">上手鑽石:</mark>
+                        <input required id="modal_amwayDiamond" style="font-size:12px;" disabled type="text">
+                    </label>
+                    {% if perms.userlogin.can_Change_DataPermission %}
+                    <label style="color: black"><mark style="color: red">資料權限等級:</mark>
+                        <input id="modal_dataPermissionsLevel" style="font-size:12px;border: 1px solid #ccc;"
+                            type="text">
+                    </label>
                     {% endif %}
-                </td>
-                    　　
-                <td id = "{{UserAccount.id}}_modify" data-th="修改">
-                    <button type="button" class="button small"	data-toggle="modal"
-							data-target="#accountModifyConfirm" onclick="accountManagerConfirm('{{UserAccount.id}}')">
-                            修改
-                    </button>
-                </td>
-                    　　
-<!--                <td id = "{{UserAccount.id}}_history" data-th="修改歷史紀錄">-->
-<!--                    <button type="button" class="button small"	data-toggle="modal"-->
-<!--							data-target="#accountHistory" onclick="accountHistory('{{UserAccount.id}}')">-->
-<!--                            查看-->
-<!--                    </button>-->
-                    <td id = "{{UserAccount.id}}_modify_history" data-th="修改紀錄">
-                        <button class="button_history small" type="button" data-toggle="modal" data-target="#pointModal">
-                            查看
-                        </button>
-                    </td>
-<!--                </td>-->
+                    {% if perms.userlogin.can_freeze_account %}
+                    <label style="color: black"><mark style="color: red">帳號狀態:</mark>
+                        <select id="modal_accountStatus" name="modal_accountStatus" style="font-size:12px; disable">
+                            <option id="正常">正常</option>
+                            <option id="帳號凍結">帳號凍結</option>
+                        </select>
+                    </label>
+                    {% endif %}
 
-                </tr>
-                {% endfor %}
-
-                </table>
-            </div>
-
-        </section>
-
-
-        {% if pageisNotNull %}
-        <div class="dataTables_paginate paging_simple_numbers pull-right inner">
-            <ul class="pagination ">
-                {{ pagination.page_html|safe }}
-            </ul>
-
-        </div>
-        {% endif %}
-
-
-    </div>
-
-</div>
-<!-- Modal 修改-->
-<!--<form method="POST" id="modalAccountModifyPOST" action="{% url 'modalAccountModifyPOST' %}">{% csrf_token %}-->
-<div class="modal fade" id="accountModifyConfirm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 style="color: black" class="modal-title" id="staticBackdropLabel"></h3>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-          <input id = "userid_user" style="font-size:12px;border: 1px solid #ccc;" type="hidden" required>
-          <label  style="color: black"><mark style="color: red">姓名:</mark>
-              <input id = "modal_user" style="font-size:12px;border: 1px solid #ccc;" type="text" required>
-          </label>
-          <label  style="color: black"><mark style="color: red">會員編號:</mark>
-              <input id = "modal_amwayNumber" disabled style="font-size:12px;" type="text">
-          </label>
-          <label id = "modal_gender" style="color: black"><mark style="color: red">性別:</mark>
-                <select  style="font-size:12px;border: 1px solid #ccc;" id="gender" name="gender">
-                        <option id="男" value="男" >男</option>
-                        <option id="女" value="女" >女</option>
-                </select>
-          </label>
-          <label id = "" style="color: black"><mark style="color: red">電話:</mark>
-              <input required id = "modal_phone" style="font-size:12px;border: 1px solid #ccc;" type="text">
-          </label>
-          <label id = "modal_jobTitle" style="color: black"><mark style="color: red">職務:</mark>
-              {% if perms.userlogin.can_Change_JobTitle %}
-            <select id="chainYenJobTitle" name="chainYenJobTitle"style="font-size:12px;border: 1px solid #ccc;">
-                {% else %}
-                <select id="chainYenJobTitle" name="chainYenJobTitle"style="font-size:12px" disabled>
-                {% endif %}
-                {% for jobtitle in jobTitles %}
-                <option id="{{jobtitle.jobTitle}}" value="{{jobtitle.jobTitle}}">{{jobtitle.jobTitle}}</option>
-                {% endfor %}
-            </select>
-          </label>
-          <label  style="color: black"><mark style="color: red">獎銜:</mark>
-                <select id="modal_amwayAward" name="modal_amwayAward"style="font-size:12px;border: 1px solid #ccc;">
-
-                {% for amwayAward in amwayAwards %}
-                    <option id="{{amwayAward.amwayAward}}" value="{{amwayAward.amwayAward}}">{{amwayAward.amwayAward}}</option>
-                {% endfor %}
-            </select>
-          </label>
-          <label  style="color: black"><mark style="color: red">教室:</mark>
-          {% if perms.userlogin.can_Change_class %}
-            <select id="modal_classRoom" name="modal_classRoom"style="font-size:12px;border: 1px solid #ccc;">
-          {% else %}
-                <select id="modal_classRoom" name="modal_classRoom"style="font-size:12px; disable">
-          {% endif %}
-                {% for chainYenClass in chainYenClasses %}
-                    <option id="{{chainYenClass.ClassRoomName}}" value="{{chainYenClass.ClassRoomName}}">{{chainYenClass.ClassRoomName}}</option>
-                {% endfor %}
-            </select>
-          </label>
-          <label style="color: black"><mark style="color: red">上手白金編號:</mark>
-            <input id = "amwayDD" style="font-size:12px;border: 1px solid #ccc;" type="text" onchange = "managerCheckDD('{{ csrf_token }}')">
-          </label>
-
-          <label style="color: black"><mark style="color: red">上手白金姓名:</mark>
-            <input required id = "modal_amwayDD_name" style="font-size:12px;" disabled type="text">
-          </label>
-
-          <label  style="color: black"><mark style="color: red">上手鑽石:</mark>
-            <input required id = "modal_amwayDiamond" style="font-size:12px;" disabled type="text">
-          </label>
-          {% if perms.userlogin.can_Change_DataPermission %}
-          <label  style="color: black"><mark style="color: red">資料權限等級:</mark>
-            <input id = "modal_dataPermissionsLevel" style="font-size:12px;border: 1px solid #ccc;"  type="text">
-          </label>
-          {% endif %}
-          {% if perms.userlogin.can_freeze_account %}
-          <label  style="color: black"><mark style="color: red">帳號狀態:</mark>
-              <select id="modal_accountStatus" name="modal_accountStatus"style="font-size:12px; disable">
-                    <option id="正常">正常</option>
-                    <option id="帳號凍結">帳號凍結</option>
-              </select>
-          </label>
-          {% endif %}
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-          <input id="auditAcceptCurrentId" hidden type="text">
-        <button id="auditFinalAcceptBtn" type="button" class="btn btn-primary" data-dismiss="modal" onclick="modifySubmit('{{ csrf_token }}')" >確定修改</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!--</form>-->
-<!-- Modal 歷史查看-->
- <!-- Modal -->
-        <div class="modal fade" id="pointModal" tabindex="-1" aria-labelledby="pointModalLabel" aria-hidden="true" style="width:100%">
-            <div class="modal-dialog modal-xl modal-dialog-centered pt-5">
-                <div class="modal-content" style="background-color: #2a2f4a;" style="width:100%;">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="pointModalLabel">修改紀錄</h5>
-                    </div>
-                    <div class="modal-body table-responsive">
-                        <table id="example" class="display table-bordered " style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th>變更者</th>
-                                    <th>修改日期</th>
-                                    <th>變更欄位</th>
-                                    <th>原始值</th>
-                                    <th>修改後</th>
-
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" data-dismiss="modal">關閉</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <input id="auditAcceptCurrentId" hidden type="text">
+                    <button id="auditFinalAcceptBtn" type="button" class="btn btn-primary" data-dismiss="modal"
+                        onclick="modifySubmit('{{ csrf_token }}')">確定修改</button>
                 </div>
             </div>
         </div>
-<!--<div class="modal fade" id="accountHistory" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">-->
-<!--  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">-->
-<!--    <div class="modal-content">-->
-<!--      <div class="modal-header">-->
-<!--        <h3 style="color: black" class="modal-title" >修改的歷史紀錄</h3>-->
-<!--        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
-<!--      </div>-->
-<!--      <div class="modal-body">-->
+    </div>
+    <!-- Modal 歷史查看-->
+    <div class="modal fade" id="pointModal" tabindex="-1" aria-labelledby="pointModalLabel" aria-hidden="true"
+        style="width:100%">
+        <div class="modal-dialog modal-xl modal-dialog-centered pt-5">
+            <div class="modal-content" style="background-color: #2a2f4a;" style="width:100%;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="pointModalLabel">修改紀錄</h5>
+                </div>
+                <div class="modal-body table-responsive">
+                    <table id="example" class="display table-bordered " style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>變更者</th>
+                                <th>修改日期</th>
+                                <th>變更欄位</th>
+                                <th>原始值</th>
+                                <th>修改後</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <script src="{% static 'assets/js/accountModify.js' %}"></script>
 
-<!--      </div>-->
-<!--      <div class="modal-footer">-->
-<!--        <button type="button" class="btn btn-primary" data-dismiss="modal" >關閉</button>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</div>-->
-<!-- Scripts -->
+    <script>
+        $("#myTable").on("click", ".button_modified", (event) => {
+            id = $(event.target)[0].id;
+            id = id.split("_")[0];
 
-<script src="{% static 'assets/js/accountModify.js' %}"></script>
-<link rel="stylesheet" type="text/css"
-    href="{% static 'assets/css/datatables.min.css' %}"/>
+            document.getElementById("modal_user").value = document.getElementById(id + "_user").innerHTML.trim()
 
-<script type="text/javascript"
-    src="{% static 'assets/js/datatables.min.js' %}"></script>
-<script>
-function accountManagerConfirm(id){
-    document.getElementById("modal_user").value = document.getElementById(id+"_user").innerHTML.trim()
+            document.getElementById("modal_amwayNumber").value = document.getElementById(id + "_amwayNumber").innerHTML.trim()
+            console.log(document.getElementById(id + "_gender").innerHTML.trim())
+            if (document.getElementById(id + "_gender").innerHTML.trim() == "男") {
 
-    document.getElementById("modal_amwayNumber").value = document.getElementById(id+"_amwayNumber").innerHTML.trim()
-    console.log(document.getElementById(id+"_gender").innerHTML.trim())
-    if (document.getElementById(id+"_gender").innerHTML.trim() == "男"){
+                document.getElementById("男").selected = true;
+                document.getElementById("女").selected = false;
 
-        document.getElementById("男").selected=true;
-        document.getElementById("女").selected=false;
+            }
+            else {
 
-    }
-    else{
+                document.getElementById("女").selected = true;
+                document.getElementById("男").selected = false;
+            }
+            document.getElementById("modal_phone").value = document.getElementById(id + "_phone").innerHTML.trim()
+            {% for jobtitle in jobTitles %}
 
-        document.getElementById("女").selected=true;
-        document.getElementById("男").selected=false;
-    }
-    document.getElementById("modal_phone").value = document.getElementById(id+"_phone").innerHTML.trim()
-    {% for jobtitle in jobTitles %}
+            if ("{{jobtitle.jobTitle}}" == document.getElementById(id + "_jobTitle").innerHTML.trim()) {
+                document.getElementById("{{jobtitle.jobTitle}}").selected = true
+            }
+            else {
+                document.getElementById("{{jobtitle.jobTitle}}").selected = false
+            }
+            {% endfor %}
 
-        if ("{{jobtitle.jobTitle}}" == document.getElementById(id+"_jobTitle").innerHTML.trim()){
-            document.getElementById("{{jobtitle.jobTitle}}").selected = true
-        }
-        else{
-            document.getElementById("{{jobtitle.jobTitle}}").selected = false
-        }
-    {% endfor %}
+            {% for amwayAward in amwayAwards %}
 
-    {% for amwayAward in amwayAwards %}
+            if ("{{amwayAward.amwayAward}}" == document.getElementById(id + "_amwayAward").innerHTML.trim()) {
+                document.getElementById("{{amwayAward.amwayAward}}").selected = true
+            }
+            else {
+                document.getElementById("{{amwayAward.amwayAward}}").selected = false
+            }
+            {% endfor %}
 
-        if ("{{amwayAward.amwayAward}}" == document.getElementById(id+"_amwayAward").innerHTML.trim()){
-            document.getElementById("{{amwayAward.amwayAward}}").selected = true
-        }
-        else{
-            document.getElementById("{{amwayAward.amwayAward}}").selected = false
-        }
-    {% endfor %}
+            {% for chainYenClass in chainYenClasses %}
 
-    {% for chainYenClass in chainYenClasses %}
+            if ("{{chainYenClass.ClassRoomName}}" == document.getElementById(id + "_ClassRoomName").innerHTML.trim()) {
+                document.getElementById("{{chainYenClass.ClassRoomName}}").selected = true
+            }
+            else {
+                document.getElementById("{{chainYenClass.ClassRoomName}}").selected = false
+            }
+            {% endfor %}
 
-        if ("{{chainYenClass.ClassRoomName}}" == document.getElementById(id+"_ClassRoomName").innerHTML.trim()){
-            document.getElementById("{{chainYenClass.ClassRoomName}}").selected = true
-        }
-        else{
-            document.getElementById("{{chainYenClass.ClassRoomName}}").selected = false
-        }
-    {% endfor %}
-
-    document.getElementById("amwayDD").value = document.getElementById(id+"_amwayDD_number").value.trim()
-    document.getElementById("modal_amwayDD_name").value = document.getElementById(id+"_amwayDD").innerHTML.trim()
-    document.getElementById("modal_amwayDiamond").value  =document.getElementById(id+"_amwayDiamond").innerHTML.trim()
-    document.getElementById("modal_amwayDD_name").style.color = "black";
-    document.getElementById("modal_dataPermissionsLevel").value = document.getElementById(id+"_dataPermissionsLevel").value
-    document.getElementById("modal_accountStatus").value = document.getElementById(id+"_accountStatus").innerHTML
-
-    if (document.getElementById(id+"_accountStatus").innerHTML.trim() == "正常"){
-        document.getElementById("正常").selected = true;
-        document.getElementById("帳號凍結").selected = false;
-    }
-    else{
-        document.getElementById("正常").selected = false;
-        document.getElementById("帳號凍結").selected = true;
-    }
-
-    document.getElementById("userid_user").value = id
-
-
-}
-function modifySubmit(csrftoken){
-
-    var requestURL = "{% url 'modalAccountModifyPOST' %}";
-    var userid = $('#userid_user').val();
-    var dataJSON = {"userid":userid,
-                    "modal_user":$('#modal_user').val(),
-                    "modal_amwayNumber":$('#modal_amwayNumber').val(),
-                    "gender":$('#gender').val(),
-                    "phone":$('#modal_phone').val(),
-                    "chainYenJobTitle":$('#chainYenJobTitle').val(),
-                    "modal_amwayAward":$('#modal_amwayAward').val(),
-                    "classRoom":$('#modal_classRoom').val(),
-                    "amwayDD":$('#amwayDD').val(),
-                    "modal_amwayDD_name":$('#modal_amwayDD_name').val(),
-                    "modal_amwayDiamond":$('#modal_amwayDiamond').val(),
-                    "modal_dataPermissionsLevel":$('#modal_dataPermissionsLevel').val(),
-                    "modal_accountStatus":$('#modal_accountStatus').val()
-                    };
-    $.ajax({
-        url: requestURL,
-        data: JSON.stringify(dataJSON),
-        headers: {'X-CSRFToken': csrftoken},
-        type: "POST",
-        method: "POST",
-        dataType: "json",
-        contentType: "application/json;charset=utf-8",
-        success: function (returnData) {
-
-        if (returnData.status){
-            document.getElementById(userid+"_user").innerHTML = $('#modal_user').val();
-            document.getElementById(userid+"_amwayNumber").innerHTML = $('#modal_amwayNumber').val();
-            document.getElementById(userid+"_gender").innerHTML = $('#gender').val();
-            document.getElementById(userid+"_phone").innerHTML = $('#modal_phone').val();
-            document.getElementById(userid+"_jobTitle").innerHTML = $('#chainYenJobTitle').val();
-            document.getElementById(userid+"_amwayAward").innerHTML = $('#modal_amwayAward').val();
-            document.getElementById(userid+"_ClassRoomName").innerHTML = $('#modal_classRoom').val();
-            document.getElementById(userid+"_amwayDD_number").innerHTML = $('#amwayDD').val();
-            document.getElementById(userid+"_amwayDD").innerHTML = $('#modal_amwayDD_name').val();
-            document.getElementById(userid+"_amwayDiamond").innerHTML = $('#modal_amwayDiamond').val();
-            document.getElementById(userid+"_dataPermissionsLevel").innerHTML = $('#modal_dataPermissionsLevel').val();
-            document.getElementById(userid+"_accountStatus").innerHTML = $('#modal_accountStatus').val();
-
-        }
-        else{
-            console.log("error")
-
-        }
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
-
-            console.log(thrownError)
-        }
-    });
-
-}
-function managerCheckDD(csrftoken){
-
-
-    var requestURL = "/checkRegDD";
-    var dataJSON = {"num":$('#amwayDD').val(),};
-    $.ajax({
-        url: requestURL,
-        data: JSON.stringify(dataJSON),
-        headers: {'X-CSRFToken': csrftoken},
-        type: "POST",
-        method: "POST",
-        dataType: "json",
-        contentType: "application/json;charset=utf-8",
-        success: function (returnData) {
-        if (!returnData.status){
-            document.getElementById("modal_amwayDD_name").style.display = "";
-            document.getElementById("modal_amwayDiamond").value = ""
-            document.getElementById("modal_amwayDD_name").value = "該白金不存在"
-            document.getElementById("modal_amwayDD_name").style.color = "red";
-        }
-        else{
-            document.getElementById("modal_amwayDD_name").style.display = "";
-            document.getElementById("modal_amwayDD_name").value = returnData.DDname
+            document.getElementById("amwayDD").value = document.getElementById(id + "_amwayDD_number").value.trim()
+            document.getElementById("modal_amwayDD_name").value = document.getElementById(id + "_amwayDD").innerHTML.trim()
+            document.getElementById("modal_amwayDiamond").value = document.getElementById(id + "_amwayDiamond").innerHTML.trim()
             document.getElementById("modal_amwayDD_name").style.color = "black";
-            document.getElementById("modal_amwayDiamond").value = returnData.diamond
+            document.getElementById("modal_dataPermissionsLevel").value = document.getElementById(id + "_dataPermissionsLevel").value
+            document.getElementById("modal_accountStatus").value = document.getElementById(id + "_accountStatus").innerHTML
+
+            if (document.getElementById(id + "_accountStatus").innerHTML.trim() == "正常") {
+                document.getElementById("正常").selected = true;
+                document.getElementById("帳號凍結").selected = false;
+            }
+            else {
+                document.getElementById("正常").selected = false;
+                document.getElementById("帳號凍結").selected = true;
+            }
+
+            document.getElementById("userid_user").value = id
+
+
+        });
+        function accountManagerConfirm(id) {
 
         }
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
+        function modifySubmit(csrftoken) {
 
+            var requestURL = "{% url 'modalAccountModifyPOST' %}";
+            var userid = $('#userid_user').val();
+            var dataJSON = {
+                "userid": userid,
+                "modal_user": $('#modal_user').val(),
+                "modal_amwayNumber": $('#modal_amwayNumber').val(),
+                "gender": $('#gender').val(),
+                "phone": $('#modal_phone').val(),
+                "chainYenJobTitle": $('#chainYenJobTitle').val(),
+                "modal_amwayAward": $('#modal_amwayAward').val(),
+                "classRoom": $('#modal_classRoom').val(),
+                "amwayDD": $('#amwayDD').val(),
+                "modal_amwayDD_name": $('#modal_amwayDD_name').val(),
+                "modal_amwayDiamond": $('#modal_amwayDiamond').val(),
+                "modal_dataPermissionsLevel": $('#modal_dataPermissionsLevel').val(),
+                "modal_accountStatus": $('#modal_accountStatus').val()
+            };
+            $.ajax({
+                url: requestURL,
+                data: JSON.stringify(dataJSON),
+                headers: { 'X-CSRFToken': csrftoken },
+                type: "POST",
+                method: "POST",
+                dataType: "json",
+                contentType: "application/json;charset=utf-8",
+                success: function (returnData) {
 
+                    if (returnData.status) {
+                        document.getElementById(userid + "_user").innerHTML = $('#modal_user').val();
+                        document.getElementById(userid + "_amwayNumber").innerHTML = $('#modal_amwayNumber').val();
+                        document.getElementById(userid + "_gender").innerHTML = $('#gender').val();
+                        document.getElementById(userid + "_phone").innerHTML = $('#modal_phone').val();
+                        document.getElementById(userid + "_jobTitle").innerHTML = $('#chainYenJobTitle').val();
+                        document.getElementById(userid + "_amwayAward").innerHTML = $('#modal_amwayAward').val();
+                        document.getElementById(userid + "_ClassRoomName").innerHTML = $('#modal_classRoom').val();
+                        document.getElementById(userid + "_amwayDD_number").innerHTML = $('#amwayDD').val();
+                        document.getElementById(userid + "_amwayDD").innerHTML = $('#modal_amwayDD_name').val();
+                        document.getElementById(userid + "_amwayDiamond").innerHTML = $('#modal_amwayDiamond').val();
+                        document.getElementById(userid + "_dataPermissionsLevel").innerHTML = $('#modal_dataPermissionsLevel').val();
+                        document.getElementById(userid + "_accountStatus").innerHTML = $('#modal_accountStatus').val();
+
+                    }
+                    else {
+                        console.log("error")
+
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+
+                    console.log(thrownError)
+                }
+            });
 
         }
-    });
-}
+        function managerCheckDD(csrftoken) {
 
 
-</script>
+            var requestURL = "/checkRegDD";
+            var dataJSON = { "num": $('#amwayDD').val(), };
+            $.ajax({
+                url: requestURL,
+                data: JSON.stringify(dataJSON),
+                headers: { 'X-CSRFToken': csrftoken },
+                type: "POST",
+                method: "POST",
+                dataType: "json",
+                contentType: "application/json;charset=utf-8",
+                success: function (returnData) {
+                    if (!returnData.status) {
+                        document.getElementById("modal_amwayDD_name").style.display = "";
+                        document.getElementById("modal_amwayDiamond").value = ""
+                        document.getElementById("modal_amwayDD_name").value = "該白金不存在"
+                        document.getElementById("modal_amwayDD_name").style.color = "red";
+                    }
+                    else {
+                        document.getElementById("modal_amwayDD_name").style.display = "";
+                        document.getElementById("modal_amwayDD_name").value = returnData.DDname
+                        document.getElementById("modal_amwayDD_name").style.color = "black";
+                        document.getElementById("modal_amwayDiamond").value = returnData.diamond
 
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+
+
+
+                }
+            });
+        }
+
+
+    </script>
+<style>
+    .dataTables_filter input {
+        background-color: white;
+        border-radius: 5px;
+    }
+
+</style>
 </body>
+
 </html>

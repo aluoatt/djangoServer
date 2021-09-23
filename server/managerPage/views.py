@@ -764,3 +764,36 @@ def managerStatisticManagerPage(request):
     searchUserAccountInfo = UserAccountInfo.objects.all()
     return render(request, 'managerPages/managerStatisticManagerPage.html', locals())
 
+@permission_required('userlogin.seeManagerAccountManagerPage', login_url='/accounts/userlogin/')
+def allUserAccount(request):
+    res = HttpResponse()
+    try:
+        allData = []
+        allUserAccountInfo = UserAccountInfo.objects.all()
+        for user in allUserAccountInfo:
+            userAmwayAccountInfo = UserAccountAmwayInfo.objects.get(UserAccountInfo=user)
+            chainyenAccount = UserAccountChainYenInfo.objects.get(UserAccountInfo=user)
+            temp = {
+                "id":user.id,
+                "username": user.username,
+                "user": user.user,
+                "gender": user.gender,
+                "phone": user.phone,
+                "ClassRoomName": chainyenAccount.classRoom.ClassRoomName,
+                "amwayNumber": userAmwayAccountInfo.amwayNumber,
+                "jobTitle":chainyenAccount.jobTitle.jobTitle,
+                "amwayDD": userAmwayAccountInfo.amwayDD.main,
+                "dataPermissionsLevel":user.dataPermissionsLevel,
+                "amwayDiamond": userAmwayAccountInfo.amwayDD.amwayDiamond,
+                "amwayDD_number":userAmwayAccountInfo.amwayDD.amwayNumber,
+                "amwayAward": userAmwayAccountInfo.amwayAward.amwayAward,
+                "point": chainyenAccount.point,
+                "accountStatus":user.is_active,
+            }
+            allData.append(temp)
+        res.status_code = 200
+        res.content =  json.dumps(allData)
+    except:
+        res.status_code = 503
+
+    return res
