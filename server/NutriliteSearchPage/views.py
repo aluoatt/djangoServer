@@ -125,7 +125,13 @@ def keywordSearchPage(request):
     content = {
         "fileDatas": fileDatas, "pagination": pagination, }
 
-    return render(request, 'searchPage/KeywordsSearchPage.html', locals())
+    s = render(request, 'searchPage/KeywordsSearchPage.html', locals())
+    s.setdefault('Cache-Control', 'no-store')
+    s.setdefault('Expires', 0)
+    s.setdefault('Pragma', 'no-cache')
+    return s
+
+    # return render(request, 'searchPage/KeywordsSearchPage.html', locals())
 
 
 # 查詢檔案
@@ -164,9 +170,11 @@ def NutriliteSearchPage(request, topic, selectTag):
 
     content = {
         "fileDatas": fileDatas, "pagination": pagination, }
-
-    return render(request, 'MainSearchPage.html', locals())
-
+    s = render(request, 'MainSearchPage.html', locals())
+    s.setdefault('Cache-Control', 'no-store')
+    s.setdefault('Expires', 0)
+    s.setdefault('Pragma', 'no-cache')
+    return s
 
 def exchangeOption(request, fileId):
     targetFile = fileDataInfo.objects.get(id=int(fileId))

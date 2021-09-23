@@ -61,8 +61,17 @@
 
 					<!--									style="background-color:rgb(231,209,179);">-->
 					<div style=" border-bottom: 1px solid black;">
-						<h3 style="margin-bottom: 0px"><b>{{fileData.title}}</b></h3>
-
+						<h3 style="margin-bottom: 0px">
+						{% if fileData.id in ownFileList %}
+						<b style="color:#117a8b">{{fileData.title}}</b>
+						{% else %}
+						<b>{{fileData.title}}</b>
+						{% endif %}
+						{% if fileData.fileType.id == 1 %}
+						<img src="{% static 'images/video.png' %}" width="20px" heigh="20px"></h3>
+						{% else %}
+						<img src="{% static 'images/pdf.png' %}" width="20px" heigh="20px"></h3>
+						{% endif %}
 						<details style="margin-bottom: 30px;color:#CE0000">
 							<summary>查看更多...</summary>
 							<p>{{fileData.describe}}</p>
