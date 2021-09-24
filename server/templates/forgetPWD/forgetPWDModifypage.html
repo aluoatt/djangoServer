@@ -29,16 +29,9 @@
 								<h2>密碼修改</h2>
 							</header>
 <!--							<div class="content">-->
-                                <form action="{% url 'changePasswordOption' %}" method="post">{% csrf_token %}
+                                <form action="{% url 'forgetPasswordModify' %}" method="post">{% csrf_token %}
+                                    <input type="hidden" value="{{code}}" id="code" name="code">
                                     <div name="step1">
-
-                                    <p>
-                                        <label for="id_password1">舊密碼:</label>
-                                        <input style="color:black;" type="password" name="id_password_old" autocomplete="new-password"
-                                                                                    required="" id="id_password_old"
-                                        >
-                                        <span class="helptext"></span>
-                                    </p>
 
                                     <p>
                                         <label for="id_password1">新密碼:</label>
@@ -60,9 +53,7 @@
                                                onchange="if(document.getElementById('id_password1').value != document.getElementById('id_password2').value){setCustomValidity('兩次密碼不吻合');}"
                                         >
                                     </p>
-                                    {% if passwordConfirm %}
-                                        <p style="color: red;">舊密碼錯誤</p>
-                                    {% endif %}
+
                                     </div>
 
                                 <input id="confirmBtn" type="submit" value="確定修改">

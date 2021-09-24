@@ -77,10 +77,15 @@ def keywordSearchPage(request):
                 if earchIdKeywordCount_dict[keyfileInfo.fileDataInfoID.id] >= totalKeywordNum:
                     q2.children.append(("id", keyfileInfo.fileDataInfoID.id))
 
-        # if len(q2) >0 :
-        #     hasKeywordData = True
-        # else:
-        #     q2.children.append(("id", -1))
+        titleQ = Q()
+        titleQ.connector = "AND"
+        for keyword in keywords_list:
+            titleQ.children.append(("title__contains", keyword))
+
+        for titleResult in fileDataInfo.objects.filter(titleQ):
+            q2.children.append(("id", titleResult.id))
+
+
         if len(q2) > 0:
             fileDatas = fileDataInfo.objects.filter(
                 occurrenceDate__gte=limDate,
@@ -120,7 +125,13 @@ def keywordSearchPage(request):
     content = {
         "fileDatas": fileDatas, "pagination": pagination, }
 
-    return render(request, 'searchPage/KeywordsSearchPage.html', locals())
+    s = render(request, 'searchPage/KeywordsSearchPage.html', locals())
+    s.setdefault('Cache-Control', 'no-store')
+    s.setdefault('Expires', 0)
+    s.setdefault('Pragma', 'no-cache')
+    return s
+
+    # return render(request, 'searchPage/KeywordsSearchPage.html', locals())
 
 
 # 查詢檔案
@@ -159,9 +170,11 @@ def NutriliteSearchPage(request, topic, selectTag):
 
     content = {
         "fileDatas": fileDatas, "pagination": pagination, }
-
-    return render(request, 'MainSearchPage.html', locals())
-
+    s = render(request, 'MainSearchPage.html', locals())
+    s.setdefault('Cache-Control', 'no-store')
+    s.setdefault('Expires', 0)
+    s.setdefault('Pragma', 'no-cache')
+    return s
 
 def exchangeOption(request, fileId):
     targetFile = fileDataInfo.objects.get(id=int(fileId))
@@ -370,17 +383,17 @@ def viewFilePage(request, fileId):
     if targetFile.downloadAble:
 
         s = render(request, 'viewFilePage.html', locals())
-        s.setdefault('Cache-Control', 'no-store')
-        s.setdefault('Expires', 0)
-        s.setdefault('Pragma', 'no-cache')
+        # s.setdefault('Cache-Control', 'no-store')
+        # s.setdefault('Expires', 0)
+        # s.setdefault('Pragma', 'no-cache')
         # return render(request, 'viewFilePage.html', locals())
 
 
     else:
         s = render(request, 'viewFilePageCantDownload.html', locals())
-        s.setdefault('Cache-Control', 'no-store')
-        s.setdefault('Expires', 0)
-        s.setdefault('Pragma', 'no-cache')
+        # s.setdefault('Cache-Control', 'no-store')
+        # s.setdefault('Expires', 0)
+        # s.setdefault('Pragma', 'no-cache')
     return s
 
 

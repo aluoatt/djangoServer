@@ -27,6 +27,7 @@
 					{% include 'baseMenu.html' %}
 
 				<!-- Main -->
+				<a style="color:black" href="/filesearch/{{targetFile.mainClass.mainClassName}}/{{targetFile.secClass.secClassName}}">{{targetFile.mainClass.mainClassName}}-{{targetFile.secClass.secClassName}}</a>
 				{% if permission is False %}
 				<p>權限不足</p>
 				{% elif pointEnough is False %}

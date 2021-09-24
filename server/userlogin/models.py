@@ -192,6 +192,18 @@ class ConfirmString(models.Model):
         verbose_name = "註冊確認碼"
         verbose_name_plural = "註冊確認碼"
 
+class ConfirmStringForPWD(models.Model):
+    code = models.CharField(max_length=256)
+    user_name = models.CharField(max_length=20, verbose_name='帳號')
+    c_time = models.DateTimeField(auto_now_add=True,blank=True)
+
+    def __str__(self):
+        return self.user.name + ":   " + self.code
+
+    class Meta:
+        ordering = ["-c_time"]
+        verbose_name = "忘記密碼確認碼"
+        verbose_name_plural = "忘記密碼確認碼"
 
 # 修改紀錄
 class AccountModifyHistory(models.Model):

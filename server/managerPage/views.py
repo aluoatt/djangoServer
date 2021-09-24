@@ -659,7 +659,66 @@ def allUserAccount(request):
     try:
         allData = []
         allUserAccountInfo = UserAccountInfo.objects.all()
-        for user in allUserAccountInfo:
+
+        q1 = Q()
+        q1.connector = 'OR'
+        q1.children.append(("classRoom__ClassRoomName", "無"))
+
+        if request.user.has_perm('userlogin.CYPManager'):
+            q1.children.append(("classRoom__ClassRoomName", "台北"))
+
+        if request.user.has_perm('userlogin.CYLManager'):
+            q1.children.append(("classRoom__ClassRoomName", "中壢"))
+
+        if request.user.has_perm('userlogin.CYSManager'):
+            q1.children.append(("classRoom__ClassRoomName", "新竹"))
+
+        if request.user.has_perm('userlogin.CYZManager'):
+            q1.children.append(("classRoom__ClassRoomName", "台中"))
+
+        if request.user.has_perm('userlogin.CYJManager'):
+            q1.children.append(("classRoom__ClassRoomName", "嘉義"))
+
+        if request.user.has_perm('userlogin.CYN2Manager'):
+            q1.children.append(("classRoom__ClassRoomName", "永康245"))
+
+        if request.user.has_perm('userlogin.CYN1Manager'):
+            q1.children.append(("classRoom__ClassRoomName", "永康135"))
+
+        if request.user.has_perm('userlogin.CYMManager'):
+            q1.children.append(("classRoom__ClassRoomName", "良美"))
+
+        if request.user.has_perm('userlogin.CYKManager'):
+            q1.children.append(("classRoom__ClassRoomName", "高雄"))
+
+        if request.user.has_perm('userlogin.CYDManager'):
+            q1.children.append(("classRoom__ClassRoomName", "屏東"))
+
+        if request.user.has_perm('userlogin.CYWManager'):
+            q1.children.append(("classRoom__ClassRoomName", "花蓮"))
+
+        if request.user.has_perm('userlogin.CYTManager'):
+            q1.children.append(("classRoom__ClassRoomName", "台東"))
+
+        if request.user.has_perm('userlogin.CYHManager'):
+            q1.children.append(("classRoom__ClassRoomName", "澎湖"))
+
+        q2 = Q()
+        q2.connector = 'OR'
+        q2.children.append(("id", 0))
+        for UserAccountChainYen in UserAccountChainYenInfo.objects.filter(q1):
+            q2.children.append(("id", UserAccountChainYen.UserAccountInfo.id))
+        # UserAccountChainYen = UserAccountChainYenInfo.objects.filter(q1)
+        UserAccount = UserAccountInfo.objects.get(username=request.user)
+        if registerDDandDimInfo.objects.filter(
+                amwayNumber=UserAccount.useraccountamwayinfo_set.first().amwayNumber).count() > 0:
+            print(UserAccountAmwayInfo.objects.filter(amwayDD=UserAccount.useraccountamwayinfo_set.first().id))
+            for UserAccountAmway in UserAccountAmwayInfo.objects.filter(amwayDD=registerDDandDimInfo.objects.get(
+                    amwayNumber=UserAccount.useraccountamwayinfo_set.first().amwayNumber).id):
+                q2.children.append(("id", UserAccountAmway.UserAccountInfo.id))
+        searchUserAccountInfo = UserAccountInfo.objects.filter(q2).order_by('username')
+
+        for user in searchUserAccountInfo:
             userAmwayAccountInfo = UserAccountAmwayInfo.objects.get(UserAccountInfo=user)
             chainyenAccount = UserAccountChainYenInfo.objects.get(UserAccountInfo=user)
             temp = {
@@ -684,7 +743,7 @@ def allUserAccount(request):
         res.content =  json.dumps(allData)
     except:
         res.status_code = 503
-
+        print(traceback.print_exc())
     return res
 
 @permission_required('userlogin.seeManagerAuditAccountPage', login_url='/accounts/userlogin/')

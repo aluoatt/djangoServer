@@ -9,7 +9,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import permission_required
 from userlogin.models import amwayAwardInfo ,chainYenJobTitleInfo ,chainYenClassInfo , UserAccountInfo,UserAccountChainYenInfo
 from userlogin.models import TempUserAccountInfo ,TempUserAccountAmwayInfo ,\
-    TempUserAccountChainYenInfo,registerDDandDimInfo,loginHistory
+    TempUserAccountChainYenInfo,registerDDandDimInfo,loginHistory,ConfirmStringForPWD
 from pointManage.models import pointHistory
 from django.contrib.auth.hashers import make_password
 import datetime
@@ -231,3 +231,130 @@ def certify_token(key, token):
         return False
     # token certification success
     return True
+
+def forgetPasswordKeyinNumber(request):
+    return render(request, 'forgetPWD/forgetPWDpage.html', locals())
+
+def forgetPasswordGetMail(request):
+    r'''
+        @Args:
+            key: str
+            token: str
+        @Returns:
+            boolean
+    '''
+
+    try:
+        amwayId = request.POST.get("amwayId")
+        lastNumber = request.POST.get("lastNumber")
+        UserAccount= UserAccountInfo.objects.get(username=amwayId+lastNumber)
+        code = make_confirm_string(UserAccount.username)
+        send_email(UserAccount.email, code)
+        message = "信件送出成功，請至註冊的email中收信"
+
+    except:
+        message="編號不存在，請洽管理員"
+
+    return render(request, 'personalInfoPages/changePasswordOptionResult.html', locals())
+
+def forgetPasswordModify(request):
+    r'''
+        @Args:
+            key: str
+            token: str
+        @Returns:
+            boolean
+    '''
+    code = request.POST.get('code', None)
+    id_password1 = request.POST.get("id_password1")
+    id_password2 = request.POST.get("id_password2")
+
+    message = ''
+    try:
+        confirm = ConfirmStringForPWD.objects.get(code=code)
+    except:
+        message = '無效的確認請求!'
+        return render(request, 'personalInfoPages/changePasswordOptionResult.html', locals())
+
+    c_time = confirm.c_time
+    now = datetime.datetime.now()
+    if now > c_time + datetime.timedelta(settings.PWD_CONFIRM_MIN):
+        confirm.delete()
+        message = '您的郵件已經過期，請再試一次!'
+        return render(request, 'personalInfoPages/changePasswordOptionResult.html', locals())
+    else:
+
+        if id_password1 == id_password2:
+            r = UserAccountInfo.objects.get(username=confirm.user_name)
+            r.password = make_password(id_password1)
+            r.save()
+            message = "修改成功，請重新登入"
+        else:
+            message = "修改失敗，請再試一次"
+
+        confirm.delete()
+
+        return render(request, 'personalInfoPages/changePasswordOptionResult.html', locals())
+
+
+def forgetPasswordConfirmPage(request):
+    code = request.GET.get('code', None)
+    message = ''
+    try:
+        confirm = ConfirmStringForPWD.objects.get(code=code)
+    except:
+        message = '無效的確認請求!'
+        return render(request, 'personalInfoPages/changePasswordOptionResult.html', locals())
+
+    c_time = confirm.c_time
+    now = datetime.datetime.now()
+    if now > c_time + datetime.timedelta(settings.PWD_CONFIRM_MIN):
+        confirm.delete()
+        message = '您的郵件已經過期，請再試一次!'
+        return render(request, 'managerPages/userAccountConfirm.html', locals())
+    else:
+        # confirm.delete()
+        return render(request, 'forgetPWD/forgetPWDModifypage.html', locals())
+    
+    
+
+def send_email(email, code):
+
+    from django.core.mail import EmailMultiAlternatives
+
+    subject = '來自群雁資訊檢索系統的密碼修改確認信'
+
+    text_content = '''
+                    *此信件為系統發出信件，請勿直接回覆，感謝您的配合，謝謝!*
+                    感謝您註冊自群雁資訊檢索系統！
+                    如果你看到這則消息，說明你的信箱不提供HTML連接功能，請洽會長或上手白金！'''
+
+    html_content = '''
+                    <p>*此信件為系統發出信件，請勿直接回覆，感謝您的配合，謝謝!*<p>
+                    <p>請點連結修改密碼</p>                  
+                    
+                    <p><a href="{}/accounts/forgetPassword/confirmPage?code={}" target=blank>確認連結</a></p>
+                    <p>此連結的有效期為{}分鐘！</p>
+                    '''.format(settings.MYIP, code, settings.PWD_CONFIRM_MIN)
+
+    msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_HOST_USER, [email])
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
+
+import hashlib
+
+def hash_code(s, salt='mysite'):
+    h = hashlib.sha256()
+    s += salt
+    h.update(s.encode())
+    return h.hexdigest()
+
+def make_confirm_string(user):
+    now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    code = hash_code(user, now)
+    ConfirmStringObj = ConfirmStringForPWD.objects.filter(user_name=user)
+    if ConfirmStringObj.count() > 0 :
+        ConfirmStringObj.first().delete()
+
+    ConfirmStringForPWD.objects.create(code=code, user_name=user)
+    return code

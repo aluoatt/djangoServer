@@ -19,7 +19,8 @@ from searchfile.views import home
 from django.conf.urls import url
 from NutriliteSearchPage.views import NutriliteSearchPage,viewFilePage,returnPDF,exchangeOption,keywordSearchPage,returnFileStatus
 from django .contrib.auth.decorators import login_required
-from userlogin.views import login,logout,register,createRegisterPage,checkRegDD,registerSuccess
+from userlogin.views import login,logout,register,createRegisterPage,checkRegDD,registerSuccess,\
+    forgetPasswordGetMail,forgetPasswordModify,forgetPasswordKeyinNumber,forgetPasswordConfirmPage
 from personalInfoPage.views import personalInfoHomePage, personalInfoPointPage,changePasswordPage,changePasswordOption
 from managerPage.views import managerAccountManagerPage,managerAuditAccountPage,removeAuditAccount,AcceptAuditAccount
 from managerPage.views import userAccountConfirm,managerAccountModify,modalAccountModifyPOST
@@ -45,6 +46,11 @@ urlpatterns += [
     path('accounts/registerSuccessStatus/<str:status>', registerSuccess, name='registerSuccess'),
     path('accounts/register/<str:token>', register,name='register'),
     path('accounts/createRegisterPage/', createRegisterPage,name='createRegisterPage'),
+    path('accounts/forgetPassword/GetMail', forgetPasswordGetMail,name='forgetPasswordGetMail'),
+    path('accounts/forgetPassword/modify', forgetPasswordModify,name='forgetPasswordModify'),
+    path('accounts/forgetPassword/confirmPage', forgetPasswordConfirmPage,name='forgetPasswordConfirmPage'),
+    path('accounts/forgetPassword/keyinPage', forgetPasswordKeyinNumber,name='forgetPasswordKeyinNumber'),
+
 
     path('filesearch/<str:topic>/<str:selectTag>', login_required(NutriliteSearchPage), name='NutriliteSearchPage'),
 
