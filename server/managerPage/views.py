@@ -513,7 +513,7 @@ def AcceptAuditAccount(request):
         code = make_confirm_string(TempUserAccount.username)
         send_email(TempUserAccount.email, code)
 
-        TempUserAccount.auditStatus = "確認中"
+        TempUserAccount.auditStatus = "已寄信"
         TempUserAccount.save()
         response_data["status"] = True
 

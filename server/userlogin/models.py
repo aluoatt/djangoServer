@@ -145,7 +145,7 @@ class TempUserAccountInfo(models.Model):
     password = models.CharField(max_length=128, verbose_name='密碼')
     email = models.CharField(max_length=254, verbose_name='信箱')
     dataPermissionsLevel = models.IntegerField(verbose_name='資料權限等級')
-    auditStatus = models.CharField(max_length=20, verbose_name='審核狀態')  # 審核中 #確認中
+    auditStatus = models.CharField(max_length=20, verbose_name='審核狀態')  # 審核中 #已寄信
 
     class Meta:
         verbose_name = "註冊中帳號列表"
