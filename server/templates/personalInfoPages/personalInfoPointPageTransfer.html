@@ -1,128 +1,37 @@
-<style type="text/css">
-    .rwd-table {
-        /*background: #fff;*/
-        overflow: hidden;
-    }
-
-    .rwd-table tr:nth-of-type(2n) {
-        /*background: #eee;*/
-    }
-
-    .rwd-table th,
-    .rwd-table td {
-        margin: 0.5em 1em;
-    }
-
-    .rwd-table {
-        min-width: 100%;
-    }
-
-    .rwd-table th {
-        display: none;
-    }
-
-    .rwd-table td {
-        display: block;
-    }
-
-    .rwd-table td:before {
-        content: attr(data-th) " : ";
-        font-weight: bold;
-        width: 6.5em;
-        display: inline-block;
-    }
-
-    .rwd-table th,
-    .rwd-table td {
-        text-align: left;
-    }
-
-    .rwd-table th,
-    .rwd-table td:before {
-        color: #FF2D2D;
-        font-weight: bold;
-        /*background-color:#BEBEBE	;*/
-    }
-
-    @media (min-width: 480px) {
-        .rwd-table td:before {
-            display: none;
-        }
-
-        .rwd-table th,
-        .rwd-table td {
-            display: table-cell;
-            padding: 0.25em 0.5em;
-        }
-
-        .rwd-table th:first-child,
-        .rwd-table td:first-child {
-            padding-left: 0;
-        }
-
-        .rwd-table th:last-child,
-        .rwd-table td:last-child {
-            padding-right: 0;
-        }
-
-        .rwd-table th,
-        .rwd-table td {
-            padding: 1em !important;
-        }
-    }
-</style>
 <div class="row">
     <div class="text-dark">您目前的點數: <span class="selfPoint" id="{{userAccountInfo.username}}_point">{{userAccountInfo.useraccountchainyeninfo_set.first.point}}</span></div>
 </div>
-<table id="myTable" class="rwd-table table-bordered text-center" style="border:dark;">
-    <tr class="text-center">
-        <th>直銷商</th>
-        <th>直銷編號</th>
-        <th>目前點數</th>
-        <th>轉讓 1 點</th>
-        <th>轉讓 10 點</th>
-        <th>自定義轉讓點數</th>
-    </tr>
-    {% for person in myTeam %}
-    <tr class="text-dark font-weight-bold" style=" border-bottom: 1px solid black;">
-        <td id="{{person.username}}_user" data-th="直銷商">
-            {{person.user}}
-        </td>
-
-        <td id="{{person.username}}_amwayNumber" data-th="直銷編號">
-            {{person.useraccountamwayinfo_set.first.amwayNumber}}
-        </td>
-        　　
-        <td id="{{person.username}}_point" data-th="目前點數">
-            {{person.useraccountchainyeninfo_set.first.point}}
-        </td>
-        　　
-        <td id="{{person.username}}_transferonepoint" data-th="轉讓 1 點">
-            <button class="button_transfer btn-warning" type="button" data-toggle="modal" data-target="#pointModal">
-                轉讓 1 點
-            </button>
-        </td>
-        　　
-        <td id="{{person.username}}_transfertenpoint" data-th="轉讓 10 點">
-            <button class="button_transfer btn-warning" type="button" data-toggle="modal" data-target="#pointModal">
-                轉讓 10 點
-            </button>
-        </td>
-        　　
-        <td id="{{person.username}}_transferPoint" data-th="自定義轉讓點數">
-            <button class="button_transfer btn-warning" type="button" data-toggle="modal" data-target="#transferModal">
-                轉讓
-            </button>
-        </td>
-    </tr>
-    {% endfor %}
-
+<table id="myTransferTable" class="display table table-light table-bordered" style="border:dark;width:100%; white-space: nowrap;">
+    <thead class="thead-dark">
+        <tr>
+            <th>直銷商</th>
+            <th>直銷編號</th>
+            <th>目前點數</th>
+            <th>轉讓 1 點</th>
+            <th>轉讓 10 點</th>
+            <th>自訂轉讓點數</th>
+        </tr>
+    </thead>
 </table>
 
 <style>
     .modal-content {
         background-color: #2a2f4a;
     }
+
+    .dataTables_filter input {
+        background-color: white;
+        border-radius: 5px;
+    }
+    label{
+        color:black;
+    }
+
+    .dataTables_info{
+        color:black;
+    }
+
+    th, td {border-width:10px}
 </style>
 
   

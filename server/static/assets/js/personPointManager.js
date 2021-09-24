@@ -1,8 +1,113 @@
 $(document).ready(() => {
-    $(".button_transfer").on("click", (event) => {
-        id = $(event.target).parent()[0].id;
+
+    myHistoryTable = $('#myHistoryTable').DataTable({
+        "orderClasses": false,
+        "responsive": true,
+        "fixedHeader": true,
+        "language": {
+            url: location.origin + '/static/assets/i18n/datatable/zh_Hant.json'
+        },
+        "createdRow": function (row, data, dataIndex) {
+            $(row).addClass('table-primary');
+            $(row).addClass('text-dark');
+            $(row).addClass('font-weight-bold');
+        }
+    });
+    
+    myHistoryTableHead = [
+        'modifier', 'recordDate', 'addPoint', 'reducePoint', 'transferPoint',
+        'reason', 'resultPoint'
+    ]
+
+    $.ajax({
+        'url': location.origin + "/pointManage/getSelfPointHistory",
+        'method': 'GET',
+        'processData': false,
+        'contentType': false,
+        'headers': { 'X-CSRFToken': getCookie('csrftoken') },
+        'success': (res) => {
+            data = JSON.parse(res)
+            for (i in data) {
+                fields = data[i]['fields']
+                myHistoryTable.row.add([
+                    fields['modifier'],
+                    fields['recordDate'],
+                    fields['addPoint']+fields['reducePoint']+fields['transferPoint'],
+                    fields['reason'],
+                    fields['resultPoint'],
+                ]).draw(true);
+            }
+
+            setTimeout(function () {
+                myHistoryTable.draw(true);
+                myHistoryTable.columns.adjust().draw();
+                myHistoryTable.responsive.recalc().columns.adjust();
+            }, 10);
+        },
+        'error': (res) => {
+            alert("伺服器出狀況,請聯繫系統人員")
+        }
+    });
+
+    myTransferTable = $('#myTransferTable').DataTable({
+        "orderClasses": false,
+        "responsive": true,
+        "fixedHeader": true,
+        "language": {
+            url: location.origin + '/static/assets/i18n/datatable/zh_Hant.json'
+        },
+        "createdRow": function (row, data, dataIndex) {
+            $(row).addClass('table-primary');
+            $(row).addClass('text-dark');
+            $(row).addClass('font-weight-bold');
+        }
+    });
+    
+    myTransferTableHead = [
+        'user', 'amwayNumber', 'point', 'transferonepoint', 
+        'transfertenpoint', 'transferPoint'
+    ]
+
+    $.ajax({
+        'url': location.origin + "/pointManage/getPersonalTeam",
+        'method': 'GET',
+        'processData': false,
+        'contentType': false,
+        'headers': { 'X-CSRFToken': getCookie('csrftoken') },
+        'success': (res) => {
+            data = JSON.parse(res)
+            for (i in data) {
+                fields = data[i]
+                username = fields['username']
+                myTransferTable.row.add([
+                    fields['user'],
+                    fields['amwayNumber'],
+                    fields['point'],
+                    `<a id="${username}_transferonepoint" class="button_transfer h4 btn btn-outline-success btn-sm">+1</a>`,
+                    `<a id="${username}_transfertenpoint" class="button_transfer h4 btn btn-outline-success btn-sm">+10</a>`,
+                    `<a id="${username}_transferPoint" class="button_transfer h4 btn btn-outline-success btn-sm">轉讓</a>`
+                ]).nodes().to$()
+                .find('td')
+                .each(function(index) {
+                    $(this).attr('id', username +"_" + myTransferTableHead[index] );
+                });
+            }
+
+            setTimeout(function () {
+                myTransferTable.draw(true);
+                myTransferTable.columns.adjust().draw();
+                myTransferTable.responsive.recalc().columns.adjust();
+            }, 10);
+        },
+        'error': (res) => {
+            alert("伺服器出狀況,請聯繫系統人員")
+        }
+    });
+
+    $("#myTransferTable").on("click", ".button_transfer", (event) => {
+        id = $(event.target)[0].id;
         username = id.split("_")[0];
-        user = $("#" + username +"_user").html();
+        user = $("#" + username + "_user").html();
         action = id.split("_")[1];
         if (action === "transferonepoint" || action === "transfertenpoint") {
             msg = ""

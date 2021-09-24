@@ -1,7 +1,97 @@
 $(document).ready(() => {
-    $(".button_modified").on("click", (event) => {
 
-        id = $(event.target).parent()[0].id;
+    myTable = $('#myTable').DataTable({
+        "orderClasses": false,
+        "responsive": true,
+        "fixedHeader": true,
+        "language": {
+            url: location.origin + '/static/assets/i18n/datatable/zh_Hant.json'
+        },
+        "createdRow": function (row, data, dataIndex) {
+            $(row).addClass('table-primary');
+            $(row).addClass('text-dark');
+            $(row).addClass('font-weight-bold');
+        }
+    });
+    myTableHead = [
+        'user','point' ,'jobTitle','amwayAward',
+        'addPoint','reducePoint','getPointHistory'
+    ]
+    myTableHeadChinese = [
+        '姓名','點數','職務','獎銜',
+        '加點','扣點','查看歷史'
+    ]
+    $.ajax({
+        'url': location.origin + "/pointManage/allUserAccount",
+        'method': 'GET',
+        'processData': false,
+        'contentType': false,
+        'headers': { 'X-CSRFToken': getCookie('csrftoken') },
+        'success': (res) => {
+            data = JSON.parse(res)
+            for (i in data) {
+                fields = data[i]
+                username = fields['username']
+                myTable.row.add([
+                    fields['user'],
+                    fields['point'],
+                    fields['jobTitle'],
+                    fields['amwayAward'],
+                    `<a id="${username}_addPoint" class="button_modified h4 btn btn-outline-success btn-sm">+10</a>`,
+                    `<a id="${username}_reducePoint" class="button_modified h4 btn btn-outline-success btn-sm">-1</a>`,
+                    `<a id="${username}_getPointHistory" class="button_history h4 btn btn-outline-success btn-sm" data-toggle="modal"
+                        data-target="#pointModal">
+                        查看
+                    </a>`
+                ]).nodes().to$()
+                .find('td')
+                .each(function(index) {
+                    $(this).attr('id', username +"_" + myTableHead[index] );
+                });
+            }
+            myTable.columns().every( function (index) {
+                if(index > 3){
+                    return;
+                }
+                var column = this;
+                selectHTML = `
+                <div class="col-auto">
+                    <label>${myTableHeadChinese[index]}</label>
+                    <select class="custom-select custom-select-md"><option value=""></option></select>
+                </div>
+                `
+                var select = $(selectHTML)
+                    .appendTo( $("#colSearch") );
+
+                select.find("select").on( 'change', function () {
+                    var val = $.fn.dataTable.util.escapeRegex(
+                        $(this).val()
+                    );
+
+                    column
+                        .search( val ? '^'+val+'$' : '', true, false )
+                        .draw();
+                } );
+ 
+                column.data().unique().sort().each( function ( d, j ) {
+                    select.find("select").append( '<option value="'+d+'">'+d+'</option>' )
+                } );
+            } );
+            
+            setTimeout(function(){
+                myTable.draw(true);
+                myTable.columns.adjust().draw();
+                myTable.responsive.recalc().columns.adjust();
+            }, 10);
+        },
+        'error': (res) => {
+            alert("伺服器出狀況,請聯繫系統人員")
+        }
+    });
+    
+    $("#myTable").on("click", ".button_modified",(event) => {
+
+        id = $(event.target)[0].id;
         username = id.split("_")[0];
         user = $("#" + username +"_user").html();
         action = id.split("_")[1];
@@ -51,7 +141,7 @@ $(document).ready(() => {
         }
     });
 
-    var t = $('#example').DataTable({
+    window.t = $('#example').DataTable({
         "orderClasses": false,
         "responsive": true,
         "language": {
@@ -64,12 +154,12 @@ $(document).ready(() => {
         }
     });
 
-    $(".button_history").on("click", (event) => {
+    $("#myTable").on("click", ".button_history", (event) => {
         var counter = 1;
         t.clear()
         $(".dataTables_empty").addClass("table-warning text-dark font-weight-bold");
         $(".dataTables_empty").text("目前沒有紀錄");
-        id = $(event.target).parent()[0].id;
+        id = $(event.target)[0].id;
         username = id.split("_")[0];
         action = id.split("_")[1];
         formData = new FormData();
@@ -93,8 +183,14 @@ $(document).ready(() => {
                         fields['transferPoint'],
                         fields['reason'],
                         fields['resultPoint'],
-                    ]).draw(false);
+                    ]).draw(true);
                 }
+                
+                setTimeout(function(){
+                    t.draw(true);
+                    t.columns.adjust().draw();
+                    t.responsive.recalc().columns.adjust();
+                }, 10);
             },
             'error': (res) => {
                 alert("伺服器出狀況,請聯繫系統人員")
