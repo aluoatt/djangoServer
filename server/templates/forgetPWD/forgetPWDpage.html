@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<!-- saved from url=(0040)http://127.0.0.1:8080/accounts/register/ -->
+<html lang="en">
+<head>
+    <title>ChainYen System</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		{% load static %}
+        <link href="{%static 'favicon.ico' %}" rel="shortcut icon">
+		
+</head>
+<body class="is-preload" style="background-size: Cover;background:url('{%static 'images/login底圖.png' %}');">
+
+<!-- Wrapper -->
+			<div id="wrapper" >
+
+				<!-- Header -->
+                {% include 'baseHeader.html' %}
+
+                <!-- Menu -->
+                {% include 'baseMenu.html' %}
+
+
+				<!-- Banner -->
+					<section id="" class="">
+						<div class="inner">
+							<header class="major">
+
+								<h2>忘記密碼</h2>
+							</header>
+<!--							<div class="content">-->
+                                <form action="{% url 'forgetPasswordGetMail' %}" method="post">{% csrf_token %}
+                                    <div name="step1">
+
+                                    <p>
+                                        <label for="amwayId">會員編號:</label>
+                                        <input style="color:black;" type="text" name="amwayId"
+                                                                                    required="" id="amwayId"
+                                        >
+                                        <span class="helptext"></span>
+                                    </p>
+
+                                    <p>
+                                        <label for="lastNumber">身分證後四碼:</label>
+                                        <input style="color:black;" type="text" name="lastNumber"
+                                                                                    required="" id="lastNumber"
+                                        >
+                                        <span class="helptext"></span>
+                                    </p>
+
+
+                                        <input id="confirmBtn" type="submit" value="確定">
+                                    </div>
+                            </form>
+                            <input id="goback" type ="button" onclick="history.back()" value="回到上一頁">
+
+
+
+						</div>
+					</section>
+
+			</div>
+
+		<!-- Scripts -->
+
+</body>
+</html>
+
+
+
+<style type="text/css">
+    label {
+     color: #BFFFFF        /* 透過 CSS 重新定義元素的排列方式 */
+    }
+    h2 {color:black;}
+    #amwayId,#lastNumber {
+        color:black;
+        /*border: 1px solid black;*/
+        background-color: rgba(244, 244, 255, 0.8);
+    }
+    #confirmBtn {
+        color:black;
+        border: 1px solid black;
+    }
+    label{
+      color: black;
+    }
+    #goback {
+        color:black;
+        border: 1px solid black;
+    }
+
+
+</style>
