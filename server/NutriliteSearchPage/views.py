@@ -41,12 +41,15 @@ def keywordSearchPage(request):
         keywords = ""
 
     keywords_list = keywords.split(" ")
+
     totalKeywordNum = len(keywords_list)
 
     q1 = Q()
     q1.connector = 'OR'
 
     for keyword in keywords_list:
+        if keyword == "":
+            continue
         q1.children.append(("keyword__contains", keyword))
 
     try:
