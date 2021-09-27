@@ -95,7 +95,7 @@ def userAccountConfirm(request):
                                      classRoom=chainYenClassInfo.objects.get(id=tr.tempuseraccountchainyeninfo_set.first().classRoom.id),
                                      accountStatus="正常",
                                      freezeDate=None,
-                                     point=0,
+                                     point=10,
                                      EM=tr.tempuseraccountchainyeninfo_set.first().EM)
 
         r3 = UserAccountAmwayInfo(UserAccountInfo=r,
