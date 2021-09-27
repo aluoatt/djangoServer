@@ -33,7 +33,7 @@ def keywordSearchPage(request):
         keywords = request.POST.get("keywords")
         timelim = int(request.POST.get("timelim"))
     except:
-        keywords = request.GET.get("keyword")
+        keywords = request.GET.get("keywords")
         timelim = int(request.GET.get("timelim"))
 
     if keywords is None:
