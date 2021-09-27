@@ -178,6 +178,10 @@ def NutriliteSearchPage(request, topic, selectTag):
     return s
 
 def exchangeOption(request, fileId):
+    if request.user.has_perm('userlogin.classRoomAccount'):
+        classRoomAccount = True
+    else:
+        classRoomAccount = False
     targetFile = fileDataInfo.objects.get(id=int(fileId))
     UserAccount = UserAccountInfo.objects.get(username=request.user)
     alreadyExchange = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id).count() > 0
@@ -236,10 +240,10 @@ def exchangeOption(request, fileId):
                     if targetFile.fileType.id > 1:  # 非影片
                         # 製作浮水印
                         getFileDateProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "pdf",
-                                                 UserAccount.id)
+                                                 UserAccount.id,classRoomAccount)
                     else:
                         getFileDateProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "mp4",
-                                                 UserAccount.id)
+                                                 UserAccount.id,classRoomAccount)
                 else:
                     if targetFile.fileType.id > 1:  # 非影片
                         getFileWithoutWaterProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "pdf",
@@ -256,9 +260,9 @@ def exchangeOption(request, fileId):
             if targetFile.downloadAble:
                 if targetFile.needWaterMark:
                     if targetFile.fileType.id > 1:  # 非影片
-                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "pdf", UserAccount.id)
+                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "pdf", UserAccount.id,classRoomAccount)
                     else:
-                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "mp4", UserAccount.id)
+                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "mp4", UserAccount.id,classRoomAccount)
                 else:
                     if targetFile.fileType.id > 1:  # 非影片
                         getFileWithoutWaterProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "pdf", UserAccount.id)
@@ -277,6 +281,10 @@ def regetPersonalFile(request, fileId):
     targetFile = fileDataInfo.objects.get(id=int(fileId))
     UserAccount = UserAccountInfo.objects.get(username=request.user)
     alreadyExchange = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id).count() > 0
+    if request.user.has_perm('userlogin.classRoomAccount'):
+        classRoomAccount = True
+    else:
+        classRoomAccount = False
 
     if request.user == "administrator":
         permission = True
@@ -313,13 +321,13 @@ def regetPersonalFile(request, fileId):
                     if targetFile.fileType.id > 1:  # 非影片
                         # 製作浮水印
                         getFileDateProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "pdf",
-                                                 UserAccount.id)
+                                                 UserAccount.id,classRoomAccount)
                     else:
                         getFileDateProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "mp4",
-                                                 UserAccount.id)
+                                                 UserAccount.id,classRoomAccount)
                 else:
                     if targetFile.fileType.id > 1:  # 非影片
-                        # 製作浮水印
+                        # 不製作浮水印
                         getFileWithoutWaterProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "pdf",
                                                          UserAccount.id)
                     else:
@@ -334,9 +342,9 @@ def regetPersonalFile(request, fileId):
             if targetFile.downloadAble:
                 if targetFile.needWaterMark:
                     if targetFile.fileType.id > 1:  # 非影片
-                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "pdf", UserAccount.id)
+                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "pdf", UserAccount.id,classRoomAccount)
                     else:
-                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "mp4", UserAccount.id)
+                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "mp4", UserAccount.id,classRoomAccount)
                 else:
                     if targetFile.fileType.id > 1:  # 非影片
                         getFileWithoutWaterProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "pdf", UserAccount.id)

@@ -32,6 +32,7 @@ class Server(models.Model):
             ("can_Change_JobTitle", "can_Change_JobTitle"),
             ("can_Change_class", "can_Change_class"),
             ("can_freeze_account", "can_freeze_account"),
+            ("classRoomAccount", "classRoomAccount"),
         )
 
 
