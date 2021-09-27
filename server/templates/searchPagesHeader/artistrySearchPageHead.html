@@ -38,6 +38,14 @@
                 {% endif %}
 
             </li>
+            <li>
+                {% if selectTag == "我的美麗故事" %}
+                    <a class="classActivate" href="#" class="primary">我的美麗故事</a>
+                {% else %}
+                    <a class="classNoActivate" href="{% url 'NutriliteSearchPage' '美容' '我的美麗故事' %}">我的美麗故事</a>
+                {% endif %}
+
+            </li>
 
             <li >
                 {% if selectTag == "其他" %}
