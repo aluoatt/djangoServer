@@ -17,6 +17,7 @@ import datetime
 from dateutil.relativedelta import relativedelta
 from django.http.response import StreamingHttpResponse
 from pointManage.models import pointHistory
+from django.conf import settings
 
 backaddress = "/home/chainyen/production/backEnd"
 
@@ -352,6 +353,7 @@ def regetPersonalFile(request, fileId):
 
 
 def viewFilePage(request, fileId):
+    request.session.set_expiry(settings.SESSION_COOKIE_AGE)
     targetFile = fileDataInfo.objects.get(id=int(fileId))
     UserAccount = UserAccountInfo.objects.get(username=request.user)
     personalFile = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id)
