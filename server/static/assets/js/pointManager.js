@@ -201,14 +201,16 @@ $(document).ready(() => {
 
     $(".addPointByOption").on("click", (event) => {
         id = $(event.target)[0].id;
-        if (id === "addPointByAll" || id === "addPointByJobTitle" || id === "addPointByAmwayAward") {
+        if (id === "addPointByAll" || id === "addPointByJobTitle" || 
+            id === "addPointByAmwayAward" || id === "addPointByExcel") {
             action = id;
             formInput = "";
             formInput = $("<form>", { id: "addPointForm" });
             pointDiv = $("<div>", { class: "form-group" });
             pointDiv.append($("<label>", { text: "點數" }));
-            pointDiv.append($("<input>", { type: "number", name: "point", class: "form-control", placeholder: "Enter email" }));
+            pointDiv.append($("<input>", { type: "number", name: "point", class: "form-control", placeholder: "Enter point" }));
             formInput.append(pointDiv);
+            title = "請輸入您要給予的點數";
             if (action === "addPointByAll") {
 
             } else if (action === "addPointByJobTitle") {
@@ -227,13 +229,21 @@ $(document).ready(() => {
                     pointDiv.append($("<label>", { text: element, class: "form-check-label", for: "amwayAward" + index }));
                     formInput.append(pointDiv);
                 });
+            } else if (id === "addPointByExcel"){
+                title = "請輸入要增加點數的報表清單"
+                formInput = "";
+                formInput = $("<form>", { id: "addPointForm" });
+                pointDiv = $("<div>", { class: "form-group" });
+                pointDiv.append($("<label>", { text: "報表檔案" }));
+                pointDiv.append($("<input>", { type: "file", name: "excelFile", class: "form-control", placeholder: "Select file" }));
+                formInput.append(pointDiv);
             }
 
             bootbox.confirm({
                 closeButton: false,
                 backdrop: true,
                 scrollable: true,
-                title: "請輸入您要給予的點數",
+                title: title,
                 message: formInput,
                 locale: "zh_TW",
                 container: "body",
@@ -243,15 +253,17 @@ $(document).ready(() => {
                     if (!res)
                         return;
                     formData = new FormData($("#addPointForm")[0]);
-                    point = formData.get("point");
-                    if (point <= 0) {
-                        bootbox.alert({
-                            closeButton: false,
-                            message: "請輸入大於零的點數",
-                            locale: "zh_TW",
-                            centerVertical: true,
-                        });
-                        return;
+                    if (action !== "addPointByExcel"){
+                        point = formData.get("point");
+                        if (point <= 0) {
+                            bootbox.alert({
+                                closeButton: false,
+                                message: "請輸入大於零的點數",
+                                locale: "zh_TW",
+                                centerVertical: true,
+                            });
+                            return;
+                        }
                     }
                     $.ajax({
                         url: location.origin + "/pointManage/" + action,
@@ -261,12 +273,32 @@ $(document).ready(() => {
                         'data': formData,
                         'headers': { 'X-CSRFToken': getCookie('csrftoken') },
                         'success': (res) => {
-                            bootbox.alert({
-                                closeButton: false,
-                                message: "成功",
-                                locale: "zh_TW",
-                                centerVertical: true,
-                            });
+                            
+                            if (action === "addPointByExcel"){
+                                result = JSON.parse(res);
+                                message = ""
+                                result.forEach((ele,index) => {
+                                    message = message + `<p>${ele["user"]}: ${ele["point"]}</p>`
+                                    if(ele["point"] !== "加點失敗"){
+                                        $(`#${ele['username']}_point`).html(ele["point"]);
+                                    }
+                                });
+                                bootbox.alert({
+                                    closeButton: false,
+                                    title:"點數增加清單",
+                                    message: message,
+                                    locale: "zh_TW",
+                                    centerVertical: true,
+                                });
+                            } else {
+                                bootbox.alert({
+                                    closeButton: false,
+                                    message: "成功",
+                                    locale: "zh_TW",
+                                    centerVertical: true,
+                                });
+                            }
+                            
                         },
                         'error': (res) => {
                             bootbox.alert({

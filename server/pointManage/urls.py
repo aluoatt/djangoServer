@@ -7,6 +7,7 @@ urlpatterns = [
     path('addPointByAll', views.addPointByAll, name='addPointByAll'),
     path('addPointByAmwayAward', views.addPointByAmwayAward, name='addPointByAmwayAward'),
     path('addPointByJobTitle', views.addPointByJobTitle, name='addPointByJobTitle'),
+    path('addPointByExcel', views.addPointByExcel, name='addPointByExcel'),
     path('reducePoint', views.reducePoint, name='reducePoint'),
     path('getPointHistory', views.getPointHistory, name='getPointHistory'),
     path('getSelfPointHistory', views.getSelfPointHistory, name='getSelfPointHistory'),

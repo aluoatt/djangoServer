@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from pointManage.models import pointHistory
 from django.core import serializers
 import datetime, json
+from openpyxl import load_workbook
 # Create your views here.
 
 @permission_required('userlogin.seeManagerPointPage', login_url='/accounts/userlogin/')
@@ -160,6 +161,48 @@ def addPointByJobTitle(request):
 
     return res
 
+@permission_required('userlogin.seeManagerPointPage', login_url='/accounts/userlogin/')
+def addPointByExcel(request):
+    res = HttpResponse()
+    try:
+        excelFile = ""
+        if "excelFile" in request.FILES:
+            excelFile = request.FILES['excelFile']
+        
+        name = excelFile.name
+        wb = load_workbook(excelFile)
+        sheet = wb.active
+        resContent = []
+        modifier = request.user.user
+        for i in range(2,sheet.max_row+1):
+            resTmp = {}
+            resTmp["user"] = str(sheet["A" + str(i)].value)
+            amwayNumber = str(sheet['B' + str(i)].value)
+            id4 = str(sheet['C' + str(i)].value)
+            username = amwayNumber + id4
+            resTmp["username"] = username
+            point = int(sheet['D' + str(i)].value)
+            try:
+                userAccountInfo = UserAccountInfo.objects.get(username = username)
+                userAccountChainyen = UserAccountChainYenInfo.objects.filter(UserAccountInfo=userAccountInfo)
+                userAccountChainyen.update(point=F('point') + point)
+                resultPoint = userAccountChainyen.first().point
+                pHistory = pointHistory(UserAccountInfo = userAccountInfo, modifier = modifier,
+                                        recordDate = datetime.datetime.now(), reason = '管理者加點',
+                                        addPoint = "+" + str(point), reducePoint = "", transferPoint = "",
+                                        resultPoint = resultPoint)
+                pHistory.save()
+                resTmp["resultPoint"] = resultPoint
+                resTmp["point"] = point
+            except:
+                resTmp["resultPoint"] = "加點失敗"
+                resTmp["point"] = "加點失敗"
+            resContent.append(resTmp)
+        res.status_code = 200
+        res.content = json.dumps(resContent)
+    except:
+        res.status_code = 503
+    return res
 
 @permission_required('userlogin.seeManagerPointPage', login_url='/accounts/userlogin/')
 def reducePoint(request):
