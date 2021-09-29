@@ -228,8 +228,6 @@ def reducePoint(request):
 
     return res
 
-
-
 @permission_required('userlogin.seeManagerPointPage', login_url='/accounts/userlogin/')
 def getPointHistory(request):
     res = HttpResponse()

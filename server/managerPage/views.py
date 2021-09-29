@@ -15,7 +15,7 @@ from userlogin.models import UserAccountInfo, UserAccountChainYenInfo, chainYenJ
 from userlogin.models import chainYenClassInfo, registerDDandDimInfo, amwayAwardInfo, ConfirmString,UserAccountAmwayInfo
 from django.contrib.auth.decorators import permission_required
 from userlogin.models import TempUserAccountInfo, AccountModifyHistory, TempUserAccountChainYenInfo, TempUserAccountAmwayInfo
-
+from NutriliteSearchPage.models import fileDataInfo
 
 # Create your views here.
 import hashlib
@@ -820,5 +820,16 @@ def getTempUserAccount(request):
     return res
 
 @permission_required('userlogin.seeManagerStatisticPage', login_url='/accounts/userlogin/')
-def getArticleSummary(request):
-    return
+def getFileDataSummary(request):
+    res = HttpResponse()
+    fileDatas = fileDataInfo.objects.all()
+    mainClassSummary = {}
+    for data in fileDatas:
+        mainClass = data.mainClass.mainClassName
+        if mainClass in mainClassSummary:
+            mainClassSummary[mainClass] = mainClassSummary[mainClass] + 1
+        else:
+            mainClassSummary[mainClass] = 1
+    res.content = json.dumps(mainClassSummary)
+    res.status_code = 200
+    return res

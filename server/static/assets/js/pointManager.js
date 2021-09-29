@@ -1,6 +1,7 @@
 $(document).ready(() => {
 
     myTable = $('#myTable').DataTable({
+        dom: '<"row"lfr>tip',
         "orderClasses": false,
         "responsive": true,
         "fixedHeader": true,
@@ -142,6 +143,20 @@ $(document).ready(() => {
     });
 
     window.t = $('#example').DataTable({
+        dom: '<"row"lfBr>tip',
+        buttons: [
+            {
+                extend:'excel',
+                title: "點數歷史紀錄",
+                className: 'btn btn-sm btn-warning'
+            },
+            {
+                extend:'print',
+                title: "點數歷史紀錄",
+                
+                className: 'btn btn-sm btn-warning'
+            }
+        ],
         "orderClasses": false,
         "responsive": true,
         "language": {
