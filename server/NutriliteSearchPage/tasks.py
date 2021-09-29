@@ -7,11 +7,15 @@ import requests
 logger = get_task_logger(__name__)
 
 @shared_task
-def getFileDateProcess(FileId,driveFileId,userName,fileType,ownerAccountId):
+def getFileDateProcess(FileId,driveFileId,userName,fileType,ownerAccountId,classRoomAccount=False):
     my_data = {'fileId': driveFileId, 'userName': userName,'FileType':fileType}
     logger.info(f'{userName}')
-    r = requests.post('http://127.0.0.1:9105/v1/getFile', data=my_data).text
-    # r = requests.post('http://1.34.134.127:15010/v1/getFile', data=my_data).text
+    if not classRoomAccount:
+        r = requests.post('http://127.0.0.1:9105/v1/getFile', data=my_data).text
+    else:
+        logger.info("classRoomAccount")
+        r = requests.post('http://127.0.0.1:9105/v1/getFileWithClass', data=my_data).text
+
     logger.info(f'{r}')
     d = personalFileData.objects.filter(fileDataID=FileId,ownerAccount=ownerAccountId).first()
     logger.info(d)
@@ -24,7 +28,6 @@ def getFileWithoutWaterProcess(FileId,driveFileId,userName,fileType,ownerAccount
     my_data = {'fileId': driveFileId, 'userName': userName, 'FileType': fileType}
     logger.info(f'{userName}')
     r = requests.post('http://127.0.0.1:9104/v1/getFileWithoutWater', data=my_data).text
-    # r = requests.post('http://1.34.134.127:15010/v1/getFileWithoutWater', data=my_data).text
     logger.info(f'{r}')
     d = personalFileData.objects.filter(fileDataID=FileId, ownerAccount=ownerAccountId).first()
     logger.info(d)

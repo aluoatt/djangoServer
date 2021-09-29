@@ -60,6 +60,7 @@ $(document).ready(()=>{
                 jobTitle = fields['jobTitle']
                 amwayAward = fields['amwayAward']
                 amwayNumber = fields['amwayNumber']
+                amwayDD_number = fields['amwayDD_number']
                 dataPermissionsLevel = fields['dataPermissionsLevel']
                 //insert data for modify perpose
                 moHTML = `
@@ -78,7 +79,7 @@ $(document).ready(()=>{
                         ${amwayAward}
                     </td>
                     <input type="hidden"
-                        value="${amwayNumber}"
+                        value="${amwayDD_number}"
                         id="${userid}_amwayDD_number">
                     <input type="hidden" value="${dataPermissionsLevel}"
                         id="${userid}_dataPermissionsLevel">

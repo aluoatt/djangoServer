@@ -95,7 +95,7 @@ def userAccountConfirm(request):
                                      classRoom=chainYenClassInfo.objects.get(id=tr.tempuseraccountchainyeninfo_set.first().classRoom.id),
                                      accountStatus="正常",
                                      freezeDate=None,
-                                     point=0,
+                                     point=10,
                                      EM=tr.tempuseraccountchainyeninfo_set.first().EM)
 
         r3 = UserAccountAmwayInfo(UserAccountInfo=r,
@@ -470,7 +470,7 @@ def AcceptAuditAccount(request):
         code = make_confirm_string(TempUserAccount.username)
         send_email(TempUserAccount.email, code)
 
-        TempUserAccount.auditStatus = "確認中"
+        TempUserAccount.auditStatus = "已寄信"
         TempUserAccount.save()
         response_data["status"] = True
 

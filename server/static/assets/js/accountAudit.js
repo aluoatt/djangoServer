@@ -43,7 +43,7 @@ $(document).ready(() => {
                     `<a id="${userid}_acceptBtn" data-toggle="modal"
                         data-target="#auditConfirmAccept"
                         class="button_modified h4 btn btn-outline-success btn-sm">
-                        ${fields['auditStatus'] === '確認中' ? "重送" : "同意"}
+                        ${fields['auditStatus'] === '已寄信' ? "重送" : "同意"}
                     </a>
                     <a id="${userid}_removeBtn" class="button_remove h4 btn btn-outline-success btn-sm" data-toggle="modal"
                         data-target="#auditConfirmRemove">
@@ -227,7 +227,7 @@ function auditFinalAccept(csrftoken) {
         contentType: "application/json;charset=utf-8",
         success: function (returnData) {
             if (returnData.status) {
-                document.getElementById(curId + "_auditStatus").innerHTML = "確認中"
+                document.getElementById(curId + "_auditStatus").innerHTML = "已寄信"
                 document.getElementById(curId + "_acceptBtn").innerHTML = "重送"
                 document.getElementById(curId + "_acceptBtn").setAttribute("class", "button_modified h4 btn btn-outline-primary btn-sm");
             }

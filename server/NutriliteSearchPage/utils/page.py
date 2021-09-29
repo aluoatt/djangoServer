@@ -82,7 +82,7 @@ class Pagination(object):
       if self.current_page_num <= 1:
         prev_page = '<li class="disabled"><a style="pointer-events: none;" href="#" rel="external nofollow" rel="external nofollow" class="button small">上一頁</a></li>'
       else:
-        prev_page = '<li><a href="?page=%s&keyword=%s&timelim=%s" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" class="button small">上一頁</a></li>' % (self.current_page_num - 1,self.keywords,self.timelim)
+        prev_page = '<li><a href="?page=%s&keywords=%s&timelim=%s" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" class="button small">上一頁</a></li>' % (self.current_page_num - 1,self.keywords,self.timelim)
     page_html_list.append(prev_page)
 
     # self.params=copy.deepcopy(request.GET) # {"a":"1","b":"2"}
@@ -115,7 +115,7 @@ class Pagination(object):
       if self.current_page_num >= self.all_pager:
         next_page = '<li class="disabled"><a style="pointer-events: none;" href="#" rel="external nofollow" rel="external nofollow" class="button small">下一頁</a></li>'
       else:
-        next_page = '<li><a href="?page=%s&keyword=%s&timelim=%s" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" class="button small">下一頁</a></li>' % (self.current_page_num + 1,self.keywords,self.timelim,)
+        next_page = '<li><a href="?page=%s&keywords=%s&timelim=%s" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" class="button small">下一頁</a></li>' % (self.current_page_num + 1,self.keywords,self.timelim,)
     page_html_list.append(next_page)
     # last_page = '<li><a href="?page=%s" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" class="button small">尾頁</a></li>' % (self.all_pager,)
     # page_html_list.append(last_page)

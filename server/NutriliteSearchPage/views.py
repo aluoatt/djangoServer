@@ -17,6 +17,7 @@ import datetime
 from dateutil.relativedelta import relativedelta
 from django.http.response import StreamingHttpResponse
 from pointManage.models import pointHistory
+from django.conf import settings
 
 backaddress = "/home/chainyen/production/backEnd"
 
@@ -33,19 +34,22 @@ def keywordSearchPage(request):
         keywords = request.POST.get("keywords")
         timelim = int(request.POST.get("timelim"))
     except:
-        keywords = request.GET.get("keyword")
+        keywords = request.GET.get("keywords")
         timelim = int(request.GET.get("timelim"))
 
     if keywords is None:
         keywords = ""
 
     keywords_list = keywords.split(" ")
+
     totalKeywordNum = len(keywords_list)
 
     q1 = Q()
     q1.connector = 'OR'
 
     for keyword in keywords_list:
+        if keyword == "":
+            continue
         q1.children.append(("keyword__contains", keyword))
 
     try:
@@ -177,6 +181,10 @@ def NutriliteSearchPage(request, topic, selectTag):
     return s
 
 def exchangeOption(request, fileId):
+    if request.user.has_perm('userlogin.classRoomAccount'):
+        classRoomAccount = True
+    else:
+        classRoomAccount = False
     targetFile = fileDataInfo.objects.get(id=int(fileId))
     UserAccount = UserAccountInfo.objects.get(username=request.user)
     alreadyExchange = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id).count() > 0
@@ -235,10 +243,10 @@ def exchangeOption(request, fileId):
                     if targetFile.fileType.id > 1:  # 非影片
                         # 製作浮水印
                         getFileDateProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "pdf",
-                                                 UserAccount.id)
+                                                 UserAccount.id,classRoomAccount)
                     else:
                         getFileDateProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "mp4",
-                                                 UserAccount.id)
+                                                 UserAccount.id,classRoomAccount)
                 else:
                     if targetFile.fileType.id > 1:  # 非影片
                         getFileWithoutWaterProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "pdf",
@@ -255,9 +263,9 @@ def exchangeOption(request, fileId):
             if targetFile.downloadAble:
                 if targetFile.needWaterMark:
                     if targetFile.fileType.id > 1:  # 非影片
-                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "pdf", UserAccount.id)
+                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "pdf", UserAccount.id,classRoomAccount)
                     else:
-                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "mp4", UserAccount.id)
+                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "mp4", UserAccount.id,classRoomAccount)
                 else:
                     if targetFile.fileType.id > 1:  # 非影片
                         getFileWithoutWaterProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "pdf", UserAccount.id)
@@ -276,6 +284,10 @@ def regetPersonalFile(request, fileId):
     targetFile = fileDataInfo.objects.get(id=int(fileId))
     UserAccount = UserAccountInfo.objects.get(username=request.user)
     alreadyExchange = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id).count() > 0
+    if request.user.has_perm('userlogin.classRoomAccount'):
+        classRoomAccount = True
+    else:
+        classRoomAccount = False
 
     if request.user == "administrator":
         permission = True
@@ -312,13 +324,13 @@ def regetPersonalFile(request, fileId):
                     if targetFile.fileType.id > 1:  # 非影片
                         # 製作浮水印
                         getFileDateProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "pdf",
-                                                 UserAccount.id)
+                                                 UserAccount.id,classRoomAccount)
                     else:
                         getFileDateProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "mp4",
-                                                 UserAccount.id)
+                                                 UserAccount.id,classRoomAccount)
                 else:
                     if targetFile.fileType.id > 1:  # 非影片
-                        # 製作浮水印
+                        # 不製作浮水印
                         getFileWithoutWaterProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "pdf",
                                                          UserAccount.id)
                     else:
@@ -333,9 +345,9 @@ def regetPersonalFile(request, fileId):
             if targetFile.downloadAble:
                 if targetFile.needWaterMark:
                     if targetFile.fileType.id > 1:  # 非影片
-                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "pdf", UserAccount.id)
+                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "pdf", UserAccount.id,classRoomAccount)
                     else:
-                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "mp4", UserAccount.id)
+                        getFileDateProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "mp4", UserAccount.id,classRoomAccount)
                 else:
                     if targetFile.fileType.id > 1:  # 非影片
                         getFileWithoutWaterProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "pdf", UserAccount.id)
@@ -352,6 +364,7 @@ def regetPersonalFile(request, fileId):
 
 
 def viewFilePage(request, fileId):
+    request.session.set_expiry(settings.SESSION_COOKIE_AGE)
     targetFile = fileDataInfo.objects.get(id=int(fileId))
     UserAccount = UserAccountInfo.objects.get(username=request.user)
     personalFile = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id)

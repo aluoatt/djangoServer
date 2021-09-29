@@ -174,7 +174,7 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #60 * 60
-SESSION_COOKIE_AGE = 60*60*24  # 設置session過期時間為30分鐘
+SESSION_COOKIE_AGE = 60*60*2  # 設置session過期時間為30分鐘
 # SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # 當瀏覽器被關閉的時候將session失效，但是不能刪除數據庫的session數據
 SESSION_SAVE_EVERY_REQUEST = False  # 每次請求都要保存一下session
 

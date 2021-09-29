@@ -1,6 +1,6 @@
 
 
-<form method="post" action="{% url 'keywordSearchPage' %}">{% csrf_token %}
+<form method="get" action="{% url 'keywordSearchPage' %}">{% csrf_token %}
 
     <div class="" >
         <ul class="searchBar-inline" style="padding-left:1px;padding-top:2px; margin-bottom: -25px">
@@ -9,11 +9,11 @@
             </li>
             <li style="width: 30%;">
                 <select name="timelim" id="timelim" >
-                    <option value="1">一年內資料</option>
-                    <option value="2">兩年內資料</option>
-                    <option value="3">三年內資料</option>
-                    <option value="5">五年內資料</option>
-                    <option value="100">不限</option>
+                    <option {% if timelim == 1 %} selected="selected" {%endif%} value="1">一年內資料</option>
+                    <option {% if timelim == 2 %} selected="selected" {%endif%} value="2">兩年內資料</option>
+                    <option {% if timelim == 3 %} selected="selected" {%endif%} value="3">三年內資料</option>
+                    <option {% if timelim == 5 %} selected="selected" {%endif%} value="5">五年內資料</option>
+                    <option {% if timelim == 100 %} selected="selected" {%endif%} value="100">不限</option>
                 </select>
             </li>
             <li style="width: 20%;">

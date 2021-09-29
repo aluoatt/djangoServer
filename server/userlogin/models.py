@@ -32,6 +32,7 @@ class Server(models.Model):
             ("can_Change_JobTitle", "can_Change_JobTitle"),
             ("can_Change_class", "can_Change_class"),
             ("can_freeze_account", "can_freeze_account"),
+            ("classRoomAccount", "classRoomAccount"),
         )
 
 
@@ -53,7 +54,7 @@ class UserAccountInfo(AbstractUser):
 
 class UserAccountAmwayInfo(models.Model):
     UserAccountInfo = models.ForeignKey("UserAccountInfo", on_delete=models.CASCADE, verbose_name='帳號')
-    amwayNumber = models.IntegerField(verbose_name='會員編號')
+    amwayNumber = models.CharField(max_length=20,verbose_name='會員編號')
     amwayAward = models.ForeignKey("amwayAwardInfo", on_delete=models.CASCADE, verbose_name='獎銜')
     amwayDD = models.ForeignKey("registerDDandDimInfo", verbose_name='白金', on_delete=models.PROTECT)
 
@@ -119,7 +120,7 @@ class chainYenClassInfo(models.Model):
 
 class registerDDandDimInfo(models.Model):
     amwayAward = models.ForeignKey("amwayAwardInfo", verbose_name='獎銜', on_delete=models.PROTECT)  # 只有白金跟鑽石
-    amwayNumber = models.IntegerField(verbose_name='會員編號')
+    amwayNumber = models.CharField(max_length=20,verbose_name='會員編號')
     amwayDiamond = models.CharField(max_length=20, verbose_name='上手鑽石')
     main = models.CharField(max_length=20, verbose_name='主直銷權')
     sec = models.CharField(max_length=20, verbose_name='次直銷權', null=True,blank=True)
@@ -145,7 +146,7 @@ class TempUserAccountInfo(models.Model):
     password = models.CharField(max_length=128, verbose_name='密碼')
     email = models.CharField(max_length=254, verbose_name='信箱')
     dataPermissionsLevel = models.IntegerField(verbose_name='資料權限等級')
-    auditStatus = models.CharField(max_length=20, verbose_name='審核狀態')  # 審核中 #確認中
+    auditStatus = models.CharField(max_length=20, verbose_name='審核狀態')  # 審核中 #已寄信
 
     class Meta:
         verbose_name = "註冊中帳號列表"
@@ -155,7 +156,7 @@ class TempUserAccountInfo(models.Model):
 
 class TempUserAccountAmwayInfo(models.Model):
     UserAccountInfo = models.ForeignKey("TempUserAccountInfo", on_delete=models.CASCADE,verbose_name='帳號')
-    amwayNumber = models.IntegerField(verbose_name='會員編號')
+    amwayNumber = models.CharField(max_length=20,verbose_name='會員編號')
     amwayAward = models.ForeignKey("amwayAwardInfo", on_delete=models.CASCADE, verbose_name='獎銜')
     amwayDD = models.ForeignKey("registerDDandDimInfo", verbose_name='白金', on_delete=models.PROTECT)
     # amwayDiamond = models.CharField(max_length=20, verbose_name='鑽石')
