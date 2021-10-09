@@ -3,7 +3,7 @@ from wsgiref.util import FileWrapper
 from django.http import HttpResponse, FileResponse
 from django.shortcuts import render
 from NutriliteSearchPage.models import fileDataInfo, mainClassInfo, secClassInfo, personalFileData, \
-    personalExchangeFileLog, fileDataKeywords
+    personalExchangeFileLog, fileDataKeywords,personalWatchFileLog
 from userlogin.models import UserAccountInfo, UserAccountChainYenInfo
 from NutriliteSearchPage.utils.page import Pagination
 import logging
@@ -369,6 +369,9 @@ def viewFilePage(request, fileId):
     UserAccount = UserAccountInfo.objects.get(username=request.user)
     personalFile = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id)
     alreadyExchange = personalFile.count() > 0
+
+    pregetStars = personalFile.first().stars
+
     if alreadyExchange:
         aleardyLike = personalFile.first().like
     if request.user == "administrator":
@@ -385,9 +388,15 @@ def viewFilePage(request, fileId):
         # 還沒兌換
         if not alreadyExchange:
             return render(request, 'viewFilePage.html', locals())
-        #     pointEnough = targetFile.point <= UserAccountChainYen.point
-        # else:
-        #     pointEnough = True
+
+    #檢查最近一次瀏覽時間
+    today = datetime.datetime.now()
+    delta = datetime.timedelta(minutes=-20)
+    target_day = today + delta
+    if personalWatchFileLog.objects.filter(watchAccount=UserAccount,exchangeDate__gte=target_day).count() < 1:
+        personalWatchFileLog(fileDataID=targetFile,
+                             watchAccount=UserAccount,
+                             exchangeDate=datetime.datetime.now())
 
     if (not permission) or (not pointEnough):
         targetFile = ""
@@ -396,17 +405,8 @@ def viewFilePage(request, fileId):
     if targetFile.downloadAble:
 
         s = render(request, 'viewFilePage.html', locals())
-        # s.setdefault('Cache-Control', 'no-store')
-        # s.setdefault('Expires', 0)
-        # s.setdefault('Pragma', 'no-cache')
-        # return render(request, 'viewFilePage.html', locals())
-
-
     else:
         s = render(request, 'viewFilePageCantDownload.html', locals())
-        # s.setdefault('Cache-Control', 'no-store')
-        # s.setdefault('Expires', 0)
-        # s.setdefault('Pragma', 'no-cache')
     return s
 
 

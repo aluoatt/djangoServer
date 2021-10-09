@@ -25,6 +25,7 @@ class fileDataInfo(models.Model):
     DBClass = models.ForeignKey("DBClassInfo",verbose_name='資料庫類別',on_delete=models.PROTECT)
     downloadAble = models.BooleanField(verbose_name='是否可以下載')
     likes = models.IntegerField(default=0,verbose_name="按讚數")
+    stars = models.FloatField(default=0, verbose_name="星星平均")
 
     class Meta:
         verbose_name = "檔案管理"
@@ -82,7 +83,7 @@ class sourceFromInfo(models.Model):
 
 class fileDataKeywords(models.Model):
     fileDataInfoID = models.ForeignKey('fileDataInfo',verbose_name='對應的資料ID',on_delete=models.CASCADE)
-    keyword = models.CharField(max_length=20, verbose_name='關鍵字名稱', null=True,blank=True)
+    keyword = models.CharField(max_length=40, verbose_name='關鍵字名稱', null=True,blank=True)
     class Meta:
         verbose_name = "檔案關鍵字"
         verbose_name_plural = "檔案關鍵字"
@@ -97,6 +98,8 @@ class personalFileData(models.Model):
     waterCreateReady = models.BooleanField(default=0,verbose_name='浮水印是否完成')
     waterMarkPath = models.CharField(max_length=400,verbose_name='浮水印檔案路徑', null=True,blank=True)
     like = models.BooleanField(default=0,verbose_name='是否按讚')
+    stars = models.FloatField(default=0,verbose_name='星級評分')
+    getStar = models.BooleanField(default=0, verbose_name='是否給評分')
     class Meta:
         verbose_name = "個人持有資料管理"
         verbose_name_plural = "個人持有資料管理"
@@ -108,3 +111,12 @@ class personalExchangeFileLog(models.Model):
     class Meta:
         verbose_name = "個人兌換紀錄"
         verbose_name_plural = "個人兌換紀錄"
+
+#瀏覽紀錄
+class personalWatchFileLog(models.Model):
+    fileDataID = models.ForeignKey('fileDataInfo', on_delete=models.CASCADE, verbose_name='對應的資料')
+    watchAccount = models.ForeignKey('userlogin.UserAccountInfo', on_delete=models.CASCADE, verbose_name='對應的帳號')
+    exchangeDate = models.DateTimeField(verbose_name='瀏覽時間',default=timezone.now)
+    class Meta:
+        verbose_name = "個人觀看紀錄"
+        verbose_name_plural = "個人觀看紀錄"
