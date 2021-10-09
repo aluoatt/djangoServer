@@ -15,12 +15,12 @@ $(document).ready(() => {
         }
     });
     myTableHead = [
-        'user','point' ,'jobTitle','amwayAward',
-        'addPoint','reducePoint','getPointHistory'
+        'user', 'point', 'jobTitle', 'amwayAward',
+        'addPoint', 'reducePoint', 'getPointHistory'
     ]
     myTableHeadChinese = [
-        '姓名','點數','職務','獎銜',
-        '加點','扣點','查看歷史'
+        '姓名', '點數', '職務', '獎銜',
+        '加點', '扣點', '查看歷史'
     ]
     $.ajax({
         'url': location.origin + "/pointManage/allUserAccount",
@@ -45,13 +45,13 @@ $(document).ready(() => {
                         查看
                     </a>`
                 ]).nodes().to$()
-                .find('td')
-                .each(function(index) {
-                    $(this).attr('id', username +"_" + myTableHead[index] );
-                });
+                    .find('td')
+                    .each(function (index) {
+                        $(this).attr('id', username + "_" + myTableHead[index]);
+                    });
             }
-            myTable.columns().every( function (index) {
-                if(index > 3){
+            myTable.columns().every(function (index) {
+                if (index > 3) {
                     return;
                 }
                 var column = this;
@@ -62,24 +62,24 @@ $(document).ready(() => {
                 </div>
                 `
                 var select = $(selectHTML)
-                    .appendTo( $("#colSearch") );
+                    .appendTo($("#colSearch"));
 
-                select.find("select").on( 'change', function () {
+                select.find("select").on('change', function () {
                     var val = $.fn.dataTable.util.escapeRegex(
                         $(this).val()
                     );
 
                     column
-                        .search( val ? '^'+val+'$' : '', true, false )
+                        .search(val ? '^' + val + '$' : '', true, false)
                         .draw();
-                } );
- 
-                column.data().unique().sort().each( function ( d, j ) {
-                    select.find("select").append( '<option value="'+d+'">'+d+'</option>' )
-                } );
-            } );
-            
-            setTimeout(function(){
+                });
+
+                column.data().unique().sort().each(function (d, j) {
+                    select.find("select").append('<option value="' + d + '">' + d + '</option>')
+                });
+            });
+
+            setTimeout(function () {
                 myTable.draw(true);
                 myTable.columns.adjust().draw();
                 myTable.responsive.recalc().columns.adjust();
@@ -89,18 +89,18 @@ $(document).ready(() => {
             alert("伺服器出狀況,請聯繫系統人員")
         }
     });
-    
-    $("#myTable").on("click", ".button_modified",(event) => {
+
+    $("#myTable").on("click", ".button_modified", (event) => {
 
         id = $(event.target)[0].id;
         username = id.split("_")[0];
-        user = $("#" + username +"_user").html();
+        user = $("#" + username + "_user").html();
         action = id.split("_")[1];
         if (action === "addPoint" || action === "reducePoint") {
-            msg=""
-            if(action === "addPoint")
+            msg = ""
+            if (action === "addPoint")
                 msg = "將為\"" + user + "\"增加 10 點"
-            else if(action === "reducePoint")
+            else if (action === "reducePoint")
                 msg = "將為\"" + user + "\"減少 1 點"
 
             bootbox.confirm({
@@ -146,14 +146,14 @@ $(document).ready(() => {
         dom: '<"row"lfBr>tip',
         buttons: [
             {
-                extend:'excel',
+                extend: 'excel',
                 title: "點數歷史紀錄",
                 className: 'btn btn-sm btn-warning'
             },
             {
-                extend:'print',
+                extend: 'print',
                 title: "點數歷史紀錄",
-                
+
                 className: 'btn btn-sm btn-warning'
             }
         ],
@@ -200,8 +200,8 @@ $(document).ready(() => {
                         fields['resultPoint'],
                     ]).draw(true);
                 }
-                
-                setTimeout(function(){
+
+                setTimeout(function () {
                     t.draw(true);
                     t.columns.adjust().draw();
                     t.responsive.recalc().columns.adjust();
@@ -216,7 +216,7 @@ $(document).ready(() => {
 
     $(".addPointByOption").on("click", (event) => {
         id = $(event.target)[0].id;
-        if (id === "addPointByAll" || id === "addPointByJobTitle" || 
+        if (id === "addPointByAll" || id === "addPointByJobTitle" ||
             id === "addPointByAmwayAward" || id === "addPointByExcel") {
             action = id;
             formInput = "";
@@ -229,22 +229,24 @@ $(document).ready(() => {
             if (action === "addPointByAll") {
 
             } else if (action === "addPointByJobTitle") {
+                pointDiv = $("<div>", { class: "form-group" });
+                pointDiv.append($("<label>", { text: "請選擇職務", for: "jobTitle"}));
+                pointDiv.append($("<input>", { name: "jobTitle", class: "form-control custom-select", id: "jobTitle"}));
                 jobTitleList.forEach((element, index) => {
                     if (element === "無")
                         return;
-                    pointDiv = $("<div>", { class: "form-check" });
-                    pointDiv.append($("<input>", { type: "radio", name: "amwayAward", class: "form-check-input", value: element, id: "amwayAward" + index }));
-                    pointDiv.append($("<label>", { text: element, class: "form-check-label", for: "amwayAward" + index }));
-                    formInput.append(pointDiv);
+                    $(pointDiv).find("select").append($("<option>", {text:element}))
                 });
+                formInput.append(pointDiv);
             } else if (action === "addPointByAmwayAward") {
+                pointDiv = $("<div>", { class: "form-group" });
+                pointDiv.append($("<label>", { text: "請選擇獎銜", for: "amwayAward"}));
+                pointDiv.append($("<select>", { name: "amwayAward", class: "form-control custom-select", id: "amwayAward" }));
                 amwayAwardList.forEach((element, index) => {
-                    pointDiv = $("<div>", { class: "form-check" });
-                    pointDiv.append($("<input>", { type: "radio", name: "amwayAward", class: "form-check-input", value: element, id: "amwayAward" + index }));
-                    pointDiv.append($("<label>", { text: element, class: "form-check-label", for: "amwayAward" + index }));
-                    formInput.append(pointDiv);
+                    $(pointDiv).find("select").append($("<option>", {text:element}))
                 });
-            } else if (id === "addPointByExcel"){
+                formInput.append(pointDiv);
+            } else if (id === "addPointByExcel") {
                 title = "請輸入要增加點數的報表清單"
                 formInput = "";
                 formInput = $("<form>", { id: "addPointForm" });
@@ -263,12 +265,12 @@ $(document).ready(() => {
                 locale: "zh_TW",
                 container: "body",
                 centerVertical: true,
-                className: "pt-5",
+                className: "modal-dialog-centered",
                 callback: (res) => {
                     if (!res)
                         return;
                     formData = new FormData($("#addPointForm")[0]);
-                    if (action !== "addPointByExcel"){
+                    if (action !== "addPointByExcel") {
                         point = formData.get("point");
                         if (point <= 0) {
                             bootbox.alert({
@@ -288,19 +290,19 @@ $(document).ready(() => {
                         'data': formData,
                         'headers': { 'X-CSRFToken': getCookie('csrftoken') },
                         'success': (res) => {
-                            
-                            if (action === "addPointByExcel"){
+
+                            if (action === "addPointByExcel") {
                                 result = JSON.parse(res);
                                 message = ""
-                                result.forEach((ele,index) => {
+                                result.forEach((ele, index) => {
                                     message = message + `<p>${ele["user"]}: ${ele["point"]}</p>`
-                                    if(ele["point"] !== "加點失敗"){
+                                    if (ele["point"] !== "加點失敗") {
                                         $(`#${ele['username']}_point`).html(ele["point"]);
                                     }
                                 });
                                 bootbox.alert({
                                     closeButton: false,
-                                    title:"點數增加清單",
+                                    title: "點數增加清單",
                                     message: message,
                                     locale: "zh_TW",
                                     centerVertical: true,
@@ -313,7 +315,7 @@ $(document).ready(() => {
                                     centerVertical: true,
                                 });
                             }
-                            
+
                         },
                         'error': (res) => {
                             bootbox.alert({
