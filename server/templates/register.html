@@ -102,7 +102,8 @@
                                     <div name="step3">
                                     <p>
                                         <label>職務:</label>
-                                        <select class="inputText" id="chainYenJobTitle" name="chainYenJobTitle">
+                                        <select class="inputText" id="chainYenJobTitle" name="chainYenJobTitle" required>
+                                            <option disabled selected value> -- 請選擇 -- </option>
                                             {% for ChainYenJobTitle in ChainYenJobTitles %}
                                                 <option value="{{ChainYenJobTitle.id}}" {% if chainYenJobTitle == ChainYenJobTitle.id %} checked {% endif %}>{{ ChainYenJobTitle.jobTitle }}</option>
                                             {% endfor %}
@@ -110,7 +111,8 @@
                                     </p>
                                     <p>
                                         <label>獎銜:</label>
-                                        <select class="inputText" id="amwayAward" name="amwayAward">
+                                        <select class="inputText" id="amwayAward" name="amwayAward" required>
+                                            <option disabled selected value> -- 請選擇 -- </option>
                                             {% for award in amwayawards %}
                                                 <option value="{{award.id}}" {% if amwayAward == award.amwayAward %} checked {% endif %}>{{ award.amwayAward }}</option>
                                             {% endfor %}
