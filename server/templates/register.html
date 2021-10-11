@@ -139,7 +139,8 @@
                                     <div name="step4">
                                     <p>
                                         <label>教室:</label>
-                                        <select class="inputText" id="ChainYenClass" name="ChainYenClass">
+                                        <select class="inputText" id="ChainYenClass" name="ChainYenClass" required>
+                                            <option disabled selected value> -- 請選擇 -- </option>
                                         {% for ChainYenClassInfo in ChainYenClassInfos %}
 
                                             <option value="{{ChainYenClassInfo.id}}" {% if ChainYenClass == ChainYenClassInfo.ClassRoomName %} checked {% endif %}>{{ ChainYenClassInfo.ClassRoomName }}</option>
