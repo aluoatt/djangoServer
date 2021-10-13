@@ -167,7 +167,10 @@ $(document).ready(() => {
 
             pointDiv = $("<div>", { class: "form-group col" });
             pointDiv.append($("<label>", { text: "是否可見", class: "form-check-label", for: "visible"}));
-            pointDiv.append($("<input>", { type: "text", name: "visible", class: "form-control", value: visible, id: "visible"}));
+            pointDiv.append($("<select>", { type: "text", name: "visible", class: "form-control", value: visible, id: "visible"}));
+            $(pointDiv).find("#visible").append($("<option>", {text:"true"}))
+            $(pointDiv).find("#visible").append($("<option>", {text:"false"}))
+            $(pointDiv).find("#visible").val(visible);
             groupRow.append(pointDiv);
             
             formInput.append(groupRow);
@@ -200,6 +203,18 @@ $(document).ready(() => {
                         'headers': { 'X-CSRFToken': getCookie('csrftoken') },
                         'success': (res) => {
                             res = JSON.parse(res);
+                            $(`#${articleID}_title`).html(formData.get("title"));
+                            $(`#${articleID}_mainClass`).html(formData.get("mainClass"));
+                            $(`#${articleID}_secClass`).html(formData.get("secClass"));
+                            $(`#${articleID}_describe`).html(formData.get("describe"));
+                            $(`#${articleID}_point`).html(formData.get("point"));
+                            $(`#${articleID}_visible`).html(formData.get("visible"));
+                            bootbox.alert({
+                                closeButton: false,
+                                message: "成功",
+                                locale: "zh_TW",
+                                centerVertical: true,
+                            });
                         },
                         'error': (res) => {
                             alert("伺服器出狀況,請聯繫系統人員");

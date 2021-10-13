@@ -41,6 +41,19 @@
             </form>
             {% endif %}
         {% endif %}
+
+        {% if perms.userlogin.seeManagerArticleReportPage %}
+            {% if tag == "ManagerArticleReportManagerPage" %}
+            <form action="#" method="get">{% csrf_token %}
+                <input class=" " type="submit" value="文章回報管理">
+            </form>
+            {% else %}
+            <form action="{% url 'managerArticleReportManagerPage' %}" method="get">{% csrf_token %}
+                <input class="primary" type="submit" value="文章回報管理">
+            </form>
+            {% endif %}
+        {% endif %}
+        
         {% if perms.userlogin.seeManagerPointPage %}
             {% if tag == "ManagerPointManagerPage" %}
             <form action="#" method="get">{% csrf_token %}

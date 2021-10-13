@@ -131,3 +131,10 @@ class articleModifyHistory(models.Model):
     point     = models.IntegerField(verbose_name='耗費點數')
     visible   = models.BooleanField(verbose_name='是否可見')
     recordDate = models.DateTimeField(verbose_name='修改日期')
+
+class articleReport(models.Model):
+    fileData = models.ForeignKey('fileDataInfo', on_delete=models.CASCADE, verbose_name='對應的資料')
+    reporter = models.ForeignKey('userlogin.UserAccountInfo', on_delete=models.CASCADE, verbose_name='回報者')
+    reason     = models.CharField(max_length=50, verbose_name='回報原因')
+    recordDate = models.DateTimeField(verbose_name='回報日期')
+

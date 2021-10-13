@@ -24,7 +24,8 @@ from userlogin.views import login,logout,register,createRegisterPage,checkRegDD,
 from personalInfoPage.views import personalInfoHomePage, personalInfoPointPage,changePasswordPage,changePasswordOption
 from managerPage.views import managerAccountManagerPage,managerAuditAccountPage,removeAuditAccount,AcceptAuditAccount
 from managerPage.views import userAccountConfirm,managerAccountModify,modalAccountModifyPOST
-from managerPage.views import managerPointManagerPage, getAccountModifyHistory, managerArticleManagerPage, managerStatisticManagerPage
+from managerPage.views import managerPointManagerPage, getAccountModifyHistory, managerArticleManagerPage, \
+    managerStatisticManagerPage, managerArticleReportManagerPage
 from django.conf.urls import url
 from addlikes.views import like_change,putStars
 urlpatterns = [
@@ -69,6 +70,7 @@ urlpatterns += [
     path('managerPages/home/AuditManger', login_required(managerAuditAccountPage),name='managerAuditAccountPage'),
     path('managerPages/home/PointManager', login_required(managerPointManagerPage),name='managerPointManagerPage'),
     path('managerPages/home/ArticleManager', login_required(managerArticleManagerPage),name='managerArticleManagerPage'),
+    path('managerPages/home/ArticleReportManager', login_required(managerArticleReportManagerPage),name='managerArticleReportManagerPage'),
     path('managerPages/home/StatisticManager', login_required(managerStatisticManagerPage),name='managerStatisticManagerPage'),
     path('managerPages/removeAuditAccount', login_required(removeAuditAccount),name='removeAuditAccount'),
     path('managerPages/AcceptAuditAccount', login_required(AcceptAuditAccount),name='AcceptAuditAccount'),

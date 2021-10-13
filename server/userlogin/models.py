@@ -13,6 +13,7 @@ class Server(models.Model):
             ("seeManagerAuditAccountPage", "seeManagerAuditAccountPage"),
             ("seeManagerPointPage", "seeManagerPointPage"),
             ("seeManagerArticlePage", "seeManagerArticlePage"),
+            ("seeManagerArticleReportPage", "seeManagerArticleReportPage"),
             ("seeManagerStatisticPage", "seeManagerStatisticPage"),
             ("ALLAuditManager", "ALLAuditManager"),
             ("CYPManager", "CYPManager"),
@@ -40,6 +41,8 @@ class Server(models.Model):
             ("ChainyenArticleManage", "ChainyenArticleManage"),
             ("SpeechArticleManage", "SpeechArticleManage"),
             ("articlePointManage", "articlePointManage"),
+            ("articleReport", "articleReport"),
+            ("articleReportManage", "articleReportManage"),
             ("can_freeze_account", "can_freeze_account"),
             ("classRoomAccount", "classRoomAccount"),
         )

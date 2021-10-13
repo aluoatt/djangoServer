@@ -81,7 +81,17 @@
 <!--											<span class="liked-num">{{targetFile.likes}}</span>-->
 <!--											<span>喜歡</span>-->
 <!--										</div>-->
-									<div id="rateYo"></div>
+									<div class="row justify-content-start">
+										<div id="rateYo" class="col-md-3"></div>
+										{% if perms.userlogin.articlePointManage %}
+										<div id="reportArea" class="col-md-3">
+											<button id="Article_{{targetFile.id}}" class="button_reportArticle btn btn-md btn-warning">
+												回報文章問題
+											</button>
+										</div>
+									</div>
+									
+									{% endif %}
 										<br>
 
 										{% if targetFile.fileType.id == 1 %}
@@ -157,6 +167,7 @@
 
 
 		<!-- Scripts -->
+		<script src="{% static 'assets/js/viewPage.js' %}"></script>
 		<script type="text/javascript" src="{%static 'assets/js/pdfobject.min.js'%}"></script>
 		<script type="text/javascript" src="{%static 'pdfjs-2.0/build/pdf.js'%}"></script>
 		<!-- Latest compiled and minified CSS -->
@@ -476,6 +487,10 @@
 				@font-face{font-family:'Glyphicons Halflings';src:url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.eot');src:url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.woff') format('woff'),url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.ttf') format('truetype'),url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');}.glyphicon{position:relative;top:1px;display:inline-block;font-family:'Glyphicons Halflings';font-style:normal;font-weight:normal;line-height:1;-webkit-font-smoothing:antialiased;}
 		
 					.glyphicon-thumbs-up:before{content:"\e125";}
+				
+				.modal-content {
+					background-color: #2a2f4a;
+				}
 			</style>
 	</body>
 </html>
