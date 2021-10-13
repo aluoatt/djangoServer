@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_apscheduler',
+    'groupadmin_users',
     # Add our new application
     'searchfile',
     'NutriliteSearchPage',
