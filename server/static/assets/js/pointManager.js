@@ -231,7 +231,7 @@ $(document).ready(() => {
             } else if (action === "addPointByJobTitle") {
                 pointDiv = $("<div>", { class: "form-group" });
                 pointDiv.append($("<label>", { text: "請選擇職務", for: "jobTitle"}));
-                pointDiv.append($("<input>", { name: "jobTitle", class: "form-control custom-select", id: "jobTitle"}));
+                pointDiv.append($("<select>", { name: "jobTitle", class: "form-control custom-select", id: "jobTitle"}));
                 jobTitleList.forEach((element, index) => {
                     if (element === "無")
                         return;

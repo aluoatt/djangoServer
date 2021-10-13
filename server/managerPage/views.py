@@ -15,7 +15,7 @@ from userlogin.models import UserAccountInfo, UserAccountChainYenInfo, chainYenJ
 from userlogin.models import chainYenClassInfo, registerDDandDimInfo, amwayAwardInfo, ConfirmString,UserAccountAmwayInfo
 from django.contrib.auth.decorators import permission_required
 from userlogin.models import TempUserAccountInfo, AccountModifyHistory, TempUserAccountChainYenInfo, TempUserAccountAmwayInfo
-from NutriliteSearchPage.models import fileDataInfo
+from NutriliteSearchPage.models import DBClassInfo, fileDataInfo, mainClassInfo, secClassInfo, articleModifyHistory
 
 # Create your views here.
 import hashlib
@@ -562,7 +562,8 @@ def managerPointManagerPage(request):
 
     if request.user.has_perm('userlogin.CYKManager'):
         q1.children.append(("classRoom__ClassRoomName", "高雄"))
-
+@permission_required('userlogin.seeManagerArticlePage', login_url='/accounts/userlogin/')
+def getFileDataInfo(request):
     if request.user.has_perm('userlogin.CYDManager'):
         q1.children.append(("classRoom__ClassRoomName", "屏東"))
 
@@ -606,6 +607,20 @@ def getAccountModifyHistory(request):
 @permission_required('userlogin.seeManagerArticlePage', login_url='/accounts/userlogin/')
 def managerArticleManagerPage(request):
     tag = "ManagerArticleManagerPage"
+    
+    # 主類別
+    mainClass = mainClassInfo.objects.all()
+    mainClassList = []
+    for mClass in mainClass:
+        mainClassList.append(mClass.mainClassName)
+    mainClassList = json.dumps(mainClassList)
+
+    # 副類別
+    secClass = secClassInfo.objects.all()
+    secClassList = []
+    for sClass in secClass:
+        secClassList.append(sClass.secClassName)
+    secClassList = json.dumps(secClassList)
 
     return render(request, 'managerPages/managerArticleManagerPage.html', locals())
 
@@ -799,7 +814,23 @@ def getFileDataSummary(request):
 def getFileDataInfo(request):
     res = HttpResponse()
     try:
-        fileDatas = fileDataInfo.objects.all()
+        mainClassList = []
+        if request.user.has_perm('userlogin.NutrilliteArticleManage'):
+            mainClassList.append("營養")
+        if request.user.has_perm('userlogin.ArtistryArticleManage'):
+            mainClassList.append("美容")
+        if request.user.has_perm('userlogin.TechArticleManage'):
+            mainClassList.append("科技")
+        if request.user.has_perm('userlogin.AmwayQueenArticleManage'):
+            mainClassList.append("金鍋")
+        if request.user.has_perm('userlogin.OtherArticleManage'):
+            mainClassList.append("其他")
+        if request.user.has_perm('userlogin.ChainyenArticleManage'):
+            mainClassList.append("總部會議/活動")
+        if request.user.has_perm('userlogin.SpeechArticleManage'):
+            mainClassList.append("演講廳")
+
+        fileDatas = fileDataInfo.objects.filter(mainClass__mainClassName__in=mainClassList)
         fileDataSummary = []
         for data in fileDatas:
             tmp = {
@@ -817,4 +848,67 @@ def getFileDataInfo(request):
         res.status_code = 200
     except:
         res.status_code = 503
+    return res
+
+@permission_required('userlogin.seeManagerArticlePage', login_url='/accounts/userlogin/')
+def updateFileDataInfo(request):
+    res = HttpResponse()
+    try:
+        modifier = request.user.user
+        lastModify = datetime.datetime.now()
+        id = request.POST['id']
+        title = request.POST['title']
+        mainClass = mainClassInfo.objects.get(mainClassName = request.POST["mainClass"]) 
+        secClass = secClassInfo.objects.get(secClassName = request.POST['secClass'])
+        describe = request.POST['describe']
+        point = None
+        if "point" in request.POST :
+            point = int(request.POST['point'])
+        visible = request.POST['visible']
+        if visible == "true":
+            visible = True
+        else:
+            visible = False
+        fileData = fileDataInfo.objects.filter(id=id)
+        if point and request.user.has_perm('userlogin.articlePointManage'):
+            fileData.update(title=title, mainClass=mainClass,
+                            secClass=secClass, describe=describe, point=point,
+                            visible=visible, lastModify = lastModify)
+        else:
+            fileData.update(title=title, mainClass=mainClass,
+                            secClass=secClass, describe=describe,visible=visible,
+                            lastModify=lastModify)
+        fileDataID = fileData.first()
+        fHistory = articleModifyHistory(fileDataID=fileDataID,modifier=modifier, title=title,
+                                            secClass=secClass,describe=describe,point=point,
+                                            mainClass=mainClass,visible=visible, recordDate=lastModify)
+        fHistory.save()
+
+        res.content = json.dumps({
+            "id"       : id,
+            "title"    : title,
+            "mainClass": mainClass.mainClassName,
+            "secClass" : secClass.secClassName,
+            "describe" : describe,
+            "point"    : point,
+            "visible"  : visible
+        })
+        res.status_code = 200
+        
+    except:
+        res.status_code = 503
+    return res
+
+@permission_required('userlogin.seeManagerArticlePage', login_url='/accounts/userlogin/')
+def getArticleHistory(request):
+    res = HttpResponse()
+    try:
+        id = request.POST['id']
+        fileDataID = fileDataInfo.objects.get(id=id)
+        pHistory = articleModifyHistory.objects.filter(fileDataID = fileDataID).order_by('-recordDate')
+        res.status_code = 200
+        res.content =  serializers.serialize("json", pHistory)
+    except:
+        res.status_code = 503
+
     return res

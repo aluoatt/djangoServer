@@ -39,6 +39,7 @@ class Server(models.Model):
             ("OtherArticleManage", "OtherArticleManage"),
             ("ChainyenArticleManage", "ChainyenArticleManage"),
             ("SpeechArticleManage", "SpeechArticleManage"),
+            ("articlePointManage", "articlePointManage"),
             ("can_freeze_account", "can_freeze_account"),
             ("classRoomAccount", "classRoomAccount"),
         )

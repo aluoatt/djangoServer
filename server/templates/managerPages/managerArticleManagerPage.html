@@ -28,6 +28,36 @@
 
         <!-- Main -->
         <section id="one">
+            <!-- Modal -->
+            <div class="modal fade" id="articleHistoryModal" tabindex="-1" aria-labelledby="pointModalLabel" aria-hidden="true"
+                style="width:100%">
+                <div class="modal-dialog modal-xl modal-dialog-centered pt-5">
+                    <div class="modal-content" style="background-color: #2a2f4a;" style="width:100%;">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="pointModalLabel">文章修改紀錄</h5>
+                        </div>
+                        <div class="modal-body table-responsive">
+                            <table id="articleHistoryTable" class="display table-bordered " style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>變更者</th>
+                                        <th>變更日期</th>
+                                        <th>標題</th>
+                                        <th>主類別</th>
+                                        <th>次類別</th>
+                                        <th>描述</th>
+                                        <th>消耗點數</th>
+                                        <th>是否可見</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" data-dismiss="modal">關閉</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="inner">
                 {% include 'managerPages/managerHomePageHeaderBar.html' %}
                 <div id="colSearch" class="form-row align-items-center">
@@ -72,6 +102,13 @@
         }
     </style>
     <script src="{% static 'assets/js/articleManager.js' %}"></script>
+    <script>
+        window.aritclePointManage = "{{ perms.userlogin.articlePointManage | safe }}" === "True" ? true:false;
+        mainClassListString = '{{ mainClassList | safe }}'
+        secClassListString = '{{ secClassList | safe }}'
+        window.mainClassList = JSON.parse(mainClassListString)
+        window.secClassList = JSON.parse(secClassListString)
+    </script>
 
 </body>
 

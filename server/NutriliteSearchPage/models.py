@@ -120,3 +120,14 @@ class personalWatchFileLog(models.Model):
     class Meta:
         verbose_name = "個人觀看紀錄"
         verbose_name_plural = "個人觀看紀錄"
+
+class articleModifyHistory(models.Model):
+    fileDataID = models.ForeignKey('fileDataInfo', on_delete=models.CASCADE, verbose_name='對應的資料')
+    modifier  = models.CharField(max_length=50, verbose_name='修改者')
+    title     = models.CharField(max_length=50, verbose_name='標題')
+    mainClass = models.ForeignKey("mainClassInfo",verbose_name='主類別',on_delete=models.PROTECT)
+    secClass  = models.ForeignKey("secClassInfo",verbose_name = '次類別',on_delete=models.PROTECT)
+    describe  = models.CharField(max_length=500, verbose_name='描述')
+    point     = models.IntegerField(verbose_name='耗費點數')
+    visible   = models.BooleanField(verbose_name='是否可見')
+    recordDate = models.DateTimeField(verbose_name='修改日期')

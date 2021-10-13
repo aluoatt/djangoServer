@@ -5,7 +5,6 @@ $(document).ready(() => {
         "orderClasses": false,
         "responsive": true,
         "autoWidth": true,
-        "fixedHeader": true,
         "columnDefs": [
             { "width": "25%", "targets": 4 },
             { "width": "15%", "targets": 0 },
@@ -51,7 +50,7 @@ $(document).ready(() => {
                         修改
                     </a>`,
                     `<a id="${articleID}_getModifyHistory" class="button_history h4 btn btn-outline-success btn-sm" data-toggle="modal"
-                        data-target="#pointModal">
+                        data-target="#articleHistoryModal">
                         查看
                     </a>`
                 ]).nodes().to$()
@@ -136,20 +135,35 @@ $(document).ready(() => {
 
             pointDiv = $("<div>", { class: "form-group col" });
             pointDiv.append($("<label>", { text: "主類別", class: "form-check-label", for: "mainClass"}));
-            pointDiv.append($("<input>", { type: "text", name: "mainClass", class: "form-control", value: mainClass, id: "mainClass"}));
+            pointDiv.append($("<select>", { name: "mainClass", class: "form-control custom-select", id: "mainClass"}));
+            mainClassList.forEach((element, index) => {
+                if (element === "無")
+                    return;
+                $(pointDiv).find("#mainClass").append($("<option>", {text:element}))
+            });
+            $(pointDiv).find("#mainClass").val(mainClass);
             groupRow.append(pointDiv);
 
             pointDiv = $("<div>", { class: "form-group col" });
             pointDiv.append($("<label>", { text: "次類別", class: "form-check-label", for: "secClass"}));
-            pointDiv.append($("<input>", { type: "text", name: "secClass", class: "form-control", value: secClass, id: "secClass"}));
+            pointDiv.append($("<select>", { name: "secClass", class: "form-control custom-select", id: "secClass"}));
+            secClassList.forEach((element, index) => {
+                if (element === "無")
+                    return;
+                $(pointDiv).find("#secClass").append($("<option>", {text:element}))
+            });
+            $(pointDiv).find("#secClass").val(secClass);
             groupRow.append(pointDiv);
             
             formInput.append(groupRow);
             
-            pointDiv = $("<div>", { class: "form-group col" });
-            pointDiv.append($("<label>", { text: "消耗點數", class: "form-check-label", for: "point"}));
-            pointDiv.append($("<input>", { type: "text", name: "point", class: "form-control", value: point, id: "point"}));
-            groupRow.append(pointDiv);
+            if (window.aritclePointManage){
+                pointDiv = $("<div>", { class: "form-group col" });
+                pointDiv.append($("<label>", { text: "消耗點數", class: "form-check-label", for: "point"}));
+                pointDiv.append($("<input>", { type: "text", name: "point", class: "form-control", value: point, id: "point"}));
+                groupRow.append(pointDiv);
+            }
+            
 
             pointDiv = $("<div>", { class: "form-group col" });
             pointDiv.append($("<label>", { text: "是否可見", class: "form-check-label", for: "visible"}));
@@ -178,20 +192,14 @@ $(document).ready(() => {
                         return;
                     formData = new FormData($("#article_modify")[0]);
                     $.ajax({
-                        'url': location.origin + "/pointManage/" + action,
+                        'url': location.origin + "/managerPages/updateFileDataInfo",
                         'method': 'POST',
                         'processData': false,
                         'contentType': false,
                         'data': formData,
                         'headers': { 'X-CSRFToken': getCookie('csrftoken') },
                         'success': (res) => {
-                            $("#" + username + "_point").html(res);
-                            bootbox.alert({
-                                closeButton: false,
-                                message: "成功",
-                                locale: "zh_TW",
-                                centerVertical: true,
-                            });
+                            res = JSON.parse(res);
                         },
                         'error': (res) => {
                             alert("伺服器出狀況,請聯繫系統人員");
@@ -202,7 +210,7 @@ $(document).ready(() => {
         }
     });
 
-    window.t = $('#example').DataTable({
+    window.t = $('#articleHistoryTable').DataTable({
         dom: '<"row"lfBr>tip',
         buttons: [
             {
@@ -235,12 +243,12 @@ $(document).ready(() => {
         $(".dataTables_empty").addClass("table-warning text-dark font-weight-bold");
         $(".dataTables_empty").text("目前沒有紀錄");
         id = $(event.target)[0].id;
-        username = id.split("_")[0];
+        articleID = id.split("_")[0];
         action = id.split("_")[1];
         formData = new FormData();
-        formData.append("username", username)
+        formData.append("id", articleID)
         $.ajax({
-            'url': location.origin + "/pointManage/" + action,
+            'url': location.origin + "/managerPages/getArticleHistory",
             'method': 'POST',
             'processData': false,
             'contentType': false,
@@ -253,11 +261,12 @@ $(document).ready(() => {
                     t.row.add([
                         fields['modifier'],
                         fields['recordDate'],
-                        fields['addPoint'],
-                        fields['reducePoint'],
-                        fields['transferPoint'],
-                        fields['reason'],
-                        fields['resultPoint'],
+                        fields['title'],
+                        fields['mainClass'],
+                        fields['secClass'],
+                        fields['describe'],
+                        fields['point'],
+                        fields['visible'],
                     ]).draw(true);
                 }
                 
