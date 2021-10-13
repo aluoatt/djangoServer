@@ -578,79 +578,11 @@ def getAccountModifyHistory(request):
 def managerArticleManagerPage(request):
     tag = "ManagerArticleManagerPage"
 
-    # 職務表
-    jobTitles = chainYenJobTitleInfo.objects.all()
-    # 獎銜表
-    amwayAwards = amwayAwardInfo.objects.all().order_by('rank')
-    # 教室表
-    chainYenClasses = chainYenClassInfo.objects.all().order_by('rank')
-    # 白金表
-    registerDDs = registerDDandDimInfo.objects.filter(amwayAward__rank__gte=15)
-    # 鑽石表
-    registerDims = registerDDandDimInfo.objects.filter(amwayAward__rank__gte=60)
-
-    q1 = Q()
-    q1.connector = 'OR'
-    q1.children.append(("classRoom__ClassRoomName", "無"))
-
-    if request.user.has_perm('userlogin.CYPManager'):
-        q1.children.append(("classRoom__ClassRoomName", "台北"))
-
-    if request.user.has_perm('userlogin.CYLManager'):
-        q1.children.append(("classRoom__ClassRoomName", "中壢"))
-
-    if request.user.has_perm('userlogin.CYSManager'):
-        q1.children.append(("classRoom__ClassRoomName", "新竹"))
-
-    if request.user.has_perm('userlogin.CYZManager'):
-        q1.children.append(("classRoom__ClassRoomName", "台中"))
-
-    if request.user.has_perm('userlogin.CYJManager'):
-        q1.children.append(("classRoom__ClassRoomName", "嘉義"))
-
-    if request.user.has_perm('userlogin.CYN2Manager'):
-        q1.children.append(("classRoom__ClassRoomName", "永康245"))
-
-    if request.user.has_perm('userlogin.CYN1Manager'):
-        q1.children.append(("classRoom__ClassRoomName", "永康135"))
-
-    if request.user.has_perm('userlogin.CYMManager'):
-        q1.children.append(("classRoom__ClassRoomName", "良美"))
-
-    if request.user.has_perm('userlogin.CYKManager'):
-        q1.children.append(("classRoom__ClassRoomName", "高雄"))
-
-    if request.user.has_perm('userlogin.CYDManager'):
-        q1.children.append(("classRoom__ClassRoomName", "屏東"))
-
-    if request.user.has_perm('userlogin.CYWManager'):
-        q1.children.append(("classRoom__ClassRoomName", "花蓮"))
-
-    if request.user.has_perm('userlogin.CYTManager'):
-        q1.children.append(("classRoom__ClassRoomName", "台東"))
-
-    if request.user.has_perm('userlogin.CYHManager'):
-        q1.children.append(("classRoom__ClassRoomName", "澎湖"))
-
-    q2 = Q()
-    q2.connector = 'OR'
-    q2.children.append(("id", 0))
-    for UserAccountChainYen in UserAccountChainYenInfo.objects.filter(q1):
-        q2.children.append(("id", UserAccountChainYen.UserAccountInfo.id))
-    # UserAccountChainYen = UserAccountChainYenInfo.objects.filter(q1)
-    UserAccount = UserAccountInfo.objects.get(username=request.user)
-    if registerDDandDimInfo.objects.filter(amwayNumber = UserAccount.useraccountamwayinfo_set.first().amwayNumber).count() > 0:
-        for UserAccountAmway in UserAccountAmwayInfo.objects.filter(amwayDD=UserAccount.useraccountamwayinfo_set.first().amwayNumber):
-            q2.children.append(("id", UserAccountAmway.UserAccountInfo.id))
-    #searchUserAccountInfo = UserAccountInfo.objects.filter(q2)
-    searchUserAccountInfo = UserAccountInfo.objects.all()
     return render(request, 'managerPages/managerArticleManagerPage.html', locals())
 
 @permission_required('userlogin.seeManagerStatisticPage', login_url='/accounts/userlogin/')
 def managerStatisticManagerPage(request):
     tag = "StatisticsManagerPage"
-
-    
     return render(request, 'managerPages/managerStatisticManagerPage.html', locals())
 
 @permission_required('userlogin.seeManagerAccountManagerPage', login_url='/accounts/userlogin/')
@@ -832,4 +764,28 @@ def getFileDataSummary(request):
             mainClassSummary[mainClass] = 1
     res.content = json.dumps(mainClassSummary)
     res.status_code = 200
+    return res
+
+@permission_required('userlogin.seeManagerArticlePage', login_url='/accounts/userlogin/')
+def getFileDataInfo(request):
+    res = HttpResponse()
+    try:
+        fileDatas = fileDataInfo.objects.all()
+        fileDataSummary = []
+        for data in fileDatas:
+            tmp = {
+                "id"       : data.id,
+                "title"    : data.title,
+                "DBClassCode"  : data.DBClass.DBClassCode,
+                "mainClass": data.mainClass.mainClassName,
+                "secClass" : data.secClass.secClassName,
+                "describe" : data.describe,
+                "point"    : data.point,
+                "visible"  : data.visible
+            }
+            fileDataSummary.append(tmp)
+        res.content = json.dumps(fileDataSummary)
+        res.status_code = 200
+    except:
+        res.status_code = 503
     return res
