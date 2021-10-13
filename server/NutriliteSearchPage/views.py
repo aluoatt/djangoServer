@@ -181,10 +181,11 @@ def NutriliteSearchPage(request, topic, selectTag):
     return s
 
 def exchangeOption(request, fileId):
-    if request.user.has_perm('userlogin.classRoomAccount'):
+    if request.user.has_perm('userlogin.classRoomAccount') and not request.user.is_superuser:
         classRoomAccount = True
     else:
         classRoomAccount = False
+
     targetFile = fileDataInfo.objects.get(id=int(fileId))
     UserAccount = UserAccountInfo.objects.get(username=request.user)
     alreadyExchange = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id).count() > 0
@@ -369,8 +370,10 @@ def viewFilePage(request, fileId):
     UserAccount = UserAccountInfo.objects.get(username=request.user)
     personalFile = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id)
     alreadyExchange = personalFile.count() > 0
-
-    pregetStars = personalFile.first().stars
+    try:
+        pregetStars = personalFile.first().stars
+    except:
+        pregetStars = 0
 
     if alreadyExchange:
         aleardyLike = personalFile.first().like
