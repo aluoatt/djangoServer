@@ -71,16 +71,19 @@
 									{% endif %}
 									{% if alreadyExchange %}
 
-										<div class="like" onclick="likeChange(this,{{ targetFile.id }})">
+<!--										<div class="like" onclick="likeChange(this,{{ targetFile.id }})">-->
 
-											{% if aleardyLike %}
-												<span class="glyphicon glyphicon-thumbs-up active"></span>
-											{% else %}
-												<span class="glyphicon glyphicon-thumbs-up"></span>
-											{% endif %}
-											<span class="liked-num">{{targetFile.likes}}</span>
-											<span>喜歡</span>
-										</div>
+<!--											{% if aleardyLike %}-->
+<!--												<span class="glyphicon glyphicon-thumbs-up active"></span>-->
+<!--											{% else %}-->
+<!--												<span class="glyphicon glyphicon-thumbs-up"></span>-->
+<!--											{% endif %}-->
+<!--											<span class="liked-num">{{targetFile.likes}}</span>-->
+<!--											<span>喜歡</span>-->
+<!--										</div>-->
+									<div id="rateYo"></div>
+										<br>
+
 										{% if targetFile.fileType.id == 1 %}
 										<p id="videoWait">影片載入中請稍候....</p>
 										<div id="myProgress">
@@ -154,8 +157,57 @@
 
 
 		<!-- Scripts -->
-			<script type="text/javascript" src="{%static 'assets/js/pdfobject.min.js'%}"></script>
-			<script type="text/javascript" src="{%static 'pdfjs-2.0/build/pdf.js'%}"></script>
+		<script type="text/javascript" src="{%static 'assets/js/pdfobject.min.js'%}"></script>
+		<script type="text/javascript" src="{%static 'pdfjs-2.0/build/pdf.js'%}"></script>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+		<script>
+			$(function () {
+
+			  $("#rateYo").rateYo({
+				rating:  {{ pregetStars }},
+				halfStar: true
+			  });
+			});
+			$(function () {
+
+			  $("#rateYo").rateYo()
+						  .on("rateyo.set", function (e, data) {
+							startChange(data.rating)
+						  });
+			});
+			function startChange(rat){
+					let csrftoken = '{{ csrf_token }}';
+					var requestURL = "{% url 'putStars' %}";
+					var fileid = {{ targetFile.id }};
+					$.ajax({
+						url: requestURL,
+						headers: {'X-CSRFToken': csrftoken},
+						type: "GET",
+						data:{
+							fileid:fileid,
+							stars:rat
+
+						},
+
+						success: function (returnData) {
+
+
+						},
+						error: function (xhr, ajaxOptions, thrownError) {
+
+
+
+						}
+					});
+
+				}
+
+		</script>
+
+
 			<script>
 
 

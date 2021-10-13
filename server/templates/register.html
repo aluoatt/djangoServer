@@ -95,14 +95,15 @@
                                         <label>e-mail:</label>
                                         <input class="inputText" type="text" name="e_mail" autocomplete="none"
                                                                  required="" id="e_mail" value="{{e_mail}}" placeholder="請務必填寫正確，否則無法註冊"
-                                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+                                        pattern="[A-Za-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
                                     </p>
                                     </div>
                                     <hr style="border: 1px solid whitesmoke;">
                                     <div name="step3">
                                     <p>
                                         <label>職務:</label>
-                                        <select class="inputText" id="chainYenJobTitle" name="chainYenJobTitle">
+                                        <select class="inputText" id="chainYenJobTitle" name="chainYenJobTitle" required>
+                                            <option disabled selected value> -- 請選擇 -- </option>
                                             {% for ChainYenJobTitle in ChainYenJobTitles %}
                                                 <option value="{{ChainYenJobTitle.id}}" {% if chainYenJobTitle == ChainYenJobTitle.id %} checked {% endif %}>{{ ChainYenJobTitle.jobTitle }}</option>
                                             {% endfor %}
@@ -110,7 +111,8 @@
                                     </p>
                                     <p>
                                         <label>獎銜:</label>
-                                        <select class="inputText" id="amwayAward" name="amwayAward">
+                                        <select class="inputText" id="amwayAward" name="amwayAward" required>
+                                            <option disabled selected value> -- 請選擇 -- </option>
                                             {% for award in amwayawards %}
                                                 <option value="{{award.id}}" {% if amwayAward == award.amwayAward %} checked {% endif %}>{{ award.amwayAward }}</option>
                                             {% endfor %}
@@ -137,7 +139,8 @@
                                     <div name="step4">
                                     <p>
                                         <label>教室:</label>
-                                        <select class="inputText" id="ChainYenClass" name="ChainYenClass">
+                                        <select class="inputText" id="ChainYenClass" name="ChainYenClass" required>
+                                            <option disabled selected value> -- 請選擇 -- </option>
                                         {% for ChainYenClassInfo in ChainYenClassInfos %}
 
                                             <option value="{{ChainYenClassInfo.id}}" {% if ChainYenClass == ChainYenClassInfo.ClassRoomName %} checked {% endif %}>{{ ChainYenClassInfo.ClassRoomName }}</option>

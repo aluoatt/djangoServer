@@ -40,3 +40,35 @@ def like_change(request):
         response_data["liked_num"] = fileData.likes
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
+def putStars(request):
+    rates = float(request.GET.get('stars'))
+
+
+    fileid = request.GET.get('fileid')
+    response_data = {}
+    personalFileDataGet = personalFileData.objects.filter(ownerAccount=request.user, fileDataID=int(fileid))
+
+    if personalFileDataGet.count() < 0:
+
+        response_data["status"] = False
+
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    else:
+        fileData = fileDataInfo.objects.filter(id=int(fileid)).first()
+        personalFileDataGet = personalFileDataGet.first()
+        personalFileDataGet.getStar = 1
+        personalFileDataGet.stars = rates
+        personalFileDataGet.save()
+
+        allThisFilepersonalFileData = personalFileData.objects.filter(fileDataID=int(fileid),getStar=1)
+
+
+        totalstar = sum([i.stars for i in allThisFilepersonalFileData])/allThisFilepersonalFileData.count()
+
+        fileData.stars = totalstar
+
+        fileData.save()
+
+        response_data["status"] = True
+        response_data["stars_num"] = totalstar
+        return HttpResponse(json.dumps(response_data), content_type="application/json")

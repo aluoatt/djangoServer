@@ -215,7 +215,9 @@ function auditFinalRemove(csrftoken) {
 
 function auditFinalAccept(csrftoken) {
     var requestURL = '/managerPages/AcceptAuditAccount';
+
     var curId = $('#auditAcceptCurrentId').val();
+    document.getElementById(curId + "_auditStatus").innerHTML = "處理中"
     var dataJSON = { "id": $('#auditAcceptCurrentId').val(), };
     $.ajax({
         url: requestURL,
@@ -224,6 +226,7 @@ function auditFinalAccept(csrftoken) {
         type: "POST",
         method: "POST",
         dataType: "json",
+        async: true,
         contentType: "application/json;charset=utf-8",
         success: function (returnData) {
             if (returnData.status) {

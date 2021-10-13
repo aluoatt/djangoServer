@@ -362,6 +362,35 @@ def modalAccountModifyPOST(request):
 
                 r2.jobTitle = odata
 
+            if odata.jobTitle == "會長":
+
+                userAcconut = r
+                perm = Permission.objects.get(codename=settings.CLASS_CHARIMAN_MANAGER_DICT[
+                    userAcconut.useraccountchainyeninfo_set.first().classRoom.ClassRoomName])
+                userAcconut.user_permissions.add(perm)
+                perm = Permission.objects.get(codename="can_see_register")
+                userAcconut.user_permissions.add(perm)
+                perm = Permission.objects.get(codename="seeManagerMenuButton")
+                userAcconut.user_permissions.add(perm)
+                perm = Permission.objects.get(codename="seeManagerAccountManagerPage")
+                userAcconut.user_permissions.add(perm)
+                perm = Permission.objects.get(codename="seeManagerAuditAccountPage")
+                userAcconut.user_permissions.add(perm)
+                perm = Permission.objects.get(codename="can_Change_JobTitle")
+                userAcconut.user_permissions.add(perm)
+            else:
+                userAcconut = r
+                perm = Permission.objects.get(codename="can_see_register")
+                userAcconut.user_permissions.remove(perm)
+                perm = Permission.objects.get(codename="seeManagerMenuButton")
+                userAcconut.user_permissions.remove(perm)
+                perm = Permission.objects.get(codename="seeManagerAccountManagerPage")
+                userAcconut.user_permissions.remove(perm)
+                perm = Permission.objects.get(codename="seeManagerAuditAccountPage")
+                userAcconut.user_permissions.remove(perm)
+                perm = Permission.objects.get(codename="can_Change_JobTitle")
+                userAcconut.user_permissions.remove(perm)
+
 
 
         if request.user.has_perm('userlogin.can_Change_class'):
