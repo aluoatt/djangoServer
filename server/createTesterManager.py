@@ -39,13 +39,13 @@ def createManager(amwayNumber, amAward, ddInfo, user, username, jobTitle, classI
     perm = Permission.objects.get(codename="seeManagerAccountManagerPage")
     userAccount.user_permissions.add(perm)
 
-preAmwayNumber = "000000"
-preDiamond     = "administrator"
-preMain        = "超級管理者"
+preAmwayNumber = "100000"
+preDiamond     = "100000"
+preMain        = ""
 for i in range(4):
     user = "直銷商" + str(i)
-    amwayNumber = str(2000000 + i)
-    IDNumber = str(2000 + i)
+    amwayNumber = str(8000000 + i)
+    IDNumber = str(8000 + i)
     username = amwayNumber + IDNumber
     jobTitle = chainYenJobTitleInfo.objects.get(jobTitle = "無")
     classInfo = chainYenClassInfo.objects.get(ClassRoomName = "台北")
