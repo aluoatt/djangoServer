@@ -3,7 +3,6 @@ $(document).ready(() => {
     window.myTable = $('#myTable').DataTable({
         "orderClasses": false,
         "responsive": true,
-        "fixedHeader": true,
         "language": {
             url: location.origin + '/static/assets/i18n/datatable/zh_Hant.json'
         },
