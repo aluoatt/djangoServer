@@ -134,6 +134,8 @@ $(document).ready(() => {
         document.getElementById("modal_amwayAward").innerHTML = ("<mark style=\"color: red\">獎銜:</mark>"
             + document.getElementById(id + "_amwayAward").innerHTML)
 
+        document.getElementById("modal_gender").innerHTML = ("<mark style=\"color: red\">性別:</mark>"
+            + document.getElementById(id + "_gender").innerHTML)
         document.getElementById("modal_amwayDD").innerHTML = ("<mark style=\"color: red\">上手白金:</mark>"
             + document.getElementById(id + "_amwayDD").innerHTML)
 
