@@ -400,6 +400,7 @@ def viewFilePage(request, fileId):
         personalWatchFileLog(fileDataID=targetFile,
                              watchAccount=UserAccount,
                              exchangeDate=datetime.datetime.now())
+        personalWatchFileLog.save()
 
     if (not permission) or (not pointEnough):
         targetFile = ""
