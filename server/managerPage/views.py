@@ -928,7 +928,7 @@ def reportArticle(request):
         res.status_code = 503
     return res
 
-@permission_required('userlogin.seeManagerArticlePage', login_url='/accounts/userlogin/')
+@permission_required('userlogin.seeManagerArticleReportPage', login_url='/accounts/userlogin/')
 def removeArticleReport(request, reportID):
     res = HttpResponse()
     try:
@@ -939,7 +939,7 @@ def removeArticleReport(request, reportID):
         res.status_code = 503
     return res
 
-@permission_required('userlogin.seeManagerArticlePage', login_url='/accounts/userlogin/')
+@permission_required('userlogin.seeManagerArticleReportPage', login_url='/accounts/userlogin/')
 def getArticleReport(request):
     res = HttpResponse()
     try:
