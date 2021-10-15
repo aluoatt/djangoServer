@@ -902,9 +902,23 @@ def getArticleHistory(request):
     try:
         id = request.POST['id']
         fileDataID = fileDataInfo.objects.get(id=id)
-        pHistory = articleModifyHistory.objects.filter(fileDataID = fileDataID).order_by('-recordDate')
+        aHistory = articleModifyHistory.objects.filter(fileDataID = fileDataID).order_by('-recordDate')
+        
+        historyList = []
+        for data in aHistory:
+            tmp = {
+                "modifier":   data.modifier,
+                "recordDate": str(data.recordDate),
+                "title":      data.title,
+                "mainClass":  data.mainClass.mainClassName,
+                "secClass":   data.secClass.secClassName,
+                "describe":   data.describe,
+                "point":      data.point,
+                "visible":    data.visible
+            }
+            historyList.append(tmp)
         res.status_code = 200
-        res.content =  serializers.serialize("json", pHistory)
+        res.content =  json.dumps(historyList)
     except:
         res.status_code = 503
 

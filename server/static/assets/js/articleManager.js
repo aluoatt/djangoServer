@@ -272,7 +272,7 @@ $(document).ready(() => {
             'success': (res) => {
                 data = JSON.parse(res)
                 for (i in data) {
-                    fields = data[i]['fields']
+                    fields = data[i]
                     t.row.add([
                         fields['modifier'],
                         fields['recordDate'],
