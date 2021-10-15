@@ -13,5 +13,6 @@ urlpatterns = [
     path('getArticleReport', views.getArticleReport, name='getArticleReport'),
     path('reportArticle', views.reportArticle, name='reportArticle'),
     path('removeArticleReport/<str:reportID>', views.removeArticleReport, name='removeArticleReport'),
+    path('getArticleOwnRank', views.getArticleOwnRank, name='getArticleOwnRank'),
 ]
 

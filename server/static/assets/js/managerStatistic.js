@@ -12,7 +12,7 @@ $(document).ready(() => {
             $(row).addClass('font-weight-bold');
         }
     });
-    myTable.clear();
+    myTable.clear().draw();
     $(".dataTables_empty").addClass("table-warning text-dark font-weight-bold");
     $(".dataTables_empty").text("資料載入中");
     $.ajax({
@@ -34,8 +34,8 @@ $(document).ready(() => {
                     "value": data[i]
                 })
             }
-            drawBarChart(d3Data);
-            drawPieChart(d3Data);
+            drawBarChart("articleBarChart", d3Data);
+            drawPieChart("articlePieChart", d3Data);
             setTimeout(function () {
                 myTable.draw(true);
                 myTable.columns.adjust().draw();
@@ -47,7 +47,66 @@ $(document).ready(() => {
         }
     });
 
-    function drawPieChart(data) {
+    $("#articleRankNav").on("click", ()=>{
+        if ($.fn.DataTable.isDataTable("#articelRankTable")) {
+            rankTable = $("#articelRankTable").dataTable().api()
+        } else {
+            rankTable = $('#articelRankTable').DataTable({
+                "orderClasses": false,
+                "responsive": true,
+                "fixedHeader": true,
+                "language": {
+                    url: location.origin + '/static/assets/i18n/datatable/zh_Hant.json'
+                },
+                "createdRow": function (row, data, dataIndex) {
+                    $(row).addClass('table-primary');
+                    $(row).addClass('text-dark');
+                    $(row).addClass('font-weight-bold');
+                }
+            });
+        }
+        
+        rankTable.clear().draw();
+        $(".dataTables_empty").addClass("table-warning text-dark font-weight-bold");
+        $(".dataTables_empty").text("資料載入中");
+        $.ajax({
+            'url': location.origin + "/managerPages/getArticleOwnRank",
+            'method': 'GET',
+            'processData': false,
+            'contentType': false,
+            'headers': { 'X-CSRFToken': getCookie('csrftoken') },
+            'success': (res) => {
+                allData = JSON.parse(res)
+                d3Data = [];
+                for (i in allData) {
+                    data = allData[i];
+                    rankTable.row.add([
+                        data['title'],
+                        data['mainClass'],
+                        data['totalLike'],
+                        Number(data['totalStars'])/Number(data['total']),
+                        data['total'],
+                    ])
+                    d3Data.push({
+                        "name": data['title'],
+                        "value": data['total']
+                    })
+                }
+                drawHorizontalBarChart("rankBarChart", d3Data);
+                //drawPieChart("rankPieChart", d3Data);
+                setTimeout(function () {
+                    rankTable.draw(true);
+                    rankTable.columns.adjust().draw();
+                    rankTable.responsive.recalc().columns.adjust();
+                }, 10);
+            },
+            'error': (res) => {
+                alert("伺服器出狀況,請聯繫系統人員")
+            }
+        });
+    })
+
+    function drawPieChart(chartID, data) {
         var colors = [
             "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd",
             "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"
@@ -55,7 +114,7 @@ $(document).ready(() => {
         height = 300;
         width = 300;
         radius = width/2;
-        svg = d3.select("#myPieChart")
+        svg = d3.select("#" + chartID)
             .attr("viewBox", [0, 0, width, height])
             .append("g")
             .attr('transform', `translate(${width / 2}, ${height / 2})`);
@@ -122,7 +181,7 @@ $(document).ready(() => {
             })
     }
 
-    function drawBarChart(data) {
+    function drawBarChart(chartID, data) {
 
         title = {
             x: "Article",
@@ -160,7 +219,7 @@ $(document).ready(() => {
             .range([width - margin.right, margin.left])
             .padding(0.6)
 
-        svg = d3.select("#myBarChart").attr("viewBox", [0, 0, width, height]);
+        svg = d3.select("#" + chartID).attr("viewBox", [0, 0, width, height]);
         bar = svg.append("g")
             .attr("fill", color)
             .selectAll("rect")
@@ -191,6 +250,78 @@ $(document).ready(() => {
 
         svg.append("g")
             .call(yAxis);
+    }
+
+    function drawHorizontalBarChart(chartID, data) {
+       
+        data.sort((a,b) => a.value>b.value)
+        data = data.slice(0, 10)
+        title = {
+            y: "",
+            x: ""
+        }
+        margin = ({ top: 20, right: 20, bottom: 30, left: 40 });
+        height = 350;
+        width = 700;
+        color = "steelblue";
+        yAxis = g => g
+            .attr("transform", `translate(${margin.left},0)`)
+            .call(d3.axisLeft(y))
+            .call(g => g.select(".domain").remove())
+            .call(g => g.selectAll("line").remove());
+            
+        xAxis = g => g
+            .attr("transform", `translate(0,${height - margin.bottom})`)
+            .call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0))
+            
+
+        x = d3.scaleLinear()
+            .domain([0, d3.max(data, d => d.value)])
+            .range([margin.left,width - margin.right])
+
+        y = d3.scalePoint()
+            .domain(d3.map(data, d => d.name))
+            .range([height - margin.bottom, margin.top])
+            .padding(0.6)
+
+        svg = d3.select("#" + chartID).attr("viewBox", [0, 0, width, height]);
+
+        bar = svg.append("g")
+            .selectAll("rect")
+            .data(data)
+            .enter()
+            .append("g");
+
+        bar.append("rect")
+            .attr("y", (d) => {
+                return y(d.name) - 5
+            })
+            .attr("fill", (d, i) => {
+                return d3.schemeCategory10[i]
+            })
+            .attr("width", d => x(d.value)-x(0))
+            .attr("x", margin.left)
+            .attr("height", 10);
+
+        bar.append("text")
+            .attr("y", (d) => {
+                return y(d.name) - 5
+            })
+            .attr("x", margin.left)
+            .style("fill", "white")
+            .style("text-anchor", "start")
+            .style("font-size", "10px")
+            .text(d => d.name);
+
+        
+
+        svg.append("g")
+            .call(xAxis);
+
+        svg.append("g")
+            .call(yAxis)
+            .selectAll("text")
+            .remove()
     }
     
     function getCookie(name) {

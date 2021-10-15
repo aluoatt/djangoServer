@@ -144,7 +144,7 @@ $(document).ready(()=>{
     
     $("#myTable").on("click", ".button_history", (event)=>{
         var counter = 1;
-        t.clear()
+        t.clear().draw();
         $(".dataTables_empty").addClass("table-warning text-dark font-weight-bold");
         $(".dataTables_empty").text("目前沒有紀錄");
         id = $(event.target)[0].id;

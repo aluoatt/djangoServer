@@ -33,6 +33,7 @@ class fileDataInfo(models.Model):
 
     def __str__(self):
         return self.title
+
 #資料庫類別對應表
 class DBClassInfo(models.Model):
 
@@ -63,6 +64,7 @@ class secClassInfo(models.Model):
     class Meta:
         verbose_name = "次類別對應表"
         verbose_name_plural = "次類別對應表"
+
 #檔案類型對應表
 class fileTypeInfo(models.Model):
 
@@ -72,6 +74,7 @@ class fileTypeInfo(models.Model):
     class Meta:
         verbose_name = "檔案類型對應表"
         verbose_name_plural = "檔案類型對應表"
+        
 #資料來源對應表
 class sourceFromInfo(models.Model):
     sourceFromName = models.CharField(max_length=50, verbose_name='資料來源名稱', null=True,blank=True)
@@ -103,6 +106,7 @@ class personalFileData(models.Model):
     class Meta:
         verbose_name = "個人持有資料管理"
         verbose_name_plural = "個人持有資料管理"
+
 class personalExchangeFileLog(models.Model):
     fileDataID = models.ForeignKey('fileDataInfo', on_delete=models.CASCADE, verbose_name='對應的資料')
     ownerAccount = models.ForeignKey('userlogin.UserAccountInfo', on_delete=models.CASCADE, verbose_name='對應的帳號')

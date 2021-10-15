@@ -16,7 +16,7 @@ from userlogin.models import chainYenClassInfo, registerDDandDimInfo, amwayAward
 from django.contrib.auth.decorators import permission_required
 from userlogin.models import TempUserAccountInfo, AccountModifyHistory, TempUserAccountChainYenInfo, TempUserAccountAmwayInfo
 from NutriliteSearchPage.models import DBClassInfo, fileDataInfo, mainClassInfo, secClassInfo, articleModifyHistory, articleReport
-from NutriliteSearchPage.models import personalExchangeFileLog, fileDataKeywords
+from NutriliteSearchPage.models import fileDataKeywords, personalFileData, personalWatchFileLog
 
 # Create your views here.
 import hashlib
@@ -772,9 +772,36 @@ def getFileDataSummary(request):
     return res
 
 @permission_required('userlogin.seeManagerStatisticPage', login_url='/accounts/userlogin/')
-def getArticleExchangeRank(request):
+def getArticleOwnRank(request):
     res = HttpResponse()
-    fileDatas = personalExchangeFileLog.objects.all()
+    fileDatas = personalFileData.objects.all()
+    ownDataSummary = {}
+    for data in fileDatas:
+        fileID = data.fileDataID.id
+        if fileID in ownDataSummary:
+            ownDataSummary[fileID]["total"] = ownDataSummary[fileID]["total"] + 1
+            ownDataSummary[fileID]["totalLike"] = ownDataSummary[fileID]["totalLike"] + int(data.like)
+            ownDataSummary[fileID]["totalStars"] = ownDataSummary[fileID]["totalStars"] + data.stars
+        else:
+            ownDataSummary[fileID] = {
+                "title":      data.fileDataID.title,
+                "mainClass":  data.fileDataID.mainClass.mainClassName,
+                "costPoint":  data.costPoint,
+                "total": 1,
+                "totalLike":  int(data.like),
+                "totalStars": data.stars
+            }
+    ownDataSummaryList = []
+    for key in ownDataSummary:
+        ownDataSummaryList.append(ownDataSummary[key])
+    res.content = json.dumps(ownDataSummaryList)
+    res.status_code = 200
+    return res
+
+@permission_required('userlogin.seeManagerStatisticPage', login_url='/accounts/userlogin/')
+def getArticleWatchRank(request):
+    res = HttpResponse()
+    fileDatas = personalWatchFileLog.objects.all()
     mainClassSummary = {}
     for data in fileDatas:
         mainClass = data.mainClass.mainClassName
@@ -785,7 +812,6 @@ def getArticleExchangeRank(request):
     res.content = json.dumps(mainClassSummary)
     res.status_code = 200
     return res
-
 
 @permission_required('userlogin.seeManagerArticlePage', login_url='/accounts/userlogin/')
 def getFileDataInfo(request):

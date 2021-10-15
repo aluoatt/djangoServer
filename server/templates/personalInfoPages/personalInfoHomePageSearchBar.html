@@ -1,16 +1,25 @@
-<div class="row">
-    <header class="major">
-        <h2 style="color:black;">個人資料</h2>
-    </header>
-    <div class="row align-items-center">
+<div class="row justify-content-start">
+    <div class="col">
+        <header class="major">
+            <h2 style="color:black;">個人資料</h2>
+        </header>
+    </div>
+    </div>
+<div class="row justify-content-start">
+    
+    <div class="col align-items-center">
         <form action="{% url 'personalInfoHomePage' selectTag='全部' %}" method="post">{% csrf_token %}
-            <input class="primary small " {% if selectPage == '瀏覽已兌換資料' %} style="background-color:#c2c9d1" {% endif %} type="submit" value="瀏覽已兌換資料">
+            <input class="primary medium rounded " {% if selectPage == '瀏覽已兌換資料' %} style="background-color:#c2c9d1" {% endif %} type="submit" value="瀏覽已兌換資料">
         </form>
+    </div>
+    <div class="col">
         <form action="{% url 'changePasswordPage' %}" method="post">{% csrf_token %}
-            <input class="primary small " type="submit" value="修改個人密碼">
+            <input class="primary medium rounded " type="submit" value="修改個人密碼">
         </form>
+    </div>
+    <div class="col">
         <form action="{% url 'personalInfoPointPage' %}" method="get">{% csrf_token %}
-            <input class="primary small " {% if selectPage == '管理個人點數' %} style="background-color:#c2c9d1" {% endif %} type="submit" value="管理個人點數">
+            <input class="primary medium rounded " {% if selectPage == '管理個人點數' %} style="background-color:#c2c9d1" {% endif %} type="submit" value="管理個人點數">
         </form>
     </div>
 </div>

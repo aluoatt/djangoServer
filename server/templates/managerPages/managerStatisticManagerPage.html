@@ -32,24 +32,32 @@
             <section id="one">
                 <div class="inner">
                     {% include 'managerPages/managerHomePageHeaderBar.html' %}
-                    <nav>
-                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                            <a class="nav-link active btn-light" id="nav-home-tab" data-toggle="tab" href="#nav-home"
-                                role="tab" aria-controls="nav-home" aria-selected="true">
+                    <ul class="nav nav-tabs" id="myTab">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="articleNav" data-toggle="tab" href="#article" >
                                 文章總攬
                             </a>
-                        </div>
-                    </nav>
-                    <div class="tab-content" id="nav-tabContent">
-                        <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
-                            aria-labelledby="nav-home-tab">
-                            <br>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="articleRankNav" data-toggle="tab" href="#articleRank">
+                                資料排行榜
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="article">
                             {% include 'managerPages/managerStatisticManagerPageArticle.html' %}
+                        </div>
+                        <div class="tab-pane fade" id="articleRank">
+                            {% include 'managerPages/managerStatisticManagerPageRank.html' %}
                         </div>
                     </div>
                 </div>
             </section>
         </div>
+
     </div>
+    <script src="{% static 'assets/js/managerStatistic.js' %}"></script>
 </body>
+
 </html>
