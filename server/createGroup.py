@@ -1,5 +1,6 @@
 from django.contrib.auth.models import Group, Permission
 
+articleReport = Permission.objects.get(codename = "articleReport")
 seeManagerArticlePage = Permission.objects.get(codename = "seeManagerArticlePage")
 seeManagerArticleReportPage = Permission.objects.get(codename = "seeManagerArticleReportPage")
 articlePointManage = Permission.objects.get(codename = "articlePointManage")
@@ -60,6 +61,7 @@ if created:
 articleAdminManager, created = Group.objects.get_or_create(name='資料超級管理者')
 if created:
     articleAdminManager.permissions.add(seeManagerArticlePage)
+    articleAdminManager.permissions.add(seeManagerArticleReportPage)
     articleAdminManager.permissions.add(articlePointManage)
     articleAdminManager.permissions.add(ArtistryArticleManage)
     articleAdminManager.permissions.add(NutrilliteArticleManage)
@@ -68,8 +70,8 @@ if created:
     articleAdminManager.permissions.add(OtherArticleManage)
     articleAdminManager.permissions.add(ChainyenArticleManage)
     articleAdminManager.permissions.add(SpeechArticleManage)
+    articleAdminManager.permissions.add(articleReport)
 
 #可以回報文章問題
-articleReport = Permission.objects.get(codename = "articleReport")
 articleReporter, created = Group.objects.get_or_create(name='文章回報組')
 articleReporter.permissions.add(articleReport)

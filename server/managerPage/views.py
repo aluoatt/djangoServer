@@ -16,6 +16,7 @@ from userlogin.models import chainYenClassInfo, registerDDandDimInfo, amwayAward
 from django.contrib.auth.decorators import permission_required
 from userlogin.models import TempUserAccountInfo, AccountModifyHistory, TempUserAccountChainYenInfo, TempUserAccountAmwayInfo
 from NutriliteSearchPage.models import DBClassInfo, fileDataInfo, mainClassInfo, secClassInfo, articleModifyHistory, articleReport
+from NutriliteSearchPage.models import personalExchangeFileLog, fileDataKeywords
 
 # Create your views here.
 import hashlib
@@ -754,6 +755,7 @@ def getTempUserAccount(request):
 
     return res
 
+#統計報表相關 API
 @permission_required('userlogin.seeManagerStatisticPage', login_url='/accounts/userlogin/')
 def getFileDataSummary(request):
     res = HttpResponse()
@@ -768,6 +770,22 @@ def getFileDataSummary(request):
     res.content = json.dumps(mainClassSummary)
     res.status_code = 200
     return res
+
+@permission_required('userlogin.seeManagerStatisticPage', login_url='/accounts/userlogin/')
+def getArticleExchangeRank(request):
+    res = HttpResponse()
+    fileDatas = personalExchangeFileLog.objects.all()
+    mainClassSummary = {}
+    for data in fileDatas:
+        mainClass = data.mainClass.mainClassName
+        if mainClass in mainClassSummary:
+            mainClassSummary[mainClass] = mainClassSummary[mainClass] + 1
+        else:
+            mainClassSummary[mainClass] = 1
+    res.content = json.dumps(mainClassSummary)
+    res.status_code = 200
+    return res
+
 
 @permission_required('userlogin.seeManagerArticlePage', login_url='/accounts/userlogin/')
 def getFileDataInfo(request):
@@ -792,12 +810,17 @@ def getFileDataInfo(request):
         fileDatas = fileDataInfo.objects.filter(mainClass__mainClassName__in=mainClassList)
         fileDataSummary = []
         for data in fileDatas:
+            keywordResult = fileDataKeywords.objects.filter(fileDataInfoID = data)
+            keywordList = []
+            for item in keywordResult:
+                keywordList.append(item.keyword)
             tmp = {
                 "id"       : data.id,
                 "title"    : data.title,
                 "DBClassCode"  : data.DBClass.DBClassCode,
                 "mainClass": data.mainClass.mainClassName,
                 "secClass" : data.secClass.secClassName,
+                "keyword"  : "#" + '#'.join(keywordList),
                 "describe" : data.describe,
                 "point"    : data.point,
                 "visible"  : data.visible
@@ -831,12 +854,18 @@ def getFileDataInfoByID(request, articleID):
 
         fileDatas = fileDataInfo.objects.filter(mainClass__mainClassName__in=mainClassList)
         data = fileDatas.get(id = articleID)
+
+        keywordResult = fileDataKeywords.objects.filter(fileDataInfoID = data)
+        keywordList = []
+        for item in keywordResult:
+            keywordList.append(item.keyword)
         tmp = {
             "id"       : data.id,
             "title"    : data.title,
             "DBClassCode"  : data.DBClass.DBClassCode,
             "mainClass": data.mainClass.mainClassName,
             "secClass" : data.secClass.secClassName,
+            "keyword"  : "#" + '#'.join(keywordList),
             "describe" : data.describe,
             "point"    : data.point,
             "visible"  : data.visible
@@ -857,6 +886,7 @@ def updateFileDataInfo(request):
         title = request.POST['title']
         mainClass = mainClassInfo.objects.get(mainClassName = request.POST["mainClass"]) 
         secClass = secClassInfo.objects.get(secClassName = request.POST['secClass'])
+        keywordString = request.POST['keyword']
         describe = request.POST['describe']
         point = None
         if "point" in request.POST :
@@ -876,9 +906,19 @@ def updateFileDataInfo(request):
                             secClass=secClass, describe=describe,visible=visible,
                             lastModify=lastModify)
         fileDataID = fileData.first()
+
+        if "＃" in keywordString:
+            keywordString = keywordString.replace("＃", "#")
+        keywords = keywordString.split("#")[1:]
+        if keywords:
+            fileDataKeywords.objects.filter(fileDataInfoID = fileDataID).delete()
+        for keyword in keywords:
+            fDataKeyword = fileDataKeywords(fileDataInfoID = fileDataID, keyword = keyword)
+            fDataKeyword.save()
+
         fHistory = articleModifyHistory(fileDataID=fileDataID,modifier=modifier, title=title,
-                                            secClass=secClass,describe=describe,point=point,
-                                            mainClass=mainClass,visible=visible, recordDate=lastModify)
+                                        secClass=secClass,keyword=keywordString,describe=describe,point=point,
+                                        mainClass=mainClass,visible=visible, recordDate=lastModify)
         fHistory.save()
 
         res.content = json.dumps({
@@ -912,6 +952,7 @@ def getArticleHistory(request):
                 "title":      data.title,
                 "mainClass":  data.mainClass.mainClassName,
                 "secClass":   data.secClass.secClassName,
+                "keyword":    data.keyword,
                 "describe":   data.describe,
                 "point":      data.point,
                 "visible":    data.visible

@@ -6,9 +6,9 @@ $(document).ready(() => {
         "responsive": true,
         "autoWidth": true,
         "columnDefs": [
-            { "width": "25%", "targets": 4 },
-            { "width": "15%", "targets": 0 },
-            { "width": "1%", "targets": 1 }
+            { "width": "10%", "targets": 4 },
+            { "width": "20%", "targets": 5 },
+            { "width": "10%", "targets": 0 },
           ],
         "language": {
             url: location.origin + '/static/assets/i18n/datatable/zh_Hant.json'
@@ -20,11 +20,11 @@ $(document).ready(() => {
         }
     });
     myTableHead = [
-        'title','DBClass' ,'mainClass','secClass',
+        'title','DBClass' ,'mainClass','secClass', 'keyword',
         'describe','point','visible', "modify", "modifyHistory"
     ]
     myTableHeadChinese = [
-        '標題','資料庫類別','主類別','次類別',
+        '標題','資料庫類別','主類別','次類別', '關鍵字',
         '描述','消耗點數','是否可見', "編輯", "編輯歷史"
     ]
     $.ajax({
@@ -43,6 +43,7 @@ $(document).ready(() => {
                     fields['DBClassCode'],
                     fields['mainClass'],
                     fields['secClass'],
+                    fields['keyword'],
                     fields['describe'],
                     fields['point'],
                     fields['visible'],
@@ -113,6 +114,7 @@ $(document).ready(() => {
             DBClass = $(`#${articleID}_DBClass`).html();
             mainClass = $(`#${articleID}_mainClass`).html();
             secClass = $(`#${articleID}_secClass`).html();
+            keyword = $(`#${articleID}_keyword`).html();
             describe = $(`#${articleID}_describe`).html();
             point = $(`#${articleID}_point`).html();
             visible = $(`#${articleID}_visible`).html();
@@ -121,12 +123,12 @@ $(document).ready(() => {
             formInput.append($("<input>", {style:"display:none;", value:articleID, name:"id"}))
             pointDiv = $("<div>", { class: "form-group  col-md-3" });
             pointDiv.append($("<label>", { text: "資料庫類別", class: "form-check-label", for: "DBClass"}));
-            pointDiv.append($("<input>", { type: "text", name: "DBClass", class: "form-control text-dark", value: DBClass, id: "DBClass", readonly:true, disabled: true}));
+            pointDiv.append($("<input>", { type: "text", name: "DBClass", class: "form-control form-control-sm rounded  text-dark", value: DBClass, id: "DBClass", readonly:true, disabled: true}));
             groupRow.append(pointDiv);
 
             pointDiv = $("<div>", { class: "form-group col" });
             pointDiv.append($("<label>", { text: "標題", class: "form-check-label", for: "title"}));
-            pointDiv.append($("<input>", { type: "text", name: "title", class: "form-control", value: title, id: "title"}));
+            pointDiv.append($("<input>", { type: "text", name: "title", class: "form-control form-control-sm rounded bg-white text-dark", value: title, id: "title"}));
             groupRow.append(pointDiv);
 
             formInput.append(groupRow);
@@ -160,7 +162,7 @@ $(document).ready(() => {
             if (window.aritclePointManage){
                 pointDiv = $("<div>", { class: "form-group col" });
                 pointDiv.append($("<label>", { text: "消耗點數", class: "form-check-label", for: "point"}));
-                pointDiv.append($("<input>", { type: "text", name: "point", class: "form-control", value: point, id: "point"}));
+                pointDiv.append($("<input>", { type: "text", name: "point", class: "form-control form-control-sm  rounded bg-white text-dark round", value: point, id: "point"}));
                 groupRow.append(pointDiv);
             }
             
@@ -174,6 +176,11 @@ $(document).ready(() => {
             groupRow.append(pointDiv);
             
             formInput.append(groupRow);
+
+            pointDiv = $("<div>", { class: "form-group" });
+            pointDiv.append($("<label>", { text: "關鍵字", class: "form-check-label", for: "keyword"}));
+            pointDiv.append($("<textarea>", { type: "text", name: "keyword", class: "form-control", text: keyword, id: "keyword"}));
+            formInput.append(pointDiv);
 
             pointDiv = $("<div>", { class: "form-group" });
             pointDiv.append($("<label>", { text: "描述", class: "form-check-label", for: "describe"}));
@@ -206,6 +213,7 @@ $(document).ready(() => {
                             $(`#${articleID}_title`).html(formData.get("title"));
                             $(`#${articleID}_mainClass`).html(formData.get("mainClass"));
                             $(`#${articleID}_secClass`).html(formData.get("secClass"));
+                            $(`#${articleID}_keyword`).html(formData.get("keyword"));
                             $(`#${articleID}_describe`).html(formData.get("describe"));
                             $(`#${articleID}_point`).html(formData.get("point"));
                             $(`#${articleID}_visible`).html(formData.get("visible"));
@@ -279,6 +287,7 @@ $(document).ready(() => {
                         fields['title'],
                         fields['mainClass'],
                         fields['secClass'],
+                        fields['keyword'],
                         fields['describe'],
                         fields['point'],
                         fields['visible'],

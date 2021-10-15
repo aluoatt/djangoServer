@@ -120,6 +120,7 @@ $(document).ready(() => {
                     DBClass = res['DBClassCode'];
                     mainClass = res["mainClass"];
                     secClass = res["secClass"];
+                    keyword = res["keyword"];
                     describe = res["describe"];
                     point = res["point"];
                     visible = res["visible"];
@@ -128,12 +129,12 @@ $(document).ready(() => {
                     formInput.append($("<input>", { style: "display:none;", value: articleID, name: "id" }))
                     pointDiv = $("<div>", { class: "form-group  col-md-3" });
                     pointDiv.append($("<label>", { text: "資料庫類別", class: "form-check-label", for: "DBClass" }));
-                    pointDiv.append($("<input>", { type: "text", name: "DBClass", class: "form-control text-dark", value: DBClass, id: "DBClass", readonly: true, disabled: true }));
+                    pointDiv.append($("<input>", { type: "text", name: "DBClass", class: "form-control form-control-sm rounded  text-dark", value: DBClass, id: "DBClass", readonly: true, disabled: true }));
                     groupRow.append(pointDiv);
 
                     pointDiv = $("<div>", { class: "form-group col" });
                     pointDiv.append($("<label>", { text: "標題", class: "form-check-label", for: "title" }));
-                    pointDiv.append($("<input>", { type: "text", name: "title", class: "form-control", value: title, id: "title" }));
+                    pointDiv.append($("<input>", { type: "text", name: "title", class: "form-control form-control-sm rounded bg-white text-dark", value: title, id: "title" }));
                     groupRow.append(pointDiv);
 
                     formInput.append(groupRow);
@@ -167,7 +168,7 @@ $(document).ready(() => {
                     if (window.aritclePointManage) {
                         pointDiv = $("<div>", { class: "form-group col" });
                         pointDiv.append($("<label>", { text: "消耗點數", class: "form-check-label", for: "point" }));
-                        pointDiv.append($("<input>", { type: "text", name: "point", class: "form-control", value: point, id: "point" }));
+                        pointDiv.append($("<input>", { type: "text", name: "point", class: "form-control form-control-sm  rounded bg-white text-dark round", value: point, id: "point" }));
                         groupRow.append(pointDiv);
                     }
 
@@ -181,6 +182,11 @@ $(document).ready(() => {
                     groupRow.append(pointDiv);
 
                     formInput.append(groupRow);
+
+                    pointDiv = $("<div>", { class: "form-group" });
+                    pointDiv.append($("<label>", { text: "關鍵字", class: "form-check-label", for: "keyword" }));
+                    pointDiv.append($("<textarea>", { type: "text", name: "keyword", class: "form-control", text: keyword, id: "keyword" }));
+                    formInput.append(pointDiv);
 
                     pointDiv = $("<div>", { class: "form-group" });
                     pointDiv.append($("<label>", { text: "描述", class: "form-check-label", for: "describe" }));

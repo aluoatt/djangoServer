@@ -127,6 +127,7 @@ class articleModifyHistory(models.Model):
     title     = models.CharField(max_length=50, verbose_name='標題')
     mainClass = models.ForeignKey("mainClassInfo",verbose_name='主類別',on_delete=models.PROTECT)
     secClass  = models.ForeignKey("secClassInfo",verbose_name = '次類別',on_delete=models.PROTECT)
+    keyword   = models.CharField(max_length=500, verbose_name='關鍵字')
     describe  = models.CharField(max_length=500, verbose_name='描述')
     point     = models.IntegerField(verbose_name='耗費點數')
     visible   = models.BooleanField(verbose_name='是否可見')
