@@ -399,8 +399,7 @@ def viewFilePage(request, fileId):
     if personalWatchFileLog.objects.filter(watchAccount=UserAccount,exchangeDate__gte=target_day).count() < 1:
         personalWatchFileLog(fileDataID=targetFile,
                              watchAccount=UserAccount,
-                             exchangeDate=datetime.datetime.now())
-        personalWatchFileLog.save()
+                             exchangeDate=datetime.datetime.now()).save()
 
     if (not permission) or (not pointEnough):
         targetFile = ""
