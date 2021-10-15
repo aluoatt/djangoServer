@@ -230,20 +230,20 @@ $(document).ready(() => {
 
             } else if (action === "addPointByJobTitle") {
                 pointDiv = $("<div>", { class: "form-group" });
-                pointDiv.append($("<label>", { text: "請選擇職務", for: "jobTitle"}));
-                pointDiv.append($("<select>", { name: "jobTitle", class: "form-control custom-select", id: "jobTitle"}));
+                pointDiv.append($("<label>", { text: "請選擇職務", for: "jobTitle" }));
+                pointDiv.append($("<select>", { name: "jobTitle", class: "form-control custom-select", id: "jobTitle" }));
                 jobTitleList.forEach((element, index) => {
                     if (element === "無")
                         return;
-                    $(pointDiv).find("select").append($("<option>", {text:element}))
+                    $(pointDiv).find("select").append($("<option>", { text: element }))
                 });
                 formInput.append(pointDiv);
             } else if (action === "addPointByAmwayAward") {
                 pointDiv = $("<div>", { class: "form-group" });
-                pointDiv.append($("<label>", { text: "請選擇獎銜", for: "amwayAward"}));
+                pointDiv.append($("<label>", { text: "請選擇獎銜", for: "amwayAward" }));
                 pointDiv.append($("<select>", { name: "amwayAward", class: "form-control custom-select", id: "amwayAward" }));
                 amwayAwardList.forEach((element, index) => {
-                    $(pointDiv).find("select").append($("<option>", {text:element}))
+                    $(pointDiv).find("select").append($("<option>", { text: element }))
                 });
                 formInput.append(pointDiv);
             } else if (id === "addPointByExcel") {
@@ -293,20 +293,59 @@ $(document).ready(() => {
 
                             if (action === "addPointByExcel") {
                                 result = JSON.parse(res);
-                                message = ""
-                                result.forEach((ele, index) => {
-                                    message = message + `<p>${ele["user"]}: ${ele["point"]}</p>`
-                                    if (ele["point"] !== "加點失敗") {
-                                        $(`#${ele['username']}_point`).html(ele["point"]);
-                                    }
+                                message = $("<table>", {
+                                    "id": "excelTable",
+                                    class: "display table-bordered ",
+                                    style: "width:100%; white-space: nowrap;"
                                 });
+                                excelTable = $(message).DataTable({
+                                    dom: '<"row"lfBr>tip',
+                                    buttons: [
+                                        {
+                                            extend: 'excel',
+                                            title: "點數報表結果",
+                                            className: 'btn btn-sm btn-warning'
+                                        },
+                                        {
+                                            extend: 'print',
+                                            title: "點數報表結果",
+
+                                            className: 'btn btn-sm btn-warning'
+                                        }
+                                    ],
+                                    "orderClasses": false,
+                                    "responsive": true,
+                                    "fixedHeader": true,
+                                    "language": {
+                                        url: location.origin + '/static/assets/i18n/datatable/zh_Hant.json'
+                                    },
+                                    "createdRow": function (row, data, dataIndex) {
+                                        $(row).addClass('table-primary');
+                                        $(row).addClass('text-dark');
+                                        $(row).addClass('font-weight-bold');
+                                    },
+                                    "columns": [{ title: "姓名" }, { title: "編號" }, { title: "結果" }]
+                                });
+                                result.forEach((ele, index) => {
+                                    excelTable.row.add([
+                                        ele["user"],
+                                        ele["amwayNumber"],
+                                        ele["point"]
+                                    ])
+                                });
+
+
                                 bootbox.alert({
                                     closeButton: false,
+                                    scrollable: true,
+                                    className: "modal-dialog-centered",
+                                    container: "body",
                                     title: "點數增加清單",
                                     message: message,
                                     locale: "zh_TW",
                                     centerVertical: true,
                                 });
+
                             } else {
                                 bootbox.alert({
                                     closeButton: false,

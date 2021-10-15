@@ -180,7 +180,7 @@ def addPointByExcel(request):
             amwayNumber = str(sheet['B' + str(i)].value)
             id4 = str(sheet['C' + str(i)].value)
             username = amwayNumber + id4
-            resTmp["username"] = username
+            resTmp["amwayNumber"] = amwayNumber
             point = int(sheet['D' + str(i)].value)
             try:
                 userAccountInfo = UserAccountInfo.objects.get(username = username)
