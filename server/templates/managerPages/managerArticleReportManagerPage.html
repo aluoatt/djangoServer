@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>ChainYen System</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+    {% load static %}
+</head>
+
+<body class="is-preload">
+
+    <!-- Wrapper -->
+    <div id="wrapper">
+
+        <!-- Header -->
+        {% include 'baseHeader.html' %}
+
+        <!-- Menu -->
+        {% include 'baseMenu.html' %}
+
+        <!-- Main -->
+        <section id="one">
+            <div class="inner">
+                {% include 'managerPages/managerHomePageHeaderBar.html' %}
+                <div id="colSearch" class="form-row align-items-center">
+
+                </div>
+                <table id="myArticleTable" class="display table-bordered " style="width:100%; ">
+                    　<thead>
+                        <tr>
+                            <th>回報者</th>
+                            <th>標題</th>
+                            <th>主類別</th>
+                            <th>原因</th>
+                            <th>回報日期</th>
+                            <th>編輯資料</th>
+                            <th>刪除回報</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </section>
+    </div>
+    <style>
+        table {
+            margin: 0 auto;
+            width: 100%;
+            clear: both;
+            border-collapse: collapse;
+            table-layout: fixed;
+            word-wrap: break-word;
+        }
+
+        .modal-content {
+            background-color: #2a2f4a;
+        }
+
+        .dataTables_filter input {
+            background-color: white;
+            border-radius: 5px;
+            color: black;
+        }
+    </style>
+    <script src="{% static 'assets/js/articleReportManager.js' %}"></script>
+    <script>
+        window.aritclePointManage = "{{ perms.userlogin.articlePointManage | safe }}" === "True" ? true : false;
+        mainClassListString = '{{ mainClassList | safe }}'
+        secClassListString = '{{ secClassList | safe }}'
+        window.mainClassList = JSON.parse(mainClassListString)
+        window.secClassList = JSON.parse(secClassListString)
+    </script>
+
+</body>
+
+</html>

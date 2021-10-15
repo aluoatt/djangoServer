@@ -15,7 +15,7 @@ from userlogin.models import UserAccountInfo, UserAccountChainYenInfo, chainYenJ
 from userlogin.models import chainYenClassInfo, registerDDandDimInfo, amwayAwardInfo, ConfirmString,UserAccountAmwayInfo
 from django.contrib.auth.decorators import permission_required
 from userlogin.models import TempUserAccountInfo, AccountModifyHistory, TempUserAccountChainYenInfo, TempUserAccountAmwayInfo
-from NutriliteSearchPage.models import fileDataInfo
+from NutriliteSearchPage.models import DBClassInfo, fileDataInfo, mainClassInfo, secClassInfo, articleModifyHistory, articleReport
 
 # Create your views here.
 import hashlib
@@ -525,67 +525,7 @@ def managerPointManagerPage(request):
     for amAward in amwayAwards:
         amwayAwardList.append(amAward.amwayAward)
     amwayAwardList = json.dumps(amwayAwardList)
-    # 教室表
-    chainYenClasses = chainYenClassInfo.objects.all().order_by('rank')
-    # 白金表
-    registerDDs = registerDDandDimInfo.objects.filter(amwayAward__rank__gte=15).order_by('amwayNumber')
-    # 鑽石表
-    registerDims = registerDDandDimInfo.objects.filter(amwayAward__rank__gte=60).order_by('amwayNumber')
 
-    q1 = Q()
-    q1.connector = 'OR'
-    q1.children.append(("classRoom__ClassRoomName", "無"))
-
-    if request.user.has_perm('userlogin.CYPManager'):
-        q1.children.append(("classRoom__ClassRoomName", "台北"))
-
-    if request.user.has_perm('userlogin.CYLManager'):
-        q1.children.append(("classRoom__ClassRoomName", "中壢"))
-
-    if request.user.has_perm('userlogin.CYSManager'):
-        q1.children.append(("classRoom__ClassRoomName", "新竹"))
-
-    if request.user.has_perm('userlogin.CYZManager'):
-        q1.children.append(("classRoom__ClassRoomName", "台中"))
-
-    if request.user.has_perm('userlogin.CYJManager'):
-        q1.children.append(("classRoom__ClassRoomName", "嘉義"))
-
-    if request.user.has_perm('userlogin.CYN2Manager'):
-        q1.children.append(("classRoom__ClassRoomName", "永康245"))
-
-    if request.user.has_perm('userlogin.CYN1Manager'):
-        q1.children.append(("classRoom__ClassRoomName", "永康135"))
-
-    if request.user.has_perm('userlogin.CYMManager'):
-        q1.children.append(("classRoom__ClassRoomName", "良美"))
-
-    if request.user.has_perm('userlogin.CYKManager'):
-        q1.children.append(("classRoom__ClassRoomName", "高雄"))
-
-    if request.user.has_perm('userlogin.CYDManager'):
-        q1.children.append(("classRoom__ClassRoomName", "屏東"))
-
-    if request.user.has_perm('userlogin.CYWManager'):
-        q1.children.append(("classRoom__ClassRoomName", "花蓮"))
-
-    if request.user.has_perm('userlogin.CYTManager'):
-        q1.children.append(("classRoom__ClassRoomName", "台東"))
-
-    if request.user.has_perm('userlogin.CYHManager'):
-        q1.children.append(("classRoom__ClassRoomName", "澎湖"))
-
-    q2 = Q()
-    q2.connector = 'OR'
-    q2.children.append(("id", 0))
-    for UserAccountChainYen in UserAccountChainYenInfo.objects.filter(q1):
-        q2.children.append(("id", UserAccountChainYen.UserAccountInfo.id))
-    # UserAccountChainYen = UserAccountChainYenInfo.objects.filter(q1)
-    UserAccount = UserAccountInfo.objects.get(username=request.user)
-    if registerDDandDimInfo.objects.filter(amwayNumber = UserAccount.useraccountamwayinfo_set.first().amwayNumber).count() > 0:
-        for UserAccountAmway in UserAccountAmwayInfo.objects.filter(amwayDD=UserAccount.useraccountamwayinfo_set.first().amwayNumber):
-            q2.children.append(("id", UserAccountAmway.UserAccountInfo.id))
-    #searchUserAccountInfo = UserAccountInfo.objects.filter(q2)
     searchUserAccountInfo = UserAccountInfo.objects.all()
     return render(request, 'managerPages/managerPointManagerPage.html', locals())
 
@@ -606,80 +546,46 @@ def getAccountModifyHistory(request):
 @permission_required('userlogin.seeManagerArticlePage', login_url='/accounts/userlogin/')
 def managerArticleManagerPage(request):
     tag = "ManagerArticleManagerPage"
+    
+    # 主類別
+    mainClass = mainClassInfo.objects.all()
+    mainClassList = []
+    for mClass in mainClass:
+        mainClassList.append(mClass.mainClassName)
+    mainClassList = json.dumps(mainClassList)
 
-    # 職務表
-    jobTitles = chainYenJobTitleInfo.objects.all()
-    # 獎銜表
-    amwayAwards = amwayAwardInfo.objects.all().order_by('rank')
-    # 教室表
-    chainYenClasses = chainYenClassInfo.objects.all().order_by('rank')
-    # 白金表
-    registerDDs = registerDDandDimInfo.objects.filter(amwayAward__rank__gte=15)
-    # 鑽石表
-    registerDims = registerDDandDimInfo.objects.filter(amwayAward__rank__gte=60)
+    # 副類別
+    secClass = secClassInfo.objects.all()
+    secClassList = []
+    for sClass in secClass:
+        secClassList.append(sClass.secClassName)
+    secClassList = json.dumps(secClassList)
 
-    q1 = Q()
-    q1.connector = 'OR'
-    q1.children.append(("classRoom__ClassRoomName", "無"))
-
-    if request.user.has_perm('userlogin.CYPManager'):
-        q1.children.append(("classRoom__ClassRoomName", "台北"))
-
-    if request.user.has_perm('userlogin.CYLManager'):
-        q1.children.append(("classRoom__ClassRoomName", "中壢"))
-
-    if request.user.has_perm('userlogin.CYSManager'):
-        q1.children.append(("classRoom__ClassRoomName", "新竹"))
-
-    if request.user.has_perm('userlogin.CYZManager'):
-        q1.children.append(("classRoom__ClassRoomName", "台中"))
-
-    if request.user.has_perm('userlogin.CYJManager'):
-        q1.children.append(("classRoom__ClassRoomName", "嘉義"))
-
-    if request.user.has_perm('userlogin.CYN2Manager'):
-        q1.children.append(("classRoom__ClassRoomName", "永康245"))
-
-    if request.user.has_perm('userlogin.CYN1Manager'):
-        q1.children.append(("classRoom__ClassRoomName", "永康135"))
-
-    if request.user.has_perm('userlogin.CYMManager'):
-        q1.children.append(("classRoom__ClassRoomName", "良美"))
-
-    if request.user.has_perm('userlogin.CYKManager'):
-        q1.children.append(("classRoom__ClassRoomName", "高雄"))
-
-    if request.user.has_perm('userlogin.CYDManager'):
-        q1.children.append(("classRoom__ClassRoomName", "屏東"))
-
-    if request.user.has_perm('userlogin.CYWManager'):
-        q1.children.append(("classRoom__ClassRoomName", "花蓮"))
-
-    if request.user.has_perm('userlogin.CYTManager'):
-        q1.children.append(("classRoom__ClassRoomName", "台東"))
-
-    if request.user.has_perm('userlogin.CYHManager'):
-        q1.children.append(("classRoom__ClassRoomName", "澎湖"))
-
-    q2 = Q()
-    q2.connector = 'OR'
-    q2.children.append(("id", 0))
-    for UserAccountChainYen in UserAccountChainYenInfo.objects.filter(q1):
-        q2.children.append(("id", UserAccountChainYen.UserAccountInfo.id))
-    # UserAccountChainYen = UserAccountChainYenInfo.objects.filter(q1)
-    UserAccount = UserAccountInfo.objects.get(username=request.user)
-    if registerDDandDimInfo.objects.filter(amwayNumber = UserAccount.useraccountamwayinfo_set.first().amwayNumber).count() > 0:
-        for UserAccountAmway in UserAccountAmwayInfo.objects.filter(amwayDD=UserAccount.useraccountamwayinfo_set.first().amwayNumber):
-            q2.children.append(("id", UserAccountAmway.UserAccountInfo.id))
-    #searchUserAccountInfo = UserAccountInfo.objects.filter(q2)
-    searchUserAccountInfo = UserAccountInfo.objects.all()
     return render(request, 'managerPages/managerArticleManagerPage.html', locals())
+
+@permission_required('userlogin.seeManagerArticleReportPage', login_url='/accounts/userlogin/')
+def managerArticleReportManagerPage(request):
+    tag = "ManagerArticleReportManagerPage"
+    
+    # 主類別
+    mainClass = mainClassInfo.objects.all()
+    mainClassList = []
+    for mClass in mainClass:
+        mainClassList.append(mClass.mainClassName)
+    mainClassList = json.dumps(mainClassList)
+
+    # 副類別
+    secClass = secClassInfo.objects.all()
+    secClassList = []
+    for sClass in secClass:
+        secClassList.append(sClass.secClassName)
+    secClassList = json.dumps(secClassList)
+
+    return render(request, 'managerPages/managerArticleReportManagerPage.html', locals())
 
 @permission_required('userlogin.seeManagerStatisticPage', login_url='/accounts/userlogin/')
 def managerStatisticManagerPage(request):
     tag = "StatisticsManagerPage"
-
-    
     return render(request, 'managerPages/managerStatisticManagerPage.html', locals())
 
 @permission_required('userlogin.seeManagerAccountManagerPage', login_url='/accounts/userlogin/')
@@ -861,4 +767,213 @@ def getFileDataSummary(request):
             mainClassSummary[mainClass] = 1
     res.content = json.dumps(mainClassSummary)
     res.status_code = 200
+    return res
+
+@permission_required('userlogin.seeManagerArticlePage', login_url='/accounts/userlogin/')
+def getFileDataInfo(request):
+    res = HttpResponse()
+    try:
+        mainClassList = []
+        if request.user.has_perm('userlogin.NutrilliteArticleManage'):
+            mainClassList.append("營養")
+        if request.user.has_perm('userlogin.ArtistryArticleManage'):
+            mainClassList.append("美容")
+        if request.user.has_perm('userlogin.TechArticleManage'):
+            mainClassList.append("科技")
+        if request.user.has_perm('userlogin.AmwayQueenArticleManage'):
+            mainClassList.append("金鍋")
+        if request.user.has_perm('userlogin.OtherArticleManage'):
+            mainClassList.append("其他")
+        if request.user.has_perm('userlogin.ChainyenArticleManage'):
+            mainClassList.append("總部會議/活動")
+        if request.user.has_perm('userlogin.SpeechArticleManage'):
+            mainClassList.append("演講廳")
+
+        fileDatas = fileDataInfo.objects.filter(mainClass__mainClassName__in=mainClassList)
+        fileDataSummary = []
+        for data in fileDatas:
+            tmp = {
+                "id"       : data.id,
+                "title"    : data.title,
+                "DBClassCode"  : data.DBClass.DBClassCode,
+                "mainClass": data.mainClass.mainClassName,
+                "secClass" : data.secClass.secClassName,
+                "describe" : data.describe,
+                "point"    : data.point,
+                "visible"  : data.visible
+            }
+            fileDataSummary.append(tmp)
+        res.content = json.dumps(fileDataSummary)
+        res.status_code = 200
+    except:
+        res.status_code = 503
+    return res
+
+@permission_required('userlogin.seeManagerArticlePage', login_url='/accounts/userlogin/')
+def getFileDataInfoByID(request, articleID):
+    res = HttpResponse()
+    try:
+        mainClassList = []
+        if request.user.has_perm('userlogin.NutrilliteArticleManage'):
+            mainClassList.append("營養")
+        if request.user.has_perm('userlogin.ArtistryArticleManage'):
+            mainClassList.append("美容")
+        if request.user.has_perm('userlogin.TechArticleManage'):
+            mainClassList.append("科技")
+        if request.user.has_perm('userlogin.AmwayQueenArticleManage'):
+            mainClassList.append("金鍋")
+        if request.user.has_perm('userlogin.OtherArticleManage'):
+            mainClassList.append("其他")
+        if request.user.has_perm('userlogin.ChainyenArticleManage'):
+            mainClassList.append("總部會議/活動")
+        if request.user.has_perm('userlogin.SpeechArticleManage'):
+            mainClassList.append("演講廳")
+
+        fileDatas = fileDataInfo.objects.filter(mainClass__mainClassName__in=mainClassList)
+        data = fileDatas.get(id = articleID)
+        tmp = {
+            "id"       : data.id,
+            "title"    : data.title,
+            "DBClassCode"  : data.DBClass.DBClassCode,
+            "mainClass": data.mainClass.mainClassName,
+            "secClass" : data.secClass.secClassName,
+            "describe" : data.describe,
+            "point"    : data.point,
+            "visible"  : data.visible
+        }
+        res.content = json.dumps(tmp)
+        res.status_code = 200
+    except:
+        res.status_code = 503
+    return res
+
+@permission_required('userlogin.seeManagerArticlePage', login_url='/accounts/userlogin/')
+def updateFileDataInfo(request):
+    res = HttpResponse()
+    try:
+        modifier = request.user.user
+        lastModify = datetime.datetime.now()
+        id = request.POST['id']
+        title = request.POST['title']
+        mainClass = mainClassInfo.objects.get(mainClassName = request.POST["mainClass"]) 
+        secClass = secClassInfo.objects.get(secClassName = request.POST['secClass'])
+        describe = request.POST['describe']
+        point = None
+        if "point" in request.POST :
+            point = int(request.POST['point'])
+        visible = request.POST['visible']
+        if visible == "true":
+            visible = True
+        else:
+            visible = False
+        fileData = fileDataInfo.objects.filter(id=id)
+        if point and request.user.has_perm('userlogin.articlePointManage'):
+            fileData.update(title=title, mainClass=mainClass,
+                            secClass=secClass, describe=describe, point=point,
+                            visible=visible, lastModify = lastModify)
+        else:
+            fileData.update(title=title, mainClass=mainClass,
+                            secClass=secClass, describe=describe,visible=visible,
+                            lastModify=lastModify)
+        fileDataID = fileData.first()
+        fHistory = articleModifyHistory(fileDataID=fileDataID,modifier=modifier, title=title,
+                                            secClass=secClass,describe=describe,point=point,
+                                            mainClass=mainClass,visible=visible, recordDate=lastModify)
+        fHistory.save()
+
+        res.content = json.dumps({
+            "id"       : id,
+            "title"    : title,
+            "mainClass": mainClass.mainClassName,
+            "secClass" : secClass.secClassName,
+            "describe" : describe,
+            "point"    : point,
+            "visible"  : visible
+        })
+        res.status_code = 200
+        
+    except:
+        res.status_code = 503
+    return res
+
+@permission_required('userlogin.seeManagerArticlePage', login_url='/accounts/userlogin/')
+def getArticleHistory(request):
+    res = HttpResponse()
+    try:
+        id = request.POST['id']
+        fileDataID = fileDataInfo.objects.get(id=id)
+        pHistory = articleModifyHistory.objects.filter(fileDataID = fileDataID).order_by('-recordDate')
+        res.status_code = 200
+        res.content =  serializers.serialize("json", pHistory)
+    except:
+        res.status_code = 503
+
+    return res
+
+@permission_required('userlogin.articleReport', login_url='/accounts/userlogin/')
+def reportArticle(request):
+    res = HttpResponse()
+    try:
+        reporter  = request.user.username
+        articleID = request.POST["articleID"]
+        reason = request.POST["reason"]
+        recordDate = datetime.datetime.now()
+        fileData = fileDataInfo.objects.get(id=articleID)
+        userAccount = UserAccountInfo.objects.get(username=reporter)
+        rReport = articleReport(reporter=userAccount, fileData=fileData,
+                        reason=reason, recordDate=recordDate)
+        rReport.save()
+        res.status_code = 200
+    except:
+        res.status_code = 503
+    return res
+
+@permission_required('userlogin.seeManagerArticlePage', login_url='/accounts/userlogin/')
+def removeArticleReport(request, reportID):
+    res = HttpResponse()
+    try:
+        rReport = articleReport.objects.get(id=int(reportID))
+        rReport.delete()
+        res.status_code = 200
+    except:
+        res.status_code = 503
+    return res
+
+@permission_required('userlogin.seeManagerArticlePage', login_url='/accounts/userlogin/')
+def getArticleReport(request):
+    res = HttpResponse()
+    try:
+        mainClassList = []
+        if request.user.has_perm('userlogin.NutrilliteArticleManage'):
+            mainClassList.append("營養")
+        if request.user.has_perm('userlogin.ArtistryArticleManage'):
+            mainClassList.append("美容")
+        if request.user.has_perm('userlogin.TechArticleManage'):
+            mainClassList.append("科技")
+        if request.user.has_perm('userlogin.AmwayQueenArticleManage'):
+            mainClassList.append("金鍋")
+        if request.user.has_perm('userlogin.OtherArticleManage'):
+            mainClassList.append("其他")
+        if request.user.has_perm('userlogin.ChainyenArticleManage'):
+            mainClassList.append("總部會議/活動")
+        if request.user.has_perm('userlogin.SpeechArticleManage'):
+            mainClassList.append("演講廳")
+
+        articleDatas = articleReport.objects.filter(fileData__mainClass__mainClassName__in=mainClassList)
+        articleDataSummary = []
+        for data in articleDatas:
+            tmp = {
+                "id"         : data.id,
+                "articleID"  : data.fileData.id,
+                "reporter"   : data.reporter.user,
+                "title"      : data.fileData.title,
+                "mainClass"  : data.fileData.mainClass.mainClassName,
+                "reason"     : data.reason,
+                "recordDate" : str(data.recordDate)
+            }
+            articleDataSummary.append(tmp)
+        res.content = json.dumps(articleDataSummary)
+        res.status_code = 200
+    except:
+        res.status_code = 503
     return res

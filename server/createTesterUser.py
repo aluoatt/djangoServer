@@ -29,25 +29,18 @@ def createUser(amwayNumber, amAward, ddInfo, user, username, jobTitle, classInfo
     r2.save()
     r3.save()
 
-preAmwayNumber = "000000"
-preDiamond     = "administrator"
-preMain        = "超級管理者"
-for i in range(4):
-    user = "直銷商" + str(i)
-    amwayNumber = str(1000000 + i)
-    IDNumber = str(5000 + i)
+# 指定給白金
+DDNumber = "2000000"
+Diamond  = "1000000"
+for i in range(3):
+    user = "我的 DD 是白金" + str(i)
+    amwayNumber = str(3000000 + i)
+    IDNumber = str(3000 + i)
     username = amwayNumber + IDNumber
     jobTitle = chainYenJobTitleInfo.objects.get(jobTitle = "無")
     classInfo = chainYenClassInfo.objects.get(ClassRoomName = "台北")
     amAward = amwayAwardInfo.objects.get(amwayAward = "直銷商")
-
-    ddInfo = registerDDandDimInfo.objects.filter(amwayNumber = preAmwayNumber)
-    if not ddInfo:
-        ddInfo = registerDDandDimInfo(amwayAward=amAward, amwayNumber=preAmwayNumber,
-                                      amwayDiamond=preMain, main = preMain)
-        ddInfo.save()
-    else:
-        ddInfo = ddInfo.get()
+    ddInfo = registerDDandDimInfo.objects.get(amwayNumber = DDNumber)
 
     createUser(amwayNumber, amAward, ddInfo, user, username, jobTitle, classInfo)
 
