@@ -86,7 +86,7 @@ $(document).ready(() => {
                         data['title'],
                         data['mainClass'],
                         data['totalLike'],
-                        Number(data['totalStars'])/Number(data['total']),
+                        Number(data['totalStars'])/Number(data['numberGetStars']),
                         data['total'],
                     ])
                     d3Data.push({
@@ -255,8 +255,7 @@ $(document).ready(() => {
     }
 
     function drawHorizontalBarChart(chartID, data) {
-       
-        data = data.slice(0, 10)
+        data = data.slice(-10)
         title = {
             y: "",
             x: ""
