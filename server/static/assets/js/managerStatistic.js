@@ -53,6 +53,7 @@ $(document).ready(() => {
         } else {
             rankTable = $('#articelRankTable').DataTable({
                 "orderClasses": false,
+                "order": [[ 4, "desc" ]],
                 "responsive": true,
                 "fixedHeader": true,
                 "language": {
@@ -77,6 +78,7 @@ $(document).ready(() => {
             'headers': { 'X-CSRFToken': getCookie('csrftoken') },
             'success': (res) => {
                 allData = JSON.parse(res)
+                allData.sort((a,b) => Number(a['total'])>Number(b['total']))
                 d3Data = [];
                 for (i in allData) {
                     data = allData[i];
@@ -254,7 +256,6 @@ $(document).ready(() => {
 
     function drawHorizontalBarChart(chartID, data) {
        
-        data.sort((a,b) => a.value>b.value)
         data = data.slice(0, 10)
         title = {
             y: "",
@@ -268,7 +269,8 @@ $(document).ready(() => {
             .attr("transform", `translate(${margin.left},0)`)
             .call(d3.axisLeft(y))
             .call(g => g.select(".domain").remove())
-            .call(g => g.selectAll("line").remove());
+            .call(g => g.selectAll("line").remove())
+            .call(g => g.selectAll("text").text( (d,i) => Math.abs(10-i)))
             
         xAxis = g => g
             .attr("transform", `translate(0,${height - margin.bottom})`)
@@ -320,8 +322,7 @@ $(document).ready(() => {
 
         svg.append("g")
             .call(yAxis)
-            .selectAll("text")
-            .remove()
+            
     }
     
     function getCookie(name) {
