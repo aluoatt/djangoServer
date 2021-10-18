@@ -53,7 +53,7 @@ $(document).ready(() => {
         } else {
             rankTable = $('#articelRankTable').DataTable({
                 "orderClasses": false,
-                "order": [[ 4, "desc" ]],
+                "order": [[ 3, "desc" ]],
                 "responsive": true,
                 "fixedHeader": true,
                 "language": {
@@ -85,8 +85,7 @@ $(document).ready(() => {
                     rankTable.row.add([
                         data['title'],
                         data['mainClass'],
-                        data['totalLike'],
-                        Number(data['totalStars'])/Number(data['numberGetStars']),
+                        Number(data['totalStars']),
                         data['total'],
                     ])
                     d3Data.push({
