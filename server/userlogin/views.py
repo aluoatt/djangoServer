@@ -13,9 +13,15 @@ from userlogin.models import TempUserAccountInfo ,TempUserAccountAmwayInfo ,\
 from pointManage.models import pointHistory
 from django.contrib.auth.hashers import make_password
 import datetime
-import logging
-
+from django.contrib.sessions.models import Session
 key = "Ja8asdfnjQnasdfd72D"
+
+
+# def set_session_key(self, key):
+#     if self.last_session_key and not self.last_session_key == key:
+#         Session.objects.get(session_key=self.last_session_key).delete()
+#     self.last_session_key = key
+#     self.save()
 
 def login(request):
     if request.user.is_authenticated:
@@ -27,6 +33,8 @@ def login(request):
     user = auth.authenticate(username=username + idnumber, password=password)
     if user is not None and user.is_active:
         auth.login(request, user)
+        # UserAccountInfo.set_session_key(request.session.session_key)
+        user.set_session_key(request.session.session_key)
         userAccountInfo = UserAccountInfo.objects.get(username=request.user)
         UserAccountChainYen = UserAccountChainYenInfo.objects.get(UserAccountInfo=userAccountInfo.id)
         if UserAccountChainYen.point - 1 <= 0:

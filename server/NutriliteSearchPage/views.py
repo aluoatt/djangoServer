@@ -18,7 +18,7 @@ from dateutil.relativedelta import relativedelta
 from django.http.response import StreamingHttpResponse
 from pointManage.models import pointHistory
 from django.conf import settings
-
+from datetime import datetime, timedelta
 backaddress = "/home/chainyen/production/backEnd"
 
 
@@ -229,7 +229,8 @@ def exchangeOption(request, fileId):
                          waterCreateReady=0,
                          exchangeDate=datetime.datetime.now()
                          ).save()
-
+        targetFile.exchangeCount += 1
+        targetFile.save()
         personalExchangeFileLog(fileDataID=targetFile,
                                 ownerAccount=UserAccount,
                                 costPoint=targetFile.point,
@@ -365,7 +366,7 @@ def regetPersonalFile(request, fileId):
 
 
 def viewFilePage(request, fileId):
-    request.session.set_expiry(settings.SESSION_COOKIE_AGE)
+
     targetFile = fileDataInfo.objects.get(id=int(fileId))
     UserAccount = UserAccountInfo.objects.get(username=request.user)
     personalFile = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id)
@@ -377,6 +378,12 @@ def viewFilePage(request, fileId):
 
     if alreadyExchange:
         aleardyLike = personalFile.first().like
+        if (datetime.now() - UserAccountInfo.objects.get(username=request.user).last_login) <= timedelta(
+                minutes=60 * 5):
+            request.session.set_expiry(settings.SESSION_COOKIE_AGE)
+
+
+
     if request.user == "administrator":
         permission = True
         pointEnough = True

@@ -26,6 +26,7 @@ class fileDataInfo(models.Model):
     downloadAble = models.BooleanField(verbose_name='是否可以下載')
     likes = models.IntegerField(default=0,verbose_name="按讚數")
     stars = models.FloatField(default=0, verbose_name="星星平均")
+    exchangeCount = models.IntegerField(default=0,verbose_name="被兌換的次數")
 
     class Meta:
         verbose_name = "檔案管理"

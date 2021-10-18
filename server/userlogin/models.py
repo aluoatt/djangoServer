@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User, AbstractUser  # 匯入 AbstractUser 類
 from django.contrib.auth.hashers import make_password
-
+from django.contrib.sessions.models import Session
 
 # Create your models here.
 class Server(models.Model):
@@ -58,10 +58,17 @@ class UserAccountInfo(AbstractUser):
     gender = models.CharField(max_length=4, verbose_name='性別')
     phone = models.CharField(max_length=50, verbose_name='電話')
     dataPermissionsLevel = models.IntegerField(verbose_name='資料權限等級')
+    last_session_key = models.CharField(blank=True, null=True, max_length=40)
 
     class Meta:
         verbose_name = "帳號管理"
         verbose_name_plural = "帳號管理"
+
+    def set_session_key(self, key):
+        if self.last_session_key and not self.last_session_key == key:
+            Session.objects.get(session_key=self.last_session_key).delete()
+        self.last_session_key = key
+        self.save()
 
 
 class UserAccountAmwayInfo(models.Model):

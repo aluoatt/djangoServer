@@ -175,7 +175,7 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #60 * 60
-SESSION_COOKIE_AGE = 60*60*2  # 設置session過期時間為30分鐘
+SESSION_COOKIE_AGE = 60*60*1  # 設置session過期時間為30分鐘
 # SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # 當瀏覽器被關閉的時候將session失效，但是不能刪除數據庫的session數據
 SESSION_SAVE_EVERY_REQUEST = False  # 每次請求都要保存一下session
 
@@ -188,7 +188,7 @@ EMAIL_HOST_USER = 'ChainYenRetrieve@gmail.com'  #寄件者電子郵件
 EMAIL_HOST_PASSWORD = 'qvkfdogfqfucbpbv'  #Gmail應用程式的密碼
 CONFIRM_DAYS = 3
 PWD_CONFIRM_MIN = 15
-MYIP = "https://172.104.127.254:15168"
+MYIP = "http://127.0.0.1:8090"
 
 CLASS_CHARIMAN_MANAGER_DICT = {
             "台北":"CYPManager",
