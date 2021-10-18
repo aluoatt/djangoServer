@@ -39,13 +39,18 @@ $(document).ready(() => {
             }
 
             setTimeout(function () {
+                if (data.length == 0 ){
+
+                $(".dataTables_empty").text("目前沒有資料");
+
+             }
                 myHistoryTable.draw(true);
                 myHistoryTable.columns.adjust().draw();
                 myHistoryTable.responsive.recalc().columns.adjust();
             }, 10);
         },
         'error': (res) => {
-            alert("伺服器出狀況,請聯繫系統人員")
+            $(".dataTables_empty").text("伺服器出狀況,請聯繫系統人員");
         }
     });
 

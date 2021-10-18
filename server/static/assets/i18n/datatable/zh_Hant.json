@@ -17,7 +17,7 @@
         "sortAscending": ": 升冪排列",
         "sortDescending": ": 降冪排列"
     },
-    "emptyTable": "目前沒有資料",
+    "emptyTable": "資料載入中",
     "datetime": {
         "previous": "上一頁",
         "next": "下一頁",

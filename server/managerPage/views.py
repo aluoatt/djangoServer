@@ -676,7 +676,6 @@ def allUserAccount(request):
         res.status_code = 503
         print(traceback.print_exc())
     return res
-
 @permission_required('userlogin.seeManagerAuditAccountPage', login_url='/accounts/userlogin/')
 def getTempUserAccount(request):
     res = HttpResponse()
