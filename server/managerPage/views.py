@@ -202,7 +202,6 @@ def managerAccountManagerPage(request):
 
     return render(request, 'managerPages/managerAccountManagerPage.html', locals())
 
-
 #由管理者修改個人資料
 @permission_required('userlogin.seeManagerAccountManagerPage', login_url='/accounts/userlogin/')
 def managerAccountModify(request):
@@ -464,9 +463,6 @@ def managerAuditAccountPage(request):
 
     return render(request, 'managerPages/managerAuditAccountManagerPage.html', locals())
 
-
-
-
 @permission_required('userlogin.seeManagerAuditAccountPage', login_url='/accounts/userlogin/')
 def removeAuditAccount(request):
     response_data = {}
@@ -488,7 +484,6 @@ def removeAuditAccount(request):
 
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
-
 
 @permission_required('userlogin.seeManagerAuditAccountPage', login_url='/accounts/userlogin/')
 def AcceptAuditAccount(request):
@@ -780,16 +775,13 @@ def getArticleOwnRank(request):
         fileID = data.fileDataID.id
         if fileID in ownDataSummary:
             ownDataSummary[fileID]["total"] = ownDataSummary[fileID]["total"] + 1
-            ownDataSummary[fileID]["totalLike"] = ownDataSummary[fileID]["totalLike"] + int(data.like)
-            ownDataSummary[fileID]["totalStars"] = ownDataSummary[fileID]["totalStars"] + data.stars
         else:
             ownDataSummary[fileID] = {
-                "title":      data.fileDataID.title,
-                "mainClass":  data.fileDataID.mainClass.mainClassName,
-                "costPoint":  data.costPoint,
-                "total": 1,
-                "totalLike":  int(data.like),
-                "totalStars": data.stars
+                "title":       data.fileDataID.title,
+                "mainClass":   data.fileDataID.mainClass.mainClassName,
+                "costPoint":   data.costPoint,
+                "total":       1, 
+                "totalStars":  data.fileDataID.stars,
             }
     ownDataSummaryList = []
     for key in ownDataSummary:

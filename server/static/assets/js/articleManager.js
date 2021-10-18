@@ -24,8 +24,8 @@ $(document).ready(() => {
         'describe','point','visible', "modify", "modifyHistory"
     ]
     myTableHeadChinese = [
-        '標題','資料庫類別','主類別','次類別', '關鍵字',
-        '描述','消耗點數','是否可見', "編輯", "編輯歷史"
+        '標題','分類','主類','次類', '關鍵字',
+        '描述','點數','可見', "編輯", "歷史"
     ]
     $.ajax({
         'url': location.origin + "/managerPages/getFileDataInfo",
@@ -61,8 +61,11 @@ $(document).ready(() => {
                 });
             }
             myTable.columns().every( function (index) {
-                return ;
-                if(index > 6 || myTableHeadChinese[index] === "描述"){
+                if(myTableHeadChinese[index] !== "分類" &&
+                    myTableHeadChinese[index] !== "主類" &&
+                    myTableHeadChinese[index] !== "次類" &&
+                    myTableHeadChinese[index] !== "點數" &&
+                    myTableHeadChinese[index] !== "可見"){
                     return;
                 }
                 var column = this;
