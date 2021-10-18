@@ -162,7 +162,7 @@ def registerSuccess(request,status):
 
 @permission_required('userlogin.can_see_register', login_url='/accounts/userlogin/')
 def createRegisterPage(request):
-    token = generate_token(key, 3600)
+    token = generate_token(key, 7200)
 
     # return redirect('/accounts/register/' + token)
     return HttpResponse(json.dumps({"result":settings.MYIP+'/accounts/register/' + token}), content_type="application/json")

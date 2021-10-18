@@ -196,7 +196,6 @@ def managerAccountManagerPage(request):
     # UserAccountChainYen = UserAccountChainYenInfo.objects.filter(q1)
     UserAccount = UserAccountInfo.objects.get(username=request.user)
     if registerDDandDimInfo.objects.filter(amwayNumber = UserAccount.useraccountamwayinfo_set.first().amwayNumber).count() > 0:
-        print(UserAccountAmwayInfo.objects.filter(amwayDD=UserAccount.useraccountamwayinfo_set.first().id))
         for UserAccountAmway in UserAccountAmwayInfo.objects.filter(amwayDD=registerDDandDimInfo.objects.get(amwayNumber = UserAccount.useraccountamwayinfo_set.first().amwayNumber).id):
             q2.children.append(("id", UserAccountAmway.UserAccountInfo.id))
     searchUserAccountInfo = UserAccountInfo.objects.filter(q2).order_by('username')
@@ -263,6 +262,7 @@ def modalAccountModifyPOST(request):
     try:
         managerName = UserAccountInfo.objects.get(username=request.user).user
         userid = json.loads(request.body.decode('utf-8'))["userid"]
+
         user = json.loads(request.body.decode('utf-8'))["modal_user"]
         phone = json.loads(request.body.decode('utf-8'))["phone"]
         # amwayNumber = json.loads(request.body.decode('utf-8'))["modal_amwayNumber"]
@@ -437,7 +437,7 @@ def modalAccountModifyPOST(request):
         r2.save()
         r3.save()
     except:
-        traceback.print_exc()
+        print(traceback.print_exc())
         response_data={}
         response_data["status"] = False
         return HttpResponse(json.dumps(response_data), content_type="application/json")

@@ -95,7 +95,7 @@ def keywordSearchPage(request):
                 occurrenceDate__gte=limDate,
                 visible=1,
                 permissionsLevel__lte=dataPermissionsLevel
-            ).filter(q2).order_by('occurrenceDate')
+            ).filter(q2).order_by('-occurrenceDate')
         else:
             fileDatas = fileDataInfo.objects.filter(
                 occurrenceDate__gte=limDate,
@@ -108,7 +108,7 @@ def keywordSearchPage(request):
             occurrenceDate__gte=limDate,
             visible=1,
             permissionsLevel__lte=dataPermissionsLevel
-        ).order_by('occurrenceDate')
+        ).order_by('-occurrenceDate')
 
     if fileDatas.count() > 0:
         hasKeywordData = True
@@ -157,7 +157,7 @@ def NutriliteSearchPage(request, topic, selectTag):
     fileDatas = fileDataInfo.objects.filter(mainClass=mainClassInfo.objects.get(mainClassName=topic).id,
                                             secClass=secClassInfo.objects.get(secClassName=selectTag).id,
                                             visible=1,
-                                            permissionsLevel__lte=dataPermissionsLevel).order_by('occurrenceDate')
+                                            permissionsLevel__lte=dataPermissionsLevel).order_by('-occurrenceDate')
 
     ownFileList = [k.fileDataID.id for k in personalFileData.objects.filter(ownerAccount=userAcc)]
 
