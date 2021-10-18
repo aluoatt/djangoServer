@@ -18,7 +18,7 @@ from dateutil.relativedelta import relativedelta
 from django.http.response import StreamingHttpResponse
 from pointManage.models import pointHistory
 from django.conf import settings
-from datetime import datetime, timedelta
+from datetime import timedelta
 backaddress = "/home/chainyen/production/backEnd"
 
 
@@ -378,7 +378,7 @@ def viewFilePage(request, fileId):
 
     if alreadyExchange:
         aleardyLike = personalFile.first().like
-        if (datetime.now() - UserAccountInfo.objects.get(username=request.user).last_login) <= timedelta(
+        if (datetime.datetime.now() - UserAccountInfo.objects.get(username=request.user).last_login) <= timedelta(
                 minutes=60 * 5):
             request.session.set_expiry(settings.SESSION_COOKIE_AGE)
 

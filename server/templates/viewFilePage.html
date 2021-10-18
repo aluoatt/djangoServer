@@ -28,6 +28,11 @@
 
 				<!-- Main -->
 				<a style="color:black" href="/filesearch/{{targetFile.mainClass.mainClassName}}/{{targetFile.secClass.secClassName}}">{{targetFile.mainClass.mainClassName}}-{{targetFile.secClass.secClassName}}</a>
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<a style="color:black" data-toggle="modal"
+				   data-target="#QA">
+					常見問題
+				</a>
 				{% if permission is False %}
 				<p>權限不足</p>
 				{% elif pointEnough is False %}
@@ -164,7 +169,31 @@
 			</div>
 		</div>
 		{% endif %}
+		<!-- Modal 常見問題-->
+		<div class="modal fade" id="QA" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			 aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 style="color: white" class="modal-title" id="staticBackdropLabel">常見問題</h3>
+					</div>
+					<div  class="modal-body">
+						<p style="color: white">****下載影片****</p>
+						<p style="color: white">1.如果網路不穩，下載影片中斷，將不影響，不會再次扣點</p>
+						<p style="color: white">2.下載中也可跳至其他頁面，等載完再回來看也是可以的</p>
+						<p style="color: white">****轉讓點數****</p>
+						<p style="color: white">1.目前僅提供白金級以上領導人，可轉讓點數於自己組織網之下線夥伴</p>
+						<p style="color: white">2.如果白金於管理個人點數下有轉讓點數的按鈕，代表其組織網下面已經有夥伴註冊在資料庫；反之，代表沒有夥伴註冊</p>
 
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+
+					</div>
+				</div>
+			</div>
+		</div>
 
 		<!-- Scripts -->
 		<script src="{% static 'assets/js/viewPage.js' %}"></script>
