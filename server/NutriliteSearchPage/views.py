@@ -378,8 +378,11 @@ def viewFilePage(request, fileId):
 
     if alreadyExchange:
         aleardyLike = personalFile.first().like
-        if (datetime.datetime.now() - UserAccountInfo.objects.get(username=request.user).last_login) <= timedelta(
-                minutes=60 * 5):
+        if ((datetime.datetime.now() - UserAccountInfo.objects.get(username=request.user).last_login) <= timedelta(
+                minutes=60 * 5)
+                and (datetime.datetime.now() - UserAccountInfo.objects.get(
+                    username=request.user).last_login) >= timedelta(
+                    minutes=60 * 1)):
             request.session.set_expiry(settings.SESSION_COOKIE_AGE)
 
 
