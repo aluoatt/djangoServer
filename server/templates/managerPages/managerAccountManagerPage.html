@@ -163,6 +163,13 @@
                             <option id="帳號凍結">帳號凍結</option>
                         </select>
                     </label>
+                    {% else %}
+                    <label style="color: black ;display:none"><mark style="color: red">帳號狀態:</mark>
+                        <select id="modal_accountStatus" name="modal_accountStatus" style="font-size:12px; disable">
+                            <option id="正常">正常</option>
+                            <option id="帳號凍結">帳號凍結</option>
+                        </select>
+                    </label>
                     {% endif %}
 
                 </div>
@@ -260,7 +267,10 @@
             document.getElementById("modal_amwayDD_name").value = document.getElementById(id + "_amwayDD").innerHTML.trim()
             document.getElementById("modal_amwayDiamond").value = document.getElementById(id + "_amwayDiamond").innerHTML.trim()
             document.getElementById("modal_amwayDD_name").style.color = "black";
+            {% if perms.userlogin.can_Change_DataPermission %}
             document.getElementById("modal_dataPermissionsLevel").value = document.getElementById(id + "_dataPermissionsLevel").value
+            {% endif %}
+            {% if perms.userlogin.can_freeze_account %}
             document.getElementById("modal_accountStatus").value = document.getElementById(id + "_accountStatus").innerHTML
 
             if (document.getElementById(id + "_accountStatus").innerHTML.trim() == "正常") {
@@ -271,7 +281,7 @@
                 document.getElementById("正常").selected = false;
                 document.getElementById("帳號凍結").selected = true;
             }
-
+            {% endif %}
             document.getElementById("userid_user").value = id
 
 

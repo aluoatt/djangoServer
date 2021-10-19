@@ -92,10 +92,15 @@ $(document).ready(() => {
                 myTable.draw(true);
                 myTable.columns.adjust().draw();
                 myTable.responsive.recalc().columns.adjust();
+                if (data.length == 0 ){
+
+                $(".dataTables_empty").text("目前沒有資料");
+
+             }
             }, 10);
         },
         'error': (res) => {
-            alert("伺服器出狀況,請聯繫系統人員")
+             $(".dataTables_empty").text("伺服器出狀況,請聯繫系統人員");
         }
     });
 

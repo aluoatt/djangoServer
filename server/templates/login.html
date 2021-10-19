@@ -84,11 +84,42 @@
 				</div>
                                 </form>
 								<a style="color:black" href="{% url 'forgetPasswordKeyinNumber' %}">我忘記密碼了</a>
+								<p></p>
+								<a style="color:black" data-toggle="modal"
+									data-target="#QA"
+									>
+									常見問題
+								</a>
 							</div>
 
 		</section>
 	</div>
+	<!-- Modal 常見問題-->
+    <div class="modal fade" id="QA" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 style="color: black" class="modal-title" id="staticBackdropLabel">常見問題</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="color:black;">
+					<p>****無法登入****</p>
+				<p>1.點數不足:代表目前點數不夠登入</p>
+				<p>2.資料錯誤:請再次確認編號、後四碼、密碼是否填寫正確</p>
+				<p>****登入注意事項****</p>
+				<p>1.登入將扣點數一點(2 小時內沒有兌換或是觀看動作就登出，如果有兌換或是觀看的動作就延長 1 小時)</p>
+				<p>2.不要使用無痕與line連結開啟，以免關閉瀏覽器後，會再要求登入扣點(手機點開line連結後用預設瀏覽器開起)</p>
 
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
 	<!-- Scripts -->
 	<script>
 		function confirmSubmit() {

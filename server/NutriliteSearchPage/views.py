@@ -18,7 +18,7 @@ from dateutil.relativedelta import relativedelta
 from django.http.response import StreamingHttpResponse
 from pointManage.models import pointHistory
 from django.conf import settings
-
+from datetime import timedelta
 backaddress = "/home/chainyen/production/backEnd"
 
 
@@ -95,7 +95,7 @@ def keywordSearchPage(request):
                 occurrenceDate__gte=limDate,
                 visible=1,
                 permissionsLevel__lte=dataPermissionsLevel
-            ).filter(q2).order_by('occurrenceDate')
+            ).filter(q2).order_by('-occurrenceDate')
         else:
             fileDatas = fileDataInfo.objects.filter(
                 occurrenceDate__gte=limDate,
@@ -108,7 +108,7 @@ def keywordSearchPage(request):
             occurrenceDate__gte=limDate,
             visible=1,
             permissionsLevel__lte=dataPermissionsLevel
-        ).order_by('occurrenceDate')
+        ).order_by('-occurrenceDate')
 
     if fileDatas.count() > 0:
         hasKeywordData = True
@@ -157,7 +157,7 @@ def NutriliteSearchPage(request, topic, selectTag):
     fileDatas = fileDataInfo.objects.filter(mainClass=mainClassInfo.objects.get(mainClassName=topic).id,
                                             secClass=secClassInfo.objects.get(secClassName=selectTag).id,
                                             visible=1,
-                                            permissionsLevel__lte=dataPermissionsLevel).order_by('occurrenceDate')
+                                            permissionsLevel__lte=dataPermissionsLevel).order_by('-occurrenceDate')
 
     ownFileList = [k.fileDataID.id for k in personalFileData.objects.filter(ownerAccount=userAcc)]
 
@@ -229,7 +229,8 @@ def exchangeOption(request, fileId):
                          waterCreateReady=0,
                          exchangeDate=datetime.datetime.now()
                          ).save()
-
+        targetFile.exchangeCount += 1
+        targetFile.save()
         personalExchangeFileLog(fileDataID=targetFile,
                                 ownerAccount=UserAccount,
                                 costPoint=targetFile.point,
@@ -365,7 +366,7 @@ def regetPersonalFile(request, fileId):
 
 
 def viewFilePage(request, fileId):
-    request.session.set_expiry(settings.SESSION_COOKIE_AGE)
+
     targetFile = fileDataInfo.objects.get(id=int(fileId))
     UserAccount = UserAccountInfo.objects.get(username=request.user)
     personalFile = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id)
@@ -377,6 +378,12 @@ def viewFilePage(request, fileId):
 
     if alreadyExchange:
         aleardyLike = personalFile.first().like
+        if (datetime.datetime.now() - UserAccountInfo.objects.get(username=request.user).last_login) <= timedelta(
+                minutes=60 * 5):
+            request.session.set_expiry(settings.SESSION_COOKIE_AGE)
+
+
+
     if request.user == "administrator":
         permission = True
         pointEnough = True
