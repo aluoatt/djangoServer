@@ -66,7 +66,9 @@ class UserAccountInfo(AbstractUser):
 
     def set_session_key(self, key):
         if self.last_session_key and not self.last_session_key == key:
-            Session.objects.get(session_key=self.last_session_key).delete()
+            session_key = Session.objects.filter(session_key=self.last_session_key)
+            if session_key:
+                session_key.get().delete()
         self.last_session_key = key
         self.save()
 
