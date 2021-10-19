@@ -47,6 +47,9 @@ $(document).ready(() => {
         }
     });
 
+    rankTableHeadChinese = [
+        "文章標題", "主類別", "評分", "兌換人數"
+    ]
     $("#articleRankNav").on("click", ()=>{
         if ($.fn.DataTable.isDataTable("#articelRankTable")) {
             rankTable = $("#articelRankTable").dataTable().api()
@@ -93,8 +96,37 @@ $(document).ready(() => {
                         "value": data['total']
                     })
                 }
+                rankTable.columns().every( function (index) {
+                    if( rankTableHeadChinese[index] !== "主類別"){
+                        return;
+                    }
+                    var column = this;
+                    selectHTML = `
+                    <div class="col-auto">
+                        <label>${rankTableHeadChinese[index]}</label>
+                        <select class="custom-select custom-select-md"><option value=""></option></select>
+                    </div>
+                    `
+                    var select = $(selectHTML)
+                        .appendTo( $("#colSearch") );
+    
+                    select.find("select").on( 'change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+    
+                        column
+                            .search( val ? '^'+val+'$' : '', true, false )
+                            .draw();
+
+                        // Update bar chart
+                    } );
+     
+                    column.data().unique().sort().each( function ( d, j ) {
+                        select.find("select").append( '<option value="'+d+'">'+d+'</option>' )
+                    } );
+                } );
                 drawHorizontalBarChart("rankBarChart", d3Data);
-                //drawPieChart("rankPieChart", d3Data);
                 setTimeout(function () {
                     rankTable.draw(true);
                     rankTable.columns.adjust().draw();
