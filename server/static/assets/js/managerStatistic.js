@@ -86,7 +86,7 @@ $(document).ready(() => {
                 for (i in allData) {
                     data = allData[i];
                     rankTable.row.add([
-                        data['title'],
+                        `<a target="_blank" href="${location.origin}/viewFilePage/${data['fileID']}">${data['title']}</a>`,
                         data['mainClass'],
                         Number(data['totalStars']),
                         data['total'],

@@ -776,6 +776,7 @@ def getArticleOwnRank(request):
             ownDataSummary[fileID]["total"] = ownDataSummary[fileID]["total"] + 1
         else:
             ownDataSummary[fileID] = {
+                "fileID":      fileID,
                 "title":       data.fileDataID.title,
                 "mainClass":   data.fileDataID.mainClass.mainClassName,
                 "costPoint":   data.costPoint,
