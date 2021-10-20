@@ -50,13 +50,13 @@ $(document).ready(() => {
     rankTableHeadChinese = [
         "文章標題", "主類別", "評分", "兌換人數"
     ]
-    $("#articleRankNav").on("click", ()=>{
+    $("#articleRankNav").on("click", () => {
         if ($.fn.DataTable.isDataTable("#articelRankTable")) {
             rankTable = $("#articelRankTable").dataTable().api()
         } else {
             rankTable = $('#articelRankTable').DataTable({
                 "orderClasses": false,
-                "order": [[ 3, "desc" ]],
+                "order": [[3, "desc"]],
                 "responsive": true,
                 "fixedHeader": true,
                 "language": {
@@ -69,7 +69,7 @@ $(document).ready(() => {
                 }
             });
         }
-        
+
         rankTable.clear().draw();
         $(".dataTables_empty").addClass("table-warning text-dark font-weight-bold");
         $(".dataTables_empty").text("資料載入中");
@@ -81,7 +81,7 @@ $(document).ready(() => {
             'headers': { 'X-CSRFToken': getCookie('csrftoken') },
             'success': (res) => {
                 allData = JSON.parse(res)
-                allData.sort((a,b) => Number(a['total'])>Number(b['total']))
+                allData.sort((a, b) => Number(a['total']) > Number(b['total']))
                 d3Data = [];
                 for (i in allData) {
                     data = allData[i];
@@ -96,8 +96,8 @@ $(document).ready(() => {
                         "value": data['total']
                     })
                 }
-                rankTable.columns().every( function (index) {
-                    if( rankTableHeadChinese[index] !== "主類別"){
+                rankTable.columns().every(function (index) {
+                    if (rankTableHeadChinese[index] !== "主類別") {
                         return;
                     }
                     var column = this;
@@ -108,24 +108,35 @@ $(document).ready(() => {
                     </div>
                     `
                     var select = $(selectHTML)
-                        .appendTo( $("#colSearch") );
-    
-                    select.find("select").on( 'change', function () {
+                        .appendTo($("#colSearch"));
+
+                    select.find("select").on('change', function () {
                         var val = $.fn.dataTable.util.escapeRegex(
                             $(this).val()
                         );
-    
+
                         column
-                            .search( val ? '^'+val+'$' : '', true, false )
+                            .search(val ? '^' + val + '$' : '', true, false)
                             .draw();
 
                         // Update bar chart
-                    } );
-     
-                    column.data().unique().sort().each( function ( d, j ) {
-                        select.find("select").append( '<option value="'+d+'">'+d+'</option>' )
-                    } );
-                } );
+
+                        currentData = rankTable.rows().data().filter((d) => { return d[1] == val || val == ""; })
+                        d3Data = []
+                        for (i = 0; i < currentData.length; i++) {
+                            d3Data.push({
+                                "name": $(currentData[i][0]).html(),
+                                "value": Number(currentData[i][3])
+                            })
+                        }
+                        d3Data.sort((a, b) => a.value > b.value);
+                        drawHorizontalBarChart("rankBarChart", d3Data);
+                    });
+
+                    column.data().unique().sort().each(function (d, j) {
+                        select.find("select").append('<option value="' + d + '">' + d + '</option>')
+                    });
+                });
                 drawHorizontalBarChart("rankBarChart", d3Data);
                 setTimeout(function () {
                     rankTable.draw(true);
@@ -146,15 +157,15 @@ $(document).ready(() => {
         ];
         height = 300;
         width = 300;
-        radius = width/2;
+        radius = width / 2;
         svg = d3.select("#" + chartID)
             .attr("viewBox", [0, 0, width, height])
             .append("g")
             .attr('transform', `translate(${width / 2}, ${height / 2})`);
         const arc = d3
             .arc()
-            .innerRadius(radius*0.5)
-            .outerRadius(radius*0.7)
+            .innerRadius(radius * 0.5)
+            .outerRadius(radius * 0.7)
         const pie = d3.pie().value(d => d.value)
         dataReady = pie(data)
         pieChart = svg.selectAll('path')
@@ -201,7 +212,7 @@ $(document).ready(() => {
             .append('text')
             .attr("font-size", "7px")
             .attr("fill", "white")
-            .text(function (d) { console.log(d.data.name); return d.data.name })
+            .text(function (d) { return d.data.name })
             .attr('transform', function (d) {
                 var pos = outerArc.centroid(d);
                 var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2
@@ -286,6 +297,7 @@ $(document).ready(() => {
     }
 
     function drawHorizontalBarChart(chartID, data) {
+        d3.select("#" + chartID).selectAll("svg > *").remove();
         data = data.slice(-10)
         title = {
             y: "",
@@ -300,16 +312,16 @@ $(document).ready(() => {
             .call(d3.axisLeft(y))
             .call(g => g.select(".domain").remove())
             .call(g => g.selectAll("line").remove())
-            .call(g => g.selectAll("text").text( (d,i) => Math.abs(10-i)))
-            
+            .call(g => g.selectAll("text").text((d, i) => Math.abs(data.length - i)))
+
         xAxis = g => g
             .attr("transform", `translate(0,${height - margin.bottom})`)
             .call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0))
-            
+
 
         x = d3.scaleLinear()
             .domain([0, d3.max(data, d => d.value)])
-            .range([margin.left,width - margin.right])
+            .range([margin.left, width - margin.right])
 
         y = d3.scalePoint()
             .domain(d3.map(data, d => d.name))
@@ -325,15 +337,17 @@ $(document).ready(() => {
             .append("g");
 
         bar.append("rect")
+            .attr("x", margin.left)
             .attr("y", (d) => {
                 return y(d.name) - 5
             })
+            .attr("height", 10)
+            .transition() // and apply changes to all of them
+            .duration(1000)
             .attr("fill", (d, i) => {
                 return d3.schemeCategory10[i]
             })
-            .attr("width", d => x(d.value)-x(0))
-            .attr("x", margin.left)
-            .attr("height", 10);
+            .attr("width", d => x(d.value) - x(0));
 
         bar.append("text")
             .attr("y", (d) => {
@@ -345,16 +359,16 @@ $(document).ready(() => {
             .style("font-size", "10px")
             .text(d => d.name);
 
-        
+
 
         svg.append("g")
             .call(xAxis);
 
         svg.append("g")
             .call(yAxis)
-            
+
     }
-    
+
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
