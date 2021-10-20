@@ -103,9 +103,12 @@
 									</div>
 									
 										<br>
-
 										{% if targetFile.fileType.id == 1 %}
+										{% if alreadyReady %}
 										<p id="videoWait">影片載入中請稍候....</p>
+										{% else %}
+										<p id="videoWait">影片處理中請稍候....可離開觀看其他資料謝謝</p>
+										{% endif %}
 										<div id="myProgress">
 										  <div id="myBar"></div>
 										</div>
@@ -117,7 +120,12 @@
 										</video>
 
 										{% else %}
+
+										{% if alreadyReady %}
 										<p id="PDFWait">PDF載入中請稍候....</p>
+										{% else %}
+										<p id="PDFWait">PDF處理中請稍候....可離開觀看其他資料謝謝</p>
+										{% endif %}
 										<div id="myProgress">
 										  <div id="myBar"></div>
 										</div>

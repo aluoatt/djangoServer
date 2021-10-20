@@ -235,6 +235,8 @@ def exchangeOption(request, fileId):
                                 ownerAccount=UserAccount,
                                 costPoint=targetFile.point,
                                 ).save()
+
+
         if not supervisord:
             waterMarkUserName = UserAccountChainYen.classRoom.ClassRoomCode + "_" + UserAccount.user + "_" \
                                 + str(UserAccount.useraccountamwayinfo_set.all().first().amwayNumber)
@@ -278,6 +280,12 @@ def exchangeOption(request, fileId):
                 p.waterCreateReady = 1
                 p.waterMarkPath = "cantdownload"
                 p.save()
+    try:
+        alreadyReady = personalFileData.objects.filter(ownerAccount=UserAccount.id,
+                                                       fileDataID=targetFile.id).first().waterCreateReady
+    except:
+        alreadyReady = False
+
     return redirect('/viewFilePage/' + fileId)
 
 
@@ -410,6 +418,12 @@ def viewFilePage(request, fileId):
         personalWatchFileLog(fileDataID=targetFile,
                              watchAccount=UserAccount,
                              exchangeDate=datetime.datetime.now()).save()
+
+    try:
+        alreadyReady = personalFileData.objects.filter(ownerAccount=UserAccount.id,
+                                                       fileDataID=targetFile.id).first().waterCreateReady
+    except:
+        alreadyReady = False
 
     if (not permission) or (not pointEnough):
         targetFile = ""
