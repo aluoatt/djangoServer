@@ -3896,7 +3896,7 @@ input, select, textarea {
 			top: 0;
 			vertical-align: middle;
 			white-space: nowrap;
-			width: 8em;
+			width: 4em;
 		}
 
 			#menu .close:before, #menu .close:after {
