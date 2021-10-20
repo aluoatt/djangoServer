@@ -27,7 +27,12 @@
 					{% include 'baseMenu.html' %}
 
 				<!-- Main -->
+				{% if targetFile.mainClass.mainClassName != '總部會議/活動' %}
 				<a style="color:black" href="/filesearch/{{targetFile.mainClass.mainClassName}}/{{targetFile.secClass.secClassName}}">{{targetFile.mainClass.mainClassName}}-{{targetFile.secClass.secClassName}}</a>
+				{% else %}
+				<a style="color:black" href="/filesearch/總部會議/{{targetFile.secClass.secClassName}}">{{targetFile.mainClass.mainClassName}}-{{targetFile.secClass.secClassName}}</a>
+
+				{% endif %}
 				&nbsp;&nbsp;&nbsp;&nbsp;
 				<a style="color:black" data-toggle="modal"
 				   data-target="#QA">

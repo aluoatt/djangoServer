@@ -18,6 +18,9 @@ def home(request):
     except:
         name = AccountUser
         amwayMember = ""
+    s = render(request, 'home.html', locals())
+    s.setdefault('Cache-Control', 'no-store')
+    s.setdefault('Expires', 0)
+    s.setdefault('Pragma', 'no-cache')
+    return s
 
-
-    return render(request, 'home.html', locals())
