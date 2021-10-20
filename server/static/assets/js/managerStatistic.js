@@ -174,9 +174,18 @@ $(document).ready(() => {
             .append('g');
 
         pieChart.append('path')
-            .attr('d', arc)
             .attr('fill', (d, i) => {
                 return colors[i]
+            }).transition()
+            .delay(function(d,i) {
+                return i * 100; })
+            .duration(1000)
+            .attrTween('d', function (d) {
+                var i = d3.interpolate(d.startAngle + 0.1, d.endAngle);
+                return function (t) {
+                    d.endAngle = i(t);
+                    return arc(d)
+                }
             });
 
         pieChart.append("text")
@@ -195,6 +204,8 @@ $(document).ready(() => {
             .data(dataReady)
             .enter()
             .append('polyline')
+            .transition()
+            .duration(2000)
             .attr("stroke", "white")
             .style("fill", "none")
             .attr("stroke-width", 1)
@@ -205,7 +216,8 @@ $(document).ready(() => {
                 var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2 // we need the angle to see if the X position will be at the extreme right or extreme left
                 posC[0] = radius * 0.85 * (midangle < Math.PI ? 1 : -1); // multiply by 1 or -1 to put it on the right or on the left
                 return [posA, posB, posC]
-            })
+            });
+
         pieChart.selectAll('allLabels')
             .data(dataReady)
             .enter()
@@ -276,8 +288,15 @@ $(document).ready(() => {
                 return x(d.name) - 5
             })
             .attr("width", 10)
-            .attr("y", d => y(d.value))
-            .attr("height", d => y(0) - y(d.value));
+            .attr("y", d => y(0))
+            .attr("height", d => y(0));
+
+        bar.selectAll("rect")
+            .transition()
+            .duration(800)
+            .attr("y", function(d) { return y(d.value); })
+            .attr("height", function(d) { return height-margin.bottom - y(d.value); })
+            .delay(function(d,i){console.log(i) ; return(i*100)})
 
         bar.append("text")
             .attr("x", (d) => {
