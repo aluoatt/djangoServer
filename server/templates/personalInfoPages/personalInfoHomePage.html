@@ -120,7 +120,7 @@
 <!--                            <span class="glyphicon glyphicon-thumbs-up"></span>-->
 <!--                            <span class="liked-num">{{fileData.fileDataID.likes}}</span>-->
 <!--                        </div>-->
-                        <h3 style="color:black"><img src="{% static 'images/star.png' %}" width="20px" heigh="20px">{{fileData.stars}}</h3>
+                        <h3 style="color:black"><img src="{% static 'images/star.png' %}" width="20px" heigh="20px">{{fileData.stars|stringformat:".1f"}}</h3>
                         <ul class="actions">
                             <li>
                                 <form id="fileIDview" name="fileIDview" method="POST">{% csrf_token %}
