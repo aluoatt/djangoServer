@@ -175,6 +175,8 @@ def addPointByExcel(request):
         resContent = []
         modifier = request.user.user
         for i in range(2,sheet.max_row+1):
+            if not sheet['B' + str(i)].value:
+                break
             resTmp = {}
             resTmp["user"] = str(sheet["A" + str(i)].value)
             amwayNumber = str(sheet['B' + str(i)].value)
