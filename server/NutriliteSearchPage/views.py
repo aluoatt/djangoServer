@@ -281,8 +281,13 @@ def exchangeOption(request, fileId):
                 p.waterMarkPath = "cantdownload"
                 p.save()
     try:
-        alreadyReady = personalFileData.objects.filter(ownerAccount=UserAccount.id,
-                                                       fileDataID=targetFile.id).first().waterCreateReady
+        persondataInfo = personalFileData.objects.filter(ownerAccount=UserAccount.id,
+                                                       fileDataID=targetFile.id).first()
+        if persondataInfo.waterCreateReady:
+            if os.path.isfile(backaddress + '/'+persondataInfo.waterMarkPath):
+                alreadyReady = True
+
+
     except:
         alreadyReady = False
 
@@ -294,7 +299,7 @@ def regetPersonalFile(request, fileId):
     targetFile = fileDataInfo.objects.get(id=int(fileId))
     UserAccount = UserAccountInfo.objects.get(username=request.user)
     alreadyExchange = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id).count() > 0
-    if request.user.has_perm('userlogin.classRoomAccount'):
+    if request.user.has_perm('userlogin.classRoomAccount') and not request.user.is_superuser:
         classRoomAccount = True
     else:
         classRoomAccount = False
@@ -420,8 +425,11 @@ def viewFilePage(request, fileId):
                              exchangeDate=datetime.datetime.now()).save()
 
     try:
-        alreadyReady = personalFileData.objects.filter(ownerAccount=UserAccount.id,
-                                                       fileDataID=targetFile.id).first().waterCreateReady
+        persondataInfo = personalFileData.objects.filter(ownerAccount=UserAccount.id,
+                                                         fileDataID=targetFile.id).first()
+        if persondataInfo.waterCreateReady:
+            if os.path.isfile(backaddress + '/' + persondataInfo.waterMarkPath):
+                alreadyReady = True
     except:
         alreadyReady = False
 
