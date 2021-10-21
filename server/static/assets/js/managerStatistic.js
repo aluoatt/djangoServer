@@ -52,7 +52,7 @@ $(document).ready(() => {
     ]
     $("#articleRankNav").on("click", () => {
         if ($.fn.DataTable.isDataTable("#articelRankTable")) {
-            rankTable = $("#articelRankTable").dataTable().api()
+            return;
         } else {
             rankTable = $('#articelRankTable').DataTable({
                 "orderClasses": false,
