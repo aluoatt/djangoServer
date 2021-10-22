@@ -7,6 +7,25 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<link href="{%static 'favicon.ico' %}" rel="shortcut icon">
+	<style>
+
+
+
+
+		#eyes {
+
+			width: 18px;
+
+			position: absolute;
+
+			top: 27px;
+
+			right: 50px;
+
+		}
+
+	</style>
+
 </head>
 
 <body class="is-preload" style="background-size: Cover;background:url('{%static 'images/login底圖.png' %}');">
@@ -66,7 +85,11 @@
 						<div class="row">
 							<div class=" col-sm-4">
 								<input required="required" style="color:black;background-color:white;width:auto"
-									type="password" name="password" value="" id="password"> <br />
+									type="password" name="password" value="" id="password">
+								<label><img src="{% static 'images/pwdCloseEye.png' %}" id="eyes"></label>
+
+								<br />
+
 							</div>
 						</div>
 						{% if pwderror %}
@@ -127,6 +150,7 @@
         </div>
     </div>
 	<!-- Scripts -->
+	<script src="{% static 'assets/js/canSeePWD.js' %}"></script>
 	<script>
 		function confirmSubmit() {
 			var $form = $('form')[0];
