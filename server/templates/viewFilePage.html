@@ -106,11 +106,12 @@
 										{% if targetFile.fileType.id == 1 %}
 										{% if alreadyReady %}
 										<p id="videoWait">影片載入中請稍候....</p>
-										<div id="myProgress">
-										  <div id="myBar"></div>
-										</div>
+
 										{% else %}
 										<p id="videoWait">影片處理中請稍候....可離開觀看其他資料謝謝</p>
+
+										{% endif %}
+
 										<div id="floatingCirclesG">
 											<div class="f_circleG" id="frotateG_01"></div>
 											<div class="f_circleG" id="frotateG_02"></div>
@@ -121,9 +122,6 @@
 											<div class="f_circleG" id="frotateG_07"></div>
 											<div class="f_circleG" id="frotateG_08"></div>
 										</div>
-										{% endif %}
-
-
 										<video id="demo"  preload="media"  playsinline controls width='100%'
 											   style="display:none;" height='100%'
 											   src='' type='video/mp4' controlsList="nodownload" oncontextmenu="return false;">
@@ -134,11 +132,13 @@
 
 										{% if alreadyReady %}
 										<p id="PDFWait">PDF載入中請稍候....</p>
-										<div id="myProgress">
-											  <div id="myBar"></div>
-										</div>
+<!--										<div id="myProgress">-->
+<!--											  <div id="myBar"></div>-->
+<!--										</div>-->
 										{% else %}
 										<p id="PDFWait">PDF處理中請稍候....可離開觀看其他資料謝謝</p>
+
+										{% endif %}
 										<div id="floatingCirclesG">
 											<div class="f_circleG" id="frotateG_01"></div>
 											<div class="f_circleG" id="frotateG_02"></div>
@@ -149,9 +149,8 @@
 											<div class="f_circleG" id="frotateG_07"></div>
 											<div class="f_circleG" id="frotateG_08"></div>
 										</div>
-										{% endif %}
-
 										<div id="pdf_viewer_newer" class="container" controlsList="nodownload" oncontextmenu="return false;"></div>
+
 										{% endif %}
 
 
@@ -318,8 +317,15 @@
 								pdfjsLib.GlobalWorkerOptions.workerSrc = "{% static 'pdfjs-2.0/build/pdf.worker.js' %}";
 
 								pdfjsLib.getDocument("{% url 'returnPDF' targetFile.id %}").promise.then(function (pdf) {
-									document.getElementById("myProgress").style.display = "none"
-									document.getElementById("myBar").style.display = "none"
+									document.getElementById("floatingCirclesG").style.display = "none"
+									document.getElementById("frotateG_01").style.display = "none";
+									document.getElementById("frotateG_02").style.display = "none";
+									document.getElementById("frotateG_03").style.display = "none";
+									document.getElementById("frotateG_04").style.display = "none";
+									document.getElementById("frotateG_05").style.display = "none";
+									document.getElementById("frotateG_06").style.display = "none";
+									document.getElementById("frotateG_07").style.display = "none";
+									document.getElementById("frotateG_08").style.display = "none";
 									document.getElementById("PDFWait").style.display = "none"
 									width=100
 									for (var pageNum = 1; pageNum <= pdf.numPages; ++pageNum) {
@@ -374,18 +380,7 @@
 				}
 
 				$(document).ready(function () {
-					$.ajaxSetup({cache: false}); // This part addresses an IE bug. without it, IE will only load the first number and will never refresh
-					var elem = document.getElementById("myBar");
 
-					  var id = setInterval(frame, 300);
-					  function frame() {
-						if (width >= 95) {
-						  clearInterval(id);
-						} else {
-						  width++;
-						  elem.style.width = width + '%';
-						}
-					  }
 
 				});
 
@@ -424,9 +419,18 @@
 								width = 100
 
 
-								document.getElementById("myProgress").style.display = "none"
-								document.getElementById("myBar").style.display = "none"
-								document.getElementById("videoWait").style.display = "none"
+								document.getElementById("floatingCirclesG").style.display = "none";
+								document.getElementById("frotateG_01").style.display = "none";
+								document.getElementById("frotateG_02").style.display = "none";
+								document.getElementById("frotateG_03").style.display = "none";
+								document.getElementById("frotateG_04").style.display = "none";
+								document.getElementById("frotateG_05").style.display = "none";
+								document.getElementById("frotateG_06").style.display = "none";
+								document.getElementById("frotateG_07").style.display = "none";
+								document.getElementById("frotateG_08").style.display = "none";
+
+
+								document.getElementById("videoWait").style.display = "none";
 								document.getElementById("demo").style.display = "";
 								$('#demo').attr('src', requestURL+"#t=0.1");
 							} else {
@@ -451,18 +455,7 @@
 				}
 
 				$(document).ready(function () {
-					$.ajaxSetup({cache: false}); // This part addresses an IE bug. without it, IE will only load the first number and will never refresh
-					var elem = document.getElementById("myBar");
 
-					  var id = setInterval(frame, 500);
-					  function frame() {
-						if (width >= 95) {
-						  clearInterval(id);
-						} else {
-						  width++;
-						  elem.style.width = width + '%';
-						}
-					  }
 
 				});
 
