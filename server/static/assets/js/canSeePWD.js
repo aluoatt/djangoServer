@@ -14,7 +14,7 @@ imgs.onclick = function () {
 
         input.type = 'text';
 
-        eyes.src = '/static/images/pwdOpenEye.png';//睜眼圖
+        eyes.src = '/static/images/eye.svg';//睜眼圖
 
         flag = 1;
 
@@ -22,7 +22,7 @@ imgs.onclick = function () {
 
         input.type = 'password';
 
-        eyes.src = '/static/images/pwdCloseEye.png';//閉眼圖
+        eyes.src = '/static/images/eye-slash.svg';//閉眼圖
 
         flag = 0;
 
