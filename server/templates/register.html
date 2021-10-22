@@ -34,7 +34,7 @@
                                         <input class="inputText" type="text" name="accountName" maxlength="150" autocapitalize="none"
                                                                     autocomplete="accountName" autofocus="" required="" id="accountName"
                                                                     value="{{accountName}}" placeholder="安麗會員編號"
-                                                                    pattern="^[0-9]*$"
+                                                                    pattern="[3-9][0-9]{6}"
                                                                     oninput="setCustomValidity('');" oninvalid="setCustomValidity('格式錯誤，請檢查');"
                                         >
                                     </p>
@@ -89,7 +89,8 @@
                                     <p>
                                         <label>電話:</label>
                                         <input class="inputText" type="text" name="phone" autocomplete="none"
-                                                                 required="" id="phone" value="{{phone}}">
+                                                                 required="" id="phone" value="{{phone}}"
+                                            pattern="[0-9]{10}">
                                     </p>
                                     <p>
                                         <label>e-mail:</label>
@@ -200,7 +201,9 @@
                     + "身分證後四碼:" + document.getElementById("IDnumber").value + '\n'
                     + "教室:" + document.getElementById("ChainYenClass").value + '\n'
                     + "獎銜:" + document.getElementById("amwayAward").value;
+                    + "電話:" + document.getElementById("phone").value;
                     + "e-mail:" + document.getElementById("e_mail").value;
+                    + "上手白金:" + document.getElementById("DDnotExist").value;
 
             if (confirm(msg)==true){
             return true;
