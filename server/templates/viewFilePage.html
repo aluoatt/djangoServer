@@ -13,7 +13,7 @@
 
 	{% load static %}
 	<link href="{%static 'favicon.ico' %}" rel="shortcut icon">
-	
+	<link rel="stylesheet" href="{% static 'assets/css/loadingimg.css' %}" />
 </head>
 	<body class="is-preload" style="background-size: Cover;background:url('{%static 'images/login底圖.png' %}');">
 
@@ -106,12 +106,23 @@
 										{% if targetFile.fileType.id == 1 %}
 										{% if alreadyReady %}
 										<p id="videoWait">影片載入中請稍候....</p>
-										{% else %}
-										<p id="videoWait">影片處理中請稍候....可離開觀看其他資料謝謝</p>
-										{% endif %}
 										<div id="myProgress">
 										  <div id="myBar"></div>
 										</div>
+										{% else %}
+										<p id="videoWait">影片處理中請稍候....可離開觀看其他資料謝謝</p>
+										<div id="floatingCirclesG">
+											<div class="f_circleG" id="frotateG_01"></div>
+											<div class="f_circleG" id="frotateG_02"></div>
+											<div class="f_circleG" id="frotateG_03"></div>
+											<div class="f_circleG" id="frotateG_04"></div>
+											<div class="f_circleG" id="frotateG_05"></div>
+											<div class="f_circleG" id="frotateG_06"></div>
+											<div class="f_circleG" id="frotateG_07"></div>
+											<div class="f_circleG" id="frotateG_08"></div>
+										</div>
+										{% endif %}
+
 
 										<video id="demo"  preload="media"  playsinline controls width='100%'
 											   style="display:none;" height='100%'
@@ -123,12 +134,23 @@
 
 										{% if alreadyReady %}
 										<p id="PDFWait">PDF載入中請稍候....</p>
+										<div id="myProgress">
+											  <div id="myBar"></div>
+										</div>
 										{% else %}
 										<p id="PDFWait">PDF處理中請稍候....可離開觀看其他資料謝謝</p>
-										{% endif %}
-										<div id="myProgress">
-										  <div id="myBar"></div>
+										<div id="floatingCirclesG">
+											<div class="f_circleG" id="frotateG_01"></div>
+											<div class="f_circleG" id="frotateG_02"></div>
+											<div class="f_circleG" id="frotateG_03"></div>
+											<div class="f_circleG" id="frotateG_04"></div>
+											<div class="f_circleG" id="frotateG_05"></div>
+											<div class="f_circleG" id="frotateG_06"></div>
+											<div class="f_circleG" id="frotateG_07"></div>
+											<div class="f_circleG" id="frotateG_08"></div>
 										</div>
+										{% endif %}
+
 										<div id="pdf_viewer_newer" class="container" controlsList="nodownload" oncontextmenu="return false;"></div>
 										{% endif %}
 
