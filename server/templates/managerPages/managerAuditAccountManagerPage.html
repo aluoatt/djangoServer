@@ -38,16 +38,18 @@
 
                     </div>
                     <input type="hidden" id="urlcopy" value="複製失敗請再試一次" style="display:none;" />
-                    <button class="btn btn-primary small copy_coupon" value="產生註冊網址">產生註冊網址</button>
-                    <a  data-toggle="modal" data-target="#QA">
-									常見問題
-                    </a>
+                    <button class="btn btn-primary small copy_coupon" value="產生註冊網址">
+                        產生註冊網址
+                    </button>
+                    <button class="btn btn-primary small" data-toggle="modal" data-target="#QA">
+                        常見問題
+                    </button>
                     <br>
                     <div id="colSearch" class="form-row align-items-center">
 
                     </div>
                     <br>
-                    <table id="myTable"  class="display table-bordered " style="width:100%; white-space: nowrap;">
+                    <table id="myTable" class="display table-bordered " style="width:100%; white-space: nowrap;">
                         <thead>
                             <tr>
                                 <th>姓名</th>
@@ -172,10 +174,10 @@
                     <p>1.目前僅提供給國內且為A方案以上之安麗直銷商或生活會員註冊使用，（海外市場-大陸、澳門、越南、香港、馬來西亞⋯）目前不開放！</p>
                     <p>2.註冊連結兩小時後會過期，需重新傳送</p>
                     <p>3.白金級以上領導人，"上手白金"請填「自己」
-                    (填寫直銷商編號，名字會自動帶入)
+                        (填寫直銷商編號，名字會自動帶入)
                     </p>
                     <p>上手鑽石"不用填寫，系統會自動帶入
-                    （鑽石不在團隊的，都一律是鍾老師）
+                        （鑽石不在團隊的，都一律是鍾老師）
                     </p>
                     <p>****信箱收不到****</p>
                     <p>1.確認信箱註冊時是否正確</p>
@@ -292,7 +294,7 @@
 
             window.Clipboard.copy(value);
         });
-        
+
         function syncDelay(milliseconds) {
             var start = new Date().getTime();
             var end = 0;
@@ -356,14 +358,13 @@
             }
         }
     </script>
-<style>
-    .dataTables_filter input {
-        background-color: white;
-        color: black;
-        border-radius: 5px;
-    }
-
-</style>
+    <style>
+        .dataTables_filter input {
+            background-color: white;
+            color: black;
+            border-radius: 5px;
+        }
+    </style>
 </body>
 
 </html>
