@@ -44,7 +44,9 @@ production: clean
 	--exclude=/translationfiles \
 	--exclude=/tsconfig.json \
 	--exclude=/vendor \
+	--exclude=/build \
 	--exclude='*/__pycache__' \
+	--exclude='*/migrations' \
 	--exclude=/webpack.* \
 	$(project_dir)/ $(build_dir)/$(app_name)
 	tar -czf $(build_dir)/$(app_name)-$(version).tar.gz \
