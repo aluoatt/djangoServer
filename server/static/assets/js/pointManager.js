@@ -15,12 +15,12 @@ $(document).ready(() => {
         }
     });
     myTableHead = [
-        'user', 'point', 'jobTitle', 'amwayAward',
-        'addPoint', 'reducePoint', 'getPointHistory'
+        'user', 'point', 'amwayNumber', 'jobTitle', 'amwayAward',
+        'addPoint', 'reducePoint', 'addReducePointByUser', 'getPointHistory'
     ]
     myTableHeadChinese = [
-        '姓名', '點數', '職務', '獎銜',
-        '加點', '扣點', '查看歷史'
+        '姓名', '點數', '直銷商編號', '職務', '獎銜',
+        '增點', '扣點', '增扣點', '查看歷史'
     ]
     $.ajax({
         'url': location.origin + "/pointManage/allUserAccount",
@@ -36,10 +36,12 @@ $(document).ready(() => {
                 myTable.row.add([
                     fields['user'],
                     fields['point'],
+                    fields['amwayNumber'],
                     fields['jobTitle'],
                     fields['amwayAward'],
                     `<a id="${username}_addPoint" class="button_modified h4 btn btn-outline-success btn-sm">+10</a>`,
                     `<a id="${username}_reducePoint" class="button_modified h4 btn btn-outline-success btn-sm">-1</a>`,
+                    `<a id="${username}_addReducePointByUser" class="button_modified h4 btn btn-outline-success btn-sm">自定義</a>`,
                     `<a id="${username}_getPointHistory" class="button_history h4 btn btn-outline-success btn-sm" data-toggle="modal"
                         data-target="#pointModal">
                         查看
@@ -51,7 +53,7 @@ $(document).ready(() => {
                     });
             }
             myTable.columns().every(function (index) {
-                if (index > 3) {
+                if (index > 4) {
                     return;
                 }
                 var column = this;
@@ -101,18 +103,36 @@ $(document).ready(() => {
         username = id.split("_")[0];
         user = $("#" + username + "_user").html();
         action = id.split("_")[1];
-        if (action === "addPoint" || action === "reducePoint") {
+        if (action === "addPoint" || action === "reducePoint" ||
+            action === "addReducePointByUser") {
             msg = ""
             if (action === "addPoint")
+            {
+                title = "提醒"
                 msg = "將為\"" + user + "\"增加 10 點"
+            }
             else if (action === "reducePoint")
+            {
+                title = "提醒"
                 msg = "將為\"" + user + "\"減少 1 點"
+            }
+            else if (action === "addReducePointByUser")
+            {
+                title = "請輸入您要給予的點數"
+                msg = ""
+                msg = "";
+                msg = $("<form>", { id: "addPointForm" });
+                pointDiv = $("<div>", { class: "form-group" });
+                pointDiv.append($("<label>", { text: "點數" }));
+                pointDiv.append($("<input>", { type: "number", name: "point", class: "form-control", placeholder: "Enter point" }));
+                msg.append(pointDiv);
+            }
 
             bootbox.confirm({
                 closeButton: false,
                 backdrop: true,
                 scrollable: true,
-                title: "提醒",
+                title: title,
                 message: msg,
                 locale: "zh_TW",
                 container: "body",
@@ -120,8 +140,14 @@ $(document).ready(() => {
                 callback: (res) => {
                     if (!res)
                         return;
-                    formData = new FormData();
-                    formData.append("username", username)
+                    if(action === "addReducePointByUser"){
+                        formData = new FormData($("#addPointForm")[0]);
+                        formData.append("username", username)
+                    }else{
+                        formData = new FormData();
+                        formData.append("username", username)
+                    }
+                    
                     $.ajax({
                         'url': location.origin + "/pointManage/" + action,
                         'method': 'POST',
@@ -219,7 +245,9 @@ $(document).ready(() => {
 
     });
 
-    $(".addPointByOption").on("click", (event) => {
+    $(".addPointByOption").on("click", addPointByOption);
+
+    function addPointByOption (event) {
         id = $(event.target)[0].id;
         if (id === "addPointByAll" || id === "addPointByJobTitle" ||
             id === "addPointByAmwayAward" || id === "addPointByExcel") {
@@ -374,7 +402,7 @@ $(document).ready(() => {
                 }
             });
         }
-    });
+    }
 
     function getCookie(name) {
         let cookieValue = null;

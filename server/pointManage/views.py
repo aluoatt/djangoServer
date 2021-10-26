@@ -67,6 +67,57 @@ def addPointByAll(request):
 
     return res
 
+@permission_required('userlogin.seeManagerPointPage', login_url='/accounts/userlogin/')
+def addReducePointByUser(request):
+    res = HttpResponse()
+    try:
+        point = 0
+        try:
+            point = int(request.POST["point"])
+        except:
+            point = 0
+        if point == 0:
+            res.status_code = 200
+            return res
+
+        username = ""
+        try:
+            username = request.POST["username"]
+        except:
+            username = ""
+        if username == 0:
+            res.status_code = 200
+            return res
+
+        userAccountInfo = UserAccountInfo.objects.get(username = username)
+        userAccountChainyenList = UserAccountChainYenInfo.objects.filter(UserAccountInfo=userAccountInfo)
+        userAccountChainyenList.update(point=F('point') + point)
+
+        res.status_code = 200
+
+        modifier = request.user.user
+        if point > 0:
+            reason = "管理者增點"
+            addPoint = "+" + str(point)
+            reducePoint = ""
+        else:
+            reason = "管理者扣點"
+            addPoint = ""
+            reducePoint = str(point)
+
+        userAccount = userAccountChainyenList.get().UserAccountInfo
+        resultPoint = userAccountChainyenList.get().point
+        pHistory = pointHistory(UserAccountInfo = userAccount, modifier = modifier,
+                                recordDate = datetime.datetime.now(), reason = reason,
+                                addPoint = addPoint, reducePoint = reducePoint, transferPoint = "",
+                                resultPoint = resultPoint)
+        pHistory.save()
+        res.content = resultPoint
+
+    except:
+        res.status_code = 404
+
+    return res
 
 @permission_required('userlogin.seeManagerPointPage', login_url='/accounts/userlogin/')
 def addPointByAmwayAward(request):

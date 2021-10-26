@@ -5,6 +5,7 @@ from . import views
 urlpatterns = [
     path('addPoint', views.addPoint, name='addPoint'),
     path('addPointByAll', views.addPointByAll, name='addPointByAll'),
+    path('addReducePointByUser', views.addReducePointByUser, name='addReducePointByUser'),
     path('addPointByAmwayAward', views.addPointByAmwayAward, name='addPointByAmwayAward'),
     path('addPointByJobTitle', views.addPointByJobTitle, name='addPointByJobTitle'),
     path('addPointByExcel', views.addPointByExcel, name='addPointByExcel'),
