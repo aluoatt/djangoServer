@@ -16,13 +16,11 @@ import datetime
 from django.contrib.sessions.models import Session
 key = "Ja8asdfnjQnasdfd72D"
 
-
 # def set_session_key(self, key):
 #     if self.last_session_key and not self.last_session_key == key:
 #         Session.objects.get(session_key=self.last_session_key).delete()
 #     self.last_session_key = key
 #     self.save()
-
 def login(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('/home/')
@@ -39,9 +37,7 @@ def login(request):
         UserAccountChainYen = UserAccountChainYenInfo.objects.get(UserAccountInfo=userAccountInfo.id)
         if UserAccountChainYen.point - 1 <= 0:
             auth.logout(request)
-            pwderror = False
-            pointNotEnought = True
-            return render(request, 'login.html', locals())
+            return redirect('/accounts/login/?pointNotEnought=False')
         UserAccountChainYen.point -= 1
         UserAccountChainYen.save()
         pHistory = pointHistory(UserAccountInfo=userAccountInfo, modifier="系統",
@@ -56,8 +52,7 @@ def login(request):
         return HttpResponseRedirect('/home/')
     else:
         if username != '':
-
-            pwderror = True
+            return redirect('/accounts/login/?pwderror=False')
         return render(request, 'login.html', locals())
 
 def logout(request):

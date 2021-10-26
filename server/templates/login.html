@@ -89,19 +89,23 @@
 
 						</div>
 
-						<div class="form-group col-sm-3">
+						<div class="form-group col-sm-5">
 							<div class="d-flex flex-row">
 								<div class="p-2">
 									<input style="color:black;box-shadow: inset 0 0 0 2px #000000;" type="button"
 										value="登入" class="button rounded" onclick="confirmSubmit()" />
 								</div>
 								<div class="p-2">
-									{% if pwderror %}
-									<p style="color: red;">輸入的資料有誤</p>
-									{% endif %}
-									{% if pointNotEnought %}
-									<p style="color: red;">點數不足</p>
-									{% endif %}
+									<p style="color: red;">
+										<script>
+											if ((new URL(document.location)).searchParams.get("pointNotEnought") == "False") {
+												document.write("點數不足")
+											}
+											if ((new URL(document.location)).searchParams.get("pwderror") == "False") {
+												document.write("輸入的資料有誤")
+											}
+										</script>
+									</p>
 								</div>
 							</div>
 						</div>
