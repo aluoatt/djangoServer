@@ -119,8 +119,6 @@ $(document).ready(() => {
             else if (action === "addReducePointByUser")
             {
                 title = "請輸入您要給予的點數"
-                msg = ""
-                msg = "";
                 msg = $("<form>", { id: "addPointForm" });
                 pointDiv = $("<div>", { class: "form-group" });
                 pointDiv.append($("<label>", { text: "點數" }));

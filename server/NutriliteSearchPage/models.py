@@ -130,8 +130,8 @@ class articleModifyHistory(models.Model):
     fileDataID = models.ForeignKey('fileDataInfo', on_delete=models.CASCADE, verbose_name='對應的資料')
     modifier  = models.CharField(max_length=50, verbose_name='修改者')
     title     = models.CharField(max_length=50, verbose_name='標題')
-    mainClass = models.ForeignKey("mainClassInfo",verbose_name='主類別',on_delete=models.PROTECT)
-    secClass  = models.ForeignKey("secClassInfo",verbose_name = '次類別',on_delete=models.PROTECT)
+    mainClass = models.ForeignKey("mainClassInfo", verbose_name='主類別', on_delete=models.PROTECT)
+    secClass  = models.ForeignKey("secClassInfo", verbose_name = '次類別', on_delete=models.PROTECT)
     keyword   = models.CharField(max_length=500, verbose_name='關鍵字')
     describe  = models.CharField(max_length=500, verbose_name='描述')
     point     = models.IntegerField(verbose_name='耗費點數')
@@ -139,8 +139,12 @@ class articleModifyHistory(models.Model):
     recordDate = models.DateTimeField(verbose_name='修改日期')
 
 class articleReport(models.Model):
-    fileData = models.ForeignKey('fileDataInfo', on_delete=models.CASCADE, verbose_name='對應的資料')
-    reporter = models.ForeignKey('userlogin.UserAccountInfo', on_delete=models.CASCADE, verbose_name='回報者')
-    reason     = models.CharField(max_length=50, verbose_name='回報原因')
-    recordDate = models.DateTimeField(verbose_name='回報日期')
+    fileData      = models.ForeignKey('fileDataInfo', on_delete=models.CASCADE, verbose_name='對應的資料')
+    reporter      = models.ForeignKey('userlogin.UserAccountInfo', related_name="reporter", on_delete=models.CASCADE, verbose_name='回報者')
+    handler       = models.ForeignKey('userlogin.UserAccountInfo', related_name="handler", on_delete=models.CASCADE, verbose_name='處理者', null=True)
+    reason        = models.CharField(max_length=50, verbose_name='回報原因')
+    status        = models.CharField(max_length=50, verbose_name='狀態') #待處理report/已完成finish/無效回報discard
+    discardReason = models.CharField(max_length=50, verbose_name='無效原因', null= True)
+    recordDate    = models.DateTimeField(verbose_name='回報日期')
+    handleDate      = models.DateTimeField(verbose_name='處理日期', null=True)
 

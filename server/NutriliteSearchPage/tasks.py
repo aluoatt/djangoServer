@@ -27,7 +27,7 @@ def getFileDateProcess(FileId,driveFileId,userName,fileType,ownerAccountId,class
 def getFileWithoutWaterProcess(FileId,driveFileId,userName,fileType,ownerAccountId):
     my_data = {'fileId': driveFileId, 'userName': userName, 'FileType': fileType}
     logger.info(f'{userName}')
-    r = requests.post('http://127.0.0.1:9104/v1/getFileWithoutWater', data=my_data).text
+    r = requests.post('http://127.0.0.1:9105/v1/getFileWithoutWater', data=my_data).text
     logger.info(f'{r}')
     d = personalFileData.objects.filter(fileDataID=FileId, ownerAccount=ownerAccountId).first()
     logger.info(d)

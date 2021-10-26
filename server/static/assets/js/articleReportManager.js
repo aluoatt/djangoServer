@@ -1,6 +1,6 @@
 $(document).ready(() => {
 
-    myTable = $('#myArticleTable').DataTable({
+    reportTable = $('#reportTable').DataTable({
         dom: '<"row"lfr>tip',
         "orderClasses": false,
         "responsive": true,
@@ -25,8 +25,10 @@ $(document).ready(() => {
         '回報者', '標題', '主類別', '原因',
         '回報日期', '編輯資料', '刪除回報紀錄'
     ]
+
+    // 取得待處理列表
     $.ajax({
-        'url': location.origin + "/managerPages/getArticleReport",
+        'url': location.origin + "/managerPages/getArticleReport/report",
         'method': 'GET',
         'processData': false,
         'contentType': false,
@@ -37,9 +39,9 @@ $(document).ready(() => {
                 fields = data[i]
                 reportID = fields['id']
                 articleID = fields['articleID']
-                tempRow = myTable.row.add([
+                tempRow = reportTable.row.add([
                     fields['reporter'],
-                    fields['title'],
+                    `<a target="_blank" href="${location.origin}/viewFilePage/${articleID}">${fields['title']}</a>`,
                     fields['mainClass'],
                     fields['reason'],
                     fields['recordDate'],
@@ -58,7 +60,7 @@ $(document).ready(() => {
                     });
 
             }
-            myTable.columns().every(function (index) {
+            reportTable.columns().every(function (index) {
                 return;
                 if (index > 6 || myTableHeadChinese[index] === "描述") {
                     return;
@@ -89,26 +91,137 @@ $(document).ready(() => {
             });
 
             setTimeout(function () {
-                myTable.draw(true);
-                myTable.columns.adjust().draw();
-                myTable.responsive.recalc().columns.adjust();
-                if (data.length == 0 ){
+                reportTable.draw(true);
+                reportTable.columns.adjust().draw();
+                reportTable.responsive.recalc().columns.adjust();
+                if (data.length == 0) {
 
-                $(".dataTables_empty").text("目前沒有資料");
+                    $(".dataTables_empty").text("目前沒有資料");
 
-             }
+                }
             }, 10);
         },
         'error': (res) => {
-             $(".dataTables_empty").text("伺服器出狀況,請聯繫系統人員");
+            $(".dataTables_empty").text("伺服器出狀況,請聯繫系統人員");
         }
     });
 
-    $("#myArticleTable").on("click", ".button_editArticle", (event) => {
+    finishTable = $('#finishTable').DataTable({
+        dom: '<"row"lfr>tip',
+        "orderClasses": false,
+        "responsive": true,
+        "autoWidth": true,
+        "columnDefs": [
+            { "width": "25%", "targets": 3 },
+        ],
+        "language": {
+            url: location.origin + '/static/assets/i18n/datatable/zh_Hant.json'
+        },
+        "createdRow": function (row, data, dataIndex) {
+            $(row).addClass('table-primary');
+            $(row).addClass('text-dark');
+            $(row).addClass('font-weight-bold');
+        }
+    });
+
+    // 取得已完成列表
+    $.ajax({
+        'url': location.origin + "/managerPages/getArticleReport/finish",
+        'method': 'GET',
+        'processData': false,
+        'contentType': false,
+        'headers': { 'X-CSRFToken': getCookie('csrftoken') },
+        'success': (res) => {
+            data = JSON.parse(res)
+            for (i in data) {
+                fields = data[i]
+                articleID = fields['articleID']
+                tempRow = finishTable.row.add([
+                    fields['reporter'],
+                    `<a target="_blank" href="${location.origin}/viewFilePage/${articleID}">${fields['title']}</a>`,
+                    fields['mainClass'],
+                    fields['reason'],
+                    fields['recordDate'],
+                    fields['handler'],
+                    fields['handleDate'],
+                ]);
+            }
+            setTimeout(function () {
+                finishTable.draw(true);
+                finishTable.columns.adjust().draw();
+                finishTable.responsive.recalc().columns.adjust();
+                if (data.length == 0) {
+                    $(".dataTables_empty").text("目前沒有資料");
+                }
+            }, 10);
+        },
+        'error': (res) => {
+            $(".dataTables_empty").text("伺服器出狀況,請聯繫系統人員");
+        }
+    });
+
+    discardTable = $('#discardTable').DataTable({
+        dom: '<"row"lfr>tip',
+        "orderClasses": false,
+        "responsive": true,
+        "autoWidth": true,
+        "columnDefs": [
+            { "width": "25%", "targets": 3 },
+        ],
+        "language": {
+            url: location.origin + '/static/assets/i18n/datatable/zh_Hant.json'
+        },
+        "createdRow": function (row, data, dataIndex) {
+            $(row).addClass('table-primary');
+            $(row).addClass('text-dark');
+            $(row).addClass('font-weight-bold');
+        }
+    });
+    
+    // 取得無效列表
+    $.ajax({
+        'url': location.origin + "/managerPages/getArticleReport/discard",
+        'method': 'GET',
+        'processData': false,
+        'contentType': false,
+        'headers': { 'X-CSRFToken': getCookie('csrftoken') },
+        'success': (res) => {
+            data = JSON.parse(res)
+            for (i in data) {
+                fields = data[i]
+                articleID = fields['articleID']
+                tempRow = discardTable.row.add([
+                    fields['reporter'],
+                    `<a target="_blank" href="${location.origin}/viewFilePage/${articleID}">${fields['title']}</a>`,
+                    fields['mainClass'],
+                    fields['reason'],
+                    fields['recordDate'],
+                    fields['handler'],
+                    fields['discardReason'],
+                    fields['handleDate'],
+                ]);
+            }
+            setTimeout(function () {
+                discardTable.draw(true);
+                discardTable.columns.adjust().draw();
+                discardTable.responsive.recalc().columns.adjust();
+                if (data.length == 0) {
+                    $(".dataTables_empty").text("目前沒有資料");
+                }
+            }, 10);
+        },
+        'error': (res) => {
+            $(".dataTables_empty").text("伺服器出狀況,請聯繫系統人員");
+        }
+    });
+
+    $("#reportTable").on("click", ".button_editArticle", (event) => {
 
         id = $(event.target)[0].id;
         articleID = id.split("_")[0];
         action = id.split("_")[1];
+        parentID = $(event.target).parent()[0].id;
+        reportID = parentID.split("_")[0];
         if (action === "editArticle") {
             $.ajax({
                 'url': location.origin + "/managerPages/getFileDataInfoByID/" + articleID,
@@ -212,6 +325,7 @@ $(document).ready(() => {
                             if (!res)
                                 return;
                             formData = new FormData($("#article_modify")[0]);
+                            formData.append("reportID", reportID)
                             $.ajax({
                                 'url': location.origin + "/managerPages/updateFileDataInfo",
                                 'method': 'POST',
@@ -244,21 +358,24 @@ $(document).ready(() => {
     });
 
 
-
-    $("#myArticleTable").on("click", ".button_deleteReport", (event) => {
+    $("#reportTable").on("click", ".button_deleteReport", (event) => {
         id = $(event.target)[0].id;
         reportID = id.split("_")[0];
         action = id.split("_")[1];
         title = $(`#${reportID}_title`).html();
         reporter = $(`#${reportID}_reporter`).html();
-        msg = `確認要刪除【${reporter}】回報的【${title}】?`
-
+        title = `確認要刪除【${reporter}】回報的【${title}】?`
+        msg = $("<form>", { id: "discardForm" });
+        pointDiv = $("<div>", { class: "form-group" });
+        pointDiv.append($("<label>", { text: "無效原因" }));
+        pointDiv.append($("<textarea>", { type: "text", name: "discardReason", class: "form-control", text: "", id: "discardReason", required: true }));
+        msg.append(pointDiv);
 
         bootbox.confirm({
             closeButton: false,
             backdrop: true,
             scrollable: true,
-            title: "提醒",
+            title: title,
             message: msg,
             locale: "zh_TW",
             container: "body",
@@ -266,17 +383,16 @@ $(document).ready(() => {
             callback: (res) => {
                 if (!res)
                     return;
-                formData = new FormData();
-                formData.append("id", articleID)
+                formData = new FormData($("#discardForm")[0]);
                 $.ajax({
                     'url': location.origin + "/managerPages/removeArticleReport/" + reportID,
-                    'method': 'GET',
+                    'method': 'POST',
                     'processData': false,
                     'contentType': false,
                     'data': formData,
                     'headers': { 'X-CSRFToken': getCookie('csrftoken') },
                     'success': (res) => {
-                        window.myTable.row('#' + reportID + '_tr').remove().draw();
+                        window.reportTable.row('#' + reportID + '_tr').remove().draw();
 
                         bootbox.alert({
                             closeButton: false,

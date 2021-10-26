@@ -39,7 +39,7 @@ $(document).ready(() => {
                 fields = data[i]
                 articleID = fields['id']
                 myTable.row.add([
-                    fields['title'],
+                    `<a target="_blank" href="${location.origin}/viewFilePage/${articleID}">${fields['title']}</a>`,
                     fields['DBClassCode'],
                     fields['mainClass'],
                     fields['secClass'],

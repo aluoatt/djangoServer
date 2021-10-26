@@ -895,7 +895,7 @@ def getFileDataInfoByID(request, articleID):
     return res
 
 @permission_required('userlogin.seeManagerArticlePage', login_url='/accounts/userlogin/')
-def updateFileDataInfo(request):
+def updateFileDataInfo(request, reportID = None):
     res = HttpResponse()
     try:
         modifier = request.user.user
@@ -938,6 +938,15 @@ def updateFileDataInfo(request):
                                         secClass=secClass,keyword=keywordString,describe=describe,point=point,
                                         mainClass=mainClass,visible=visible, recordDate=lastModify)
         fHistory.save()
+
+        if "reportID" in request.POST:
+            handler = UserAccountInfo.objects.get(username = request.user.username)
+            reportID = request.POST["reportID"]
+            report = articleReport.objects.get(id =reportID)
+            report.status = "finish"
+            report.handler = handler
+            report.handleDate = datetime.datetime.now()
+            report.save()
 
         res.content = json.dumps({
             "id"       : id,
@@ -994,7 +1003,7 @@ def reportArticle(request):
         fileData = fileDataInfo.objects.get(id=articleID)
         userAccount = UserAccountInfo.objects.get(username=reporter)
         rReport = articleReport(reporter=userAccount, fileData=fileData,
-                        reason=reason, recordDate=recordDate)
+                        reason=reason, status="report", recordDate=recordDate)
         rReport.save()
         res.status_code = 200
     except:
@@ -1005,15 +1014,24 @@ def reportArticle(request):
 def removeArticleReport(request, reportID):
     res = HttpResponse()
     try:
+        discardReason = ''
+        if 'discardReason' in request.POST:
+            discardReason = request.POST['discardReason']
+
+        handler = UserAccountInfo.objects.get(username=request.user.username)
         rReport = articleReport.objects.get(id=int(reportID))
-        rReport.delete()
+        rReport.status = "discard"
+        rReport.handler = handler
+        rReport.discardReason = discardReason
+        rReport.handleDate = datetime.datetime.now()
+        rReport.save()
         res.status_code = 200
     except:
         res.status_code = 503
     return res
 
 @permission_required('userlogin.seeManagerArticleReportPage', login_url='/accounts/userlogin/')
-def getArticleReport(request):
+def getArticleReport(request, status):
     res = HttpResponse()
     try:
         mainClassList = []
@@ -1033,16 +1051,24 @@ def getArticleReport(request):
             mainClassList.append("演講廳")
 
         articleDatas = articleReport.objects.filter(fileData__mainClass__mainClassName__in=mainClassList)
+        articleDatas = articleDatas.filter(status=status)
         articleDataSummary = []
         for data in articleDatas:
+            handler = ""
+            if data.handler:
+                handler = data.handler.user
             tmp = {
                 "id"         : data.id,
                 "articleID"  : data.fileData.id,
                 "reporter"   : data.reporter.user,
+                "handler"    : handler,
                 "title"      : data.fileData.title,
                 "mainClass"  : data.fileData.mainClass.mainClassName,
                 "reason"     : data.reason,
-                "recordDate" : str(data.recordDate)
+                "status"     : data.status,
+                "discardReason"     : data.discardReason,
+                "recordDate" : str(data.recordDate),
+                "handleDate"   : str(data.handleDate)
             }
             articleDataSummary.append(tmp)
         res.content = json.dumps(articleDataSummary)

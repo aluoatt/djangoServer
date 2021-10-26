@@ -24,22 +24,34 @@
         <section id="one">
             <div class="inner">
                 {% include 'managerPages/managerHomePageHeaderBar.html' %}
-                <div id="colSearch" class="form-row align-items-center">
-
+                <ul class="nav nav-tabs" id="myTab">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="articleNav" data-toggle="tab" href="#report" >
+                            待處理
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="articleRankNav" data-toggle="tab" href="#finish">
+                            完成
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="articleRankNav" data-toggle="tab" href="#discard">
+                            無效回報
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="reportContent">
+                    <div class="tab-pane fade show active" id="report">
+                        {% include 'managerPages/managerArticleReportManagerPageReport.html' %}
+                    </div>
+                    <div class="tab-pane fade" id="finish">
+                        {% include 'managerPages/managerArticleReportManagerPageFinish.html' %}
+                    </div>
+                    <div class="tab-pane fade" id="discard">
+                        {% include 'managerPages/managerArticleReportManagerPageDiscard.html' %}
+                    </div>
                 </div>
-                <table id="myArticleTable" class="display table-bordered " style="width:100%; ">
-                    　<thead>
-                        <tr>
-                            <th>回報者</th>
-                            <th>標題</th>
-                            <th>主類別</th>
-                            <th>原因</th>
-                            <th>回報日期</th>
-                            <th>編輯資料</th>
-                            <th>刪除回報</th>
-                        </tr>
-                    </thead>
-                </table>
             </div>
         </section>
     </div>
