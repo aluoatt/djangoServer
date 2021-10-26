@@ -27,6 +27,16 @@ $(document).ready(()=>{
                     return;
                 formData = new FormData($("#article_report")[0]);
                 formData.append("articleID", articleID);
+                reason = formData.get("reason")
+                if(reason === ""){
+                    bootbox.alert({
+                        closeButton: false,
+                        message: "請確實填寫回報原因喔!",
+                        locale: "zh_TW",
+                        centerVertical: true,
+                    });
+                    return;
+                }
                 $.ajax({
                     'url': location.origin + "/managerPages/reportArticle",
                     'method': 'POST',
