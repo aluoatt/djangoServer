@@ -19,6 +19,8 @@ from django.http.response import StreamingHttpResponse
 from pointManage.models import pointHistory
 from django.conf import settings
 from datetime import timedelta
+import numpy as np
+
 backaddress = "/home/chainyen/production/backEnd"
 
 
@@ -41,17 +43,29 @@ def keywordSearchPage(request):
         keywords = ""
 
     keywords_list = keywords.split(" ")
+    mainClass_dict = {}
+    for maincls in mainClassInfo.objects.all():
+        mainClass_dict[maincls.mainClassName] = maincls.id
+
+    needFilterMainIds = []
 
     totalKeywordNum = len(keywords_list)
 
     q1 = Q()
     q1.connector = 'OR'
+    fileDataKeywords_list = []
 
     for keyword in keywords_list:
         if keyword == "":
+            totalKeywordNum -= 1
             continue
-        q1.children.append(("keyword__contains", keyword))
-
+        if keyword in mainClass_dict.keys():
+            needFilterMainIds.append(mainClass_dict[keyword])
+            totalKeywordNum -= 1
+            continue
+        # q1.children.append(("keyword__contains", keyword))
+        for fid in np.unique([fileInfo.fileDataInfoID.id for fileInfo in fileDataKeywords.objects.filter(keyword__contains=keyword)]):
+            fileDataKeywords_list.append(fid)
     try:
         userAcc = UserAccountInfo.objects.get(username=request.user)
         dataPermissionsLevel = userAcc.dataPermissionsLevel
@@ -68,34 +82,40 @@ def keywordSearchPage(request):
     earchIdKeywordCount_dict = {}
 
     fileDataKeywords_obj = fileDataKeywords.objects.filter(q1)
+
     hasKeywordData = False
     if not keywords == "":
-        for keyfileInfo in fileDataKeywords_obj:
-            if keyfileInfo.fileDataInfoID.id in earchIdKeywordCount_dict.keys():
-                earchIdKeywordCount_dict[keyfileInfo.fileDataInfoID.id] += 1
-                if earchIdKeywordCount_dict[keyfileInfo.fileDataInfoID.id] >= totalKeywordNum:
-                    q2.children.append(("id", keyfileInfo.fileDataInfoID.id))
+        for keyfileInfo_id in fileDataKeywords_list:
+            if keyfileInfo_id in earchIdKeywordCount_dict.keys():
+                earchIdKeywordCount_dict[keyfileInfo_id] += 1
+                if earchIdKeywordCount_dict[keyfileInfo_id] >= totalKeywordNum:
+                    q2.children.append(("id", keyfileInfo_id))
             else:
 
-                earchIdKeywordCount_dict[keyfileInfo.fileDataInfoID.id] = 1
-                if earchIdKeywordCount_dict[keyfileInfo.fileDataInfoID.id] >= totalKeywordNum:
-                    q2.children.append(("id", keyfileInfo.fileDataInfoID.id))
+                earchIdKeywordCount_dict[keyfileInfo_id] = 1
+                if earchIdKeywordCount_dict[keyfileInfo_id] >= totalKeywordNum:
+                    q2.children.append(("id", keyfileInfo_id))
 
         titleQ = Q()
         titleQ.connector = "AND"
         for keyword in keywords_list:
+            if keyword in mainClass_dict.keys():
+                continue
             titleQ.children.append(("title__contains", keyword))
 
         for titleResult in fileDataInfo.objects.filter(titleQ):
             q2.children.append(("id", titleResult.id))
-
+        clsQ = Q()
+        clsQ.connector = "OR"
+        for filterMainId in needFilterMainIds:
+            clsQ.children.append(("mainClass", filterMainId))
 
         if len(q2) > 0:
             fileDatas = fileDataInfo.objects.filter(
                 occurrenceDate__gte=limDate,
                 visible=1,
                 permissionsLevel__lte=dataPermissionsLevel
-            ).filter(q2).order_by('-occurrenceDate')
+            ).filter(q2 & clsQ).order_by('-occurrenceDate')
         else:
             fileDatas = fileDataInfo.objects.filter(
                 occurrenceDate__gte=limDate,
