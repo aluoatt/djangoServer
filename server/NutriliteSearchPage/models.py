@@ -98,6 +98,8 @@ class personalFileData(models.Model):
     ownerAccount = models.ForeignKey('userlogin.UserAccountInfo',on_delete=models.CASCADE,verbose_name='對應的帳號')
     exchangeDate = models.DateTimeField(verbose_name='資料兌換日期')
     expiryDate = models.DateField(verbose_name='資料兌換時效到期日',null=True,blank=True)
+    create_Date_S = models.DateTimeField(verbose_name='轉檔開始時間', null=True, blank=True,default=timezone.now)
+    create_Date_E = models.DateTimeField(verbose_name='轉檔結束時間', null=True, blank=True,default=timezone.now)
     costPoint = models.IntegerField(verbose_name='花費點數')
     waterCreateReady = models.BooleanField(default=0,verbose_name='浮水印是否完成')
     waterMarkPath = models.CharField(max_length=400,verbose_name='浮水印檔案路徑', null=True,blank=True)
