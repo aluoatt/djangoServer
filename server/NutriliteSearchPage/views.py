@@ -227,13 +227,15 @@ def exchangeOption(request, fileId):
                          expiryDate=None,
                          costPoint=targetFile.point,
                          waterCreateReady=0,
-                         exchangeDate=datetime.datetime.now()
+                         create_Date_S=str(datetime.datetime.now()),
+                         exchangeDate=str(datetime.datetime.now())
                          ).save()
         targetFile.exchangeCount += 1
         targetFile.save()
         personalExchangeFileLog(fileDataID=targetFile,
                                 ownerAccount=UserAccount,
                                 costPoint=targetFile.point,
+
                                 ).save()
 
 
@@ -244,6 +246,7 @@ def exchangeOption(request, fileId):
             # 是否製作浮水印
             if targetFile.downloadAble:
                 if targetFile.needWaterMark:
+
                     if targetFile.fileType.id > 1:  # 非影片
                         # 製作浮水印
                         getFileDateProcess.delay(targetFile.id, targetFile.PDF, waterMarkUserName, "pdf",
@@ -266,6 +269,8 @@ def exchangeOption(request, fileId):
         else:
             if targetFile.downloadAble:
                 if targetFile.needWaterMark:
+
+
                     if targetFile.fileType.id > 1:  # 非影片
                         getFileDateProcess.delay(targetFile.id, targetFile.PDF, "超級使用者", "pdf", UserAccount.id,classRoomAccount)
                     else:
@@ -460,7 +465,7 @@ def returnPDF(request, fileId):
 
     if resume.first().waterCreateReady == 0:
 
-        if resume.first().exchangeDate < (datetime.datetime.now() - datetime.timedelta(days=1)):
+        if resume.first().create_Date_S < (datetime.datetime.now() - datetime.timedelta(days=1)):
 
             if regetPersonalFile(request, fileId):
 
@@ -474,8 +479,6 @@ def returnPDF(request, fileId):
             if (resume.first().fileDataID.fileType.id == 1):
                 return stream_video(request, backaddress + '/' + resume.first().waterMarkPath)
             else:
-
-                # fsock = open(backaddress + '/' + resume.first().waterMarkPath, 'rb')
 
                 response = FileResponse(open(backaddress + '/' + resume.first().waterMarkPath, 'rb'), content_type='application/pdf', filename="pdf.pdf")
         except:
@@ -508,7 +511,7 @@ def returnFileStatus(request, fileId):
 
     if resume.first().waterCreateReady == 0:
 
-        if resume.first().exchangeDate < (datetime.datetime.now() - datetime.timedelta(days=1)):
+        if resume.first().create_Date_S < (datetime.datetime.now() - datetime.timedelta(days=1)):
 
             if regetPersonalFile(request, fileId):
 
@@ -531,7 +534,7 @@ def returnFileStatus(request, fileId):
         else:
             r = resume.first()
             r.waterCreateReady = False
-            r.exchangeDate = datetime.datetime.now()
+            r.create_Date_S = str(datetime.datetime.now())
             r.save()
             if regetPersonalFile(request, fileId):
 
