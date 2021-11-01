@@ -39,7 +39,7 @@ def personalInfoHomePage(request,selectTag):
     pagination = Pagination(current_page_num, page_count, request, per_page_num=10)
     # 處理之後的資料
     fileDatas = fileDatas[pagination.start:pagination.end]
-    selectPage = "瀏覽已兌換資料"
+    selectPage = "瀏覽曾兌換資料"
     content = {
         "fileDatas": fileDatas, "pagination": pagination, }
 

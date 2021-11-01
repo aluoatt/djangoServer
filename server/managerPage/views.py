@@ -291,7 +291,7 @@ def modalAccountModifyPOST(request):
 
             AccountModifyHistory(UserAccountInfo=r,
                                  modifier = managerName,
-                                 recordDate = datetime.datetime.now(),
+                                 recordDate = str(datetime.datetime.now()),
                                  modifyFielddName = "姓名",
                                  originFieldData = r.user,
                                  RevisedData = user).save()
@@ -300,7 +300,7 @@ def modalAccountModifyPOST(request):
         if r.gender != gender:
             AccountModifyHistory(UserAccountInfo=r,
                                  modifier=managerName,
-                                 recordDate=datetime.datetime.now(),
+                                 recordDate=str(datetime.datetime.now()),
                                  modifyFielddName="性別",
                                  originFieldData=r.gender,
                                  RevisedData=gender).save()
@@ -309,7 +309,7 @@ def modalAccountModifyPOST(request):
         if r.phone != phone:
             AccountModifyHistory(UserAccountInfo=r,
                                  modifier=managerName,
-                                 recordDate=datetime.datetime.now(),
+                                 recordDate=str(datetime.datetime.now()),
                                  modifyFielddName="電話",
                                  originFieldData=r.phone,
                                  RevisedData=phone).save()
@@ -320,7 +320,7 @@ def modalAccountModifyPOST(request):
             if r.dataPermissionsLevel != int(dataPermissionsLevel):
                 AccountModifyHistory(UserAccountInfo=r,
                                      modifier=managerName,
-                                     recordDate=datetime.datetime.now(),
+                                     recordDate=str(datetime.datetime.now()),
                                      modifyFielddName="資料權限等級",
                                      originFieldData=r.dataPermissionsLevel,
                                      RevisedData=int(dataPermissionsLevel)).save()
@@ -334,14 +334,14 @@ def modalAccountModifyPOST(request):
 
                     AccountModifyHistory(UserAccountInfo=r,
                                          modifier=managerName,
-                                         recordDate=datetime.datetime.now(),
+                                         recordDate=str(datetime.datetime.now()),
                                          modifyFielddName="資料權限等級",
                                          originFieldData="凍結",
                                          RevisedData="正常").save()
                 else:
                     AccountModifyHistory(UserAccountInfo=r,
                                         modifier=managerName,
-                                        recordDate=datetime.datetime.now(),
+                                        recordDate=str(datetime.datetime.now()),
                                         modifyFielddName="帳號狀態",
                                         originFieldData="正常",
                                         RevisedData="凍結").save()
@@ -355,7 +355,7 @@ def modalAccountModifyPOST(request):
             if r2.jobTitle.jobTitle != odata.jobTitle:
                 AccountModifyHistory(UserAccountInfo=r,
                                      modifier=managerName,
-                                     recordDate=datetime.datetime.now(),
+                                     recordDate=str(datetime.datetime.now()),
                                      modifyFielddName="職務",
                                      originFieldData=r2.jobTitle.jobTitle,
                                      RevisedData=odata.jobTitle).save()
@@ -400,7 +400,7 @@ def modalAccountModifyPOST(request):
             if r2.classRoom.ClassRoomName != odata.ClassRoomName:
                 AccountModifyHistory(UserAccountInfo=r,
                                      modifier=managerName,
-                                     recordDate=datetime.datetime.now(),
+                                     recordDate=str(datetime.datetime.now()),
                                      modifyFielddName="教室",
                                      originFieldData=r2.classRoom.ClassRoomName,
                                      RevisedData=odata.ClassRoomName).save()
@@ -413,7 +413,7 @@ def modalAccountModifyPOST(request):
         if r3.amwayAward.amwayAward != odata.amwayAward:
             AccountModifyHistory(UserAccountInfo=r,
                                  modifier=managerName,
-                                 recordDate=datetime.datetime.now(),
+                                 recordDate=str(datetime.datetime.now()),
                                  modifyFielddName="教室",
                                  originFieldData=r3.amwayAward.amwayAward,
                                  RevisedData=odata.amwayAward).save()
@@ -424,7 +424,7 @@ def modalAccountModifyPOST(request):
         if r3.amwayDD.amwayNumber != odata.amwayNumber:
             AccountModifyHistory(UserAccountInfo=r,
                                  modifier=managerName,
-                                 recordDate=datetime.datetime.now(),
+                                 recordDate=str(datetime.datetime.now()),
                                  modifyFielddName="教室",
                                  originFieldData=r3.amwayDD.amwayNumber,
                                  RevisedData=odata.amwayNumber).save()
@@ -899,7 +899,7 @@ def updateFileDataInfo(request, reportID = None):
     res = HttpResponse()
     try:
         modifier = request.user.user
-        lastModify = datetime.datetime.now()
+        lastModify = str(datetime.datetime.now())
         id = request.POST['id']
         title = request.POST['title']
         mainClass = mainClassInfo.objects.get(mainClassName = request.POST["mainClass"]) 
@@ -945,7 +945,7 @@ def updateFileDataInfo(request, reportID = None):
             report = articleReport.objects.get(id =reportID)
             report.status = "finish"
             report.handler = handler
-            report.handleDate = datetime.datetime.now()
+            report.handleDate = str(datetime.datetime.now())
             report.save()
 
         res.content = json.dumps({
@@ -999,7 +999,7 @@ def reportArticle(request):
         reporter  = request.user.username
         articleID = request.POST["articleID"]
         reason = request.POST["reason"]
-        recordDate = datetime.datetime.now()
+        recordDate = str(datetime.datetime.now())
         fileData = fileDataInfo.objects.get(id=articleID)
         userAccount = UserAccountInfo.objects.get(username=reporter)
         rReport = articleReport(reporter=userAccount, fileData=fileData,
@@ -1023,7 +1023,7 @@ def removeArticleReport(request, reportID):
         rReport.status = "discard"
         rReport.handler = handler
         rReport.discardReason = discardReason
-        rReport.handleDate = datetime.datetime.now()
+        rReport.handleDate = str(datetime.datetime.now())
         rReport.save()
         res.status_code = 200
     except:
