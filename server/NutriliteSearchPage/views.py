@@ -21,7 +21,7 @@ from django.conf import settings
 from datetime import timedelta
 import numpy as np
 
-backaddress = "/home/chainyen/production/backEnd"
+backaddress = settings.BACK_ADDRESS
 
 
 # Create your views here.
@@ -135,7 +135,7 @@ def keywordSearchPage(request):
 
     today = datetime.datetime.now()
     delta = datetime.timedelta(hours=-6)
-    target_day = today - delta
+    target_day = today + delta
     ownFileList = [k.fileDataID.id for k in personalFileData.objects.filter(ownerAccount=userAcc,
                                                                             exchangeDate__gte=target_day)]
 
@@ -184,7 +184,7 @@ def NutriliteSearchPage(request, topic, selectTag):
                                             permissionsLevel__lte=dataPermissionsLevel).order_by('-occurrenceDate')
     today = datetime.datetime.now()
     delta = datetime.timedelta(hours=-6)
-    target_day = today - delta
+    target_day = today + delta
     ownFileList = [k.fileDataID.id for k in personalFileData.objects.filter(ownerAccount=userAcc,
                                                                             exchangeDate__gte=target_day)]
 
@@ -214,7 +214,7 @@ def exchangeOption(request, fileId):
         classRoomAccount = False
     today = datetime.datetime.now()
     delta = datetime.timedelta(hours=-6)
-    target_day = today - delta
+    target_day = today + delta
     targetFile = fileDataInfo.objects.get(id=int(fileId))
     UserAccount = UserAccountInfo.objects.get(username=request.user)
     UserAccountChainYen = UserAccountChainYenInfo.objects.get(UserAccountInfo=UserAccount)
@@ -222,6 +222,7 @@ def exchangeOption(request, fileId):
                                     fileDataID=targetFile.id)
     alreadyExchange = pf.count() > 0
     if alreadyExchange:
+        pf = pf.first()
         if pf.exchangeDate < target_day:
 
             if targetFile.point > UserAccountChainYen.point:
@@ -346,7 +347,7 @@ def exchangeOption(request, fileId):
 def regetPersonalFile(request, fileId):
     today = datetime.datetime.now()
     delta = datetime.timedelta(hours=-6)
-    target_day = today - delta
+    target_day = today + delta
 
     targetFile = fileDataInfo.objects.get(id=int(fileId))
     UserAccount = UserAccountInfo.objects.get(username=request.user)
@@ -475,7 +476,7 @@ def viewFilePage(request, fileId):
 
     #檢查最近一次瀏覽時間
     today = datetime.datetime.now()
-    delta = datetime.timedelta(minutes=-20)
+    delta = datetime.timedelta(hours=-60)
     target_day = today + delta
     if personalWatchFileLog.objects.filter(watchAccount=UserAccount,exchangeDate__gte=target_day).count() < 1:
         personalWatchFileLog(fileDataID=targetFile,
