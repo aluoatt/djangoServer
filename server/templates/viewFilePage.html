@@ -357,7 +357,11 @@
 							} else {
 
 								clearInterval(my_refresh)
+								if (returnData == "error" ){
+									document.getElementById('PDFWait').innerHTML="發生錯誤或檔案兌換期限已過，請重新整理";
+								}else{
 								my_refresh = setInterval(ajpdf, t);
+								}
 
 							}
 						},
@@ -432,7 +436,11 @@
 
 
 								clearInterval(my_refresh)
+								if (returnData == "error" ){
+									document.getElementById('videoWait').innerHTML="發生錯誤或影片兌換期限已過，請重新整理";
+								}else{
 								my_refresh = setInterval(ajpdf, t);
+								}
 
 							}
 						},

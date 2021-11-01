@@ -41,7 +41,7 @@ def login(request):
         UserAccountChainYen.point -= 1
         UserAccountChainYen.save()
         pHistory = pointHistory(UserAccountInfo=userAccountInfo, modifier="系統",
-                                recordDate=datetime.datetime.now(), reason='登入扣點',
+                                recordDate=str(datetime.datetime.now()), reason='登入扣點',
                                 addPoint="", reducePoint="1", transferPoint="",
                                 resultPoint=UserAccountChainYen.point)
         pHistory.save()

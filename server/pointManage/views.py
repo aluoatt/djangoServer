@@ -25,7 +25,7 @@ def addPoint(request):
 
         modifier = request.user.user
         pHistory = pointHistory(UserAccountInfo = userAccountInfo, modifier = modifier,
-                                recordDate = datetime.datetime.now(), reason = '管理者加點',
+                                recordDate = str(datetime.datetime.now()), reason = '管理者加點',
                                 addPoint = "+10", reducePoint = "", transferPoint = "",
                                 resultPoint = point)
         pHistory.save()
@@ -57,7 +57,7 @@ def addPointByAll(request):
             userAccount = userAccountChainyen.UserAccountInfo
             resultPoint = userAccountChainyen.point
             pHistory = pointHistory(UserAccountInfo = userAccount, modifier = modifier,
-                                    recordDate = datetime.datetime.now(), reason = '管理者加點',
+                                    recordDate = str(datetime.datetime.now()), reason = '管理者加點',
                                     addPoint = "+" + str(point), reducePoint = "", transferPoint = "",
                                     resultPoint = resultPoint)
             pHistory.save()
@@ -108,7 +108,7 @@ def addReducePointByUser(request):
         userAccount = userAccountChainyenList.get().UserAccountInfo
         resultPoint = userAccountChainyenList.get().point
         pHistory = pointHistory(UserAccountInfo = userAccount, modifier = modifier,
-                                recordDate = datetime.datetime.now(), reason = reason,
+                                recordDate = str(datetime.datetime.now()), reason = reason,
                                 addPoint = addPoint, reducePoint = reducePoint, transferPoint = "",
                                 resultPoint = resultPoint)
         pHistory.save()
@@ -164,7 +164,7 @@ def addPointByAmwayAward(request):
             userAccount = userAccountChainyen.UserAccountInfo
             resultPoint = userAccountChainyen.point
             pHistory = pointHistory(UserAccountInfo = userAccount, modifier = modifier,
-                                    recordDate = datetime.datetime.now(), reason = '管理者加點',
+                                    recordDate = str(datetime.datetime.now()), reason = '管理者加點',
                                     addPoint = "+" + str(point), reducePoint = "", transferPoint = "",
                                     resultPoint = resultPoint)
             pHistory.save()
@@ -210,7 +210,7 @@ def addPointByJobTitle(request):
             userAccount = userAccountChainyen.UserAccountInfo
             resultPoint = userAccountChainyen.point
             pHistory = pointHistory(UserAccountInfo = userAccount, modifier = modifier,
-                                    recordDate = datetime.datetime.now(), reason = '管理者加點',
+                                    recordDate = str(datetime.datetime.now()), reason = '管理者加點',
                                     addPoint = "+" + str(point), reducePoint = "", transferPoint = "",
                                     resultPoint = resultPoint)
             pHistory.save()
@@ -249,7 +249,7 @@ def addPointByExcel(request):
                 userAccountChainyen.update(point=F('point') + point)
                 resultPoint = userAccountChainyen.first().point
                 pHistory = pointHistory(UserAccountInfo = userAccountInfo, modifier = modifier,
-                                        recordDate = datetime.datetime.now(), reason = '管理者加點',
+                                        recordDate = str(datetime.datetime.now()), reason = '管理者加點',
                                         addPoint = "+" + str(point), reducePoint = "", transferPoint = "",
                                         resultPoint = resultPoint)
                 pHistory.save()
@@ -280,7 +280,7 @@ def reducePoint(request):
 
         modifier = request.user.user
         pHistory = pointHistory(UserAccountInfo = userAccountInfo, modifier = modifier,
-                                recordDate = datetime.datetime.now(), reason = '管理者扣點',
+                                recordDate = str(datetime.datetime.now()), reason = '管理者扣點',
                                 addPoint = "", reducePoint = "-1", transferPoint = "",
                                 resultPoint = point)
         pHistory.save()
@@ -387,7 +387,7 @@ def transferPoint(request):
 
         modifier = request.user.user
         pHistory = pointHistory(UserAccountInfo = userAccountInfo, modifier = modifier,
-                                recordDate = datetime.datetime.now(), reason = '轉讓點數',
+                                recordDate = str(datetime.datetime.now()), reason = '轉讓點數',
                                 addPoint = "", reducePoint = "", transferPoint = "-" + str(pointTransfer),
                                 resultPoint = fromResultPoint)
         pHistory.save()
@@ -409,7 +409,7 @@ def transferPoint(request):
 
         modifier = request.user.user
         pHistory = pointHistory(UserAccountInfo = userAccountInfo, modifier = modifier,
-                                recordDate = datetime.datetime.now(), reason = '轉讓點數',
+                                recordDate = str(datetime.datetime.now()), reason = '轉讓點數',
                                 addPoint = "", reducePoint = "", transferPoint = "+" + str(pointTransfer),
                                 resultPoint = toResultPoint)
         pHistory.save()

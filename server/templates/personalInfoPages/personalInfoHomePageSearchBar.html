@@ -9,7 +9,7 @@
     
     <div class="col align-items-center">
         <form action="{% url 'personalInfoHomePage' selectTag='全部' %}" method="post">{% csrf_token %}
-            <input class="primary medium rounded " {% if selectPage == '瀏覽已兌換資料' %} style="background-color:#c2c9d1" {% endif %} type="submit" value="瀏覽已兌換資料">
+            <input class="primary medium rounded " {% if selectPage == '瀏覽曾兌換資料' %} style="background-color:#c2c9d1" {% endif %} type="submit" value="瀏覽曾兌換資料">
         </form>
     </div>
     <div class="col">

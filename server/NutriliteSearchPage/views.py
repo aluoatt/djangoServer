@@ -133,7 +133,11 @@ def keywordSearchPage(request):
     if fileDatas.count() > 0:
         hasKeywordData = True
 
-    ownFileList = [k.fileDataID.id for k in personalFileData.objects.filter(ownerAccount=userAcc)]
+    today = datetime.datetime.now()
+    delta = datetime.timedelta(hours=-6)
+    target_day = today - delta
+    ownFileList = [k.fileDataID.id for k in personalFileData.objects.filter(ownerAccount=userAcc,
+                                                                            exchangeDate__gte=target_day)]
 
     # 總頁數
     page_count = fileDatas.count()
@@ -178,8 +182,11 @@ def NutriliteSearchPage(request, topic, selectTag):
                                             secClass=secClassInfo.objects.get(secClassName=selectTag).id,
                                             visible=1,
                                             permissionsLevel__lte=dataPermissionsLevel).order_by('-occurrenceDate')
-
-    ownFileList = [k.fileDataID.id for k in personalFileData.objects.filter(ownerAccount=userAcc)]
+    today = datetime.datetime.now()
+    delta = datetime.timedelta(hours=-6)
+    target_day = today - delta
+    ownFileList = [k.fileDataID.id for k in personalFileData.objects.filter(ownerAccount=userAcc,
+                                                                            exchangeDate__gte=target_day)]
 
     # 總頁數
     page_count = fileDatas.count()
@@ -205,10 +212,26 @@ def exchangeOption(request, fileId):
         classRoomAccount = True
     else:
         classRoomAccount = False
-
+    today = datetime.datetime.now()
+    delta = datetime.timedelta(hours=-6)
+    target_day = today - delta
     targetFile = fileDataInfo.objects.get(id=int(fileId))
     UserAccount = UserAccountInfo.objects.get(username=request.user)
-    alreadyExchange = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id).count() > 0
+    UserAccountChainYen = UserAccountChainYenInfo.objects.get(UserAccountInfo=UserAccount)
+    pf = personalFileData.objects.filter(ownerAccount=UserAccount.id,
+                                    fileDataID=targetFile.id)
+    alreadyExchange = pf.count() > 0
+    if alreadyExchange:
+        if pf.exchangeDate < target_day:
+
+            if targetFile.point > UserAccountChainYen.point:
+                targetFile = ""
+                return render(request, 'viewFilePage.html', locals())
+            else:
+                UserAccountChainYen.point = UserAccountChainYen.point - targetFile.point
+                UserAccountChainYen.save()
+                pf.exchangeDate = str(datetime.datetime.now())
+                pf.save()
 
     if request.user == "administrator":
         permission = True
@@ -218,7 +241,7 @@ def exchangeOption(request, fileId):
         # 是否兌換
 
         supervisord = False
-        UserAccountChainYen = UserAccountChainYenInfo.objects.get(UserAccountInfo=UserAccount)
+
         permission = targetFile.permissionsLevel <= UserAccount.dataPermissionsLevel
         # 還沒兌換
         if not alreadyExchange:
@@ -236,7 +259,7 @@ def exchangeOption(request, fileId):
             UserAccountChainYen.save()
 
             pHistory = pointHistory(UserAccountInfo=UserAccount, modifier="系統",
-                                    recordDate=datetime.datetime.now(), reason='兌換資料',
+                                    recordDate=str(datetime.datetime.now()), reason='兌換資料',
                                     addPoint="", reducePoint=targetFile.point, transferPoint="",
                                     resultPoint=UserAccountChainYen.point)
             pHistory.save()
@@ -321,9 +344,15 @@ def exchangeOption(request, fileId):
 
 ###
 def regetPersonalFile(request, fileId):
+    today = datetime.datetime.now()
+    delta = datetime.timedelta(hours=-6)
+    target_day = today - delta
+
     targetFile = fileDataInfo.objects.get(id=int(fileId))
     UserAccount = UserAccountInfo.objects.get(username=request.user)
-    alreadyExchange = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id).count() > 0
+    alreadyExchange = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id,
+                                                      exchangeDate__gte=target_day).count() > 0
+
     if request.user.has_perm('userlogin.classRoomAccount') and not request.user.is_superuser:
         classRoomAccount = True
     else:
@@ -404,10 +433,14 @@ def regetPersonalFile(request, fileId):
 
 
 def viewFilePage(request, fileId):
+    today = datetime.datetime.now()
+    delta = datetime.timedelta(hours=-6)
+    target_day = today + delta
 
     targetFile = fileDataInfo.objects.get(id=int(fileId))
     UserAccount = UserAccountInfo.objects.get(username=request.user)
-    personalFile = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id)
+    personalFile = personalFileData.objects.filter(ownerAccount=UserAccount.id, fileDataID=targetFile.id,
+                                                   exchangeDate__gte=target_day)
     alreadyExchange = personalFile.count() > 0
     try:
         pregetStars = personalFile.first().stars
@@ -447,7 +480,7 @@ def viewFilePage(request, fileId):
     if personalWatchFileLog.objects.filter(watchAccount=UserAccount,exchangeDate__gte=target_day).count() < 1:
         personalWatchFileLog(fileDataID=targetFile,
                              watchAccount=UserAccount,
-                             exchangeDate=datetime.datetime.now()).save()
+                             exchangeDate=str(datetime.datetime.now())).save()
 
     try:
         persondataInfo = personalFileData.objects.filter(ownerAccount=UserAccount.id,
@@ -473,7 +506,12 @@ def viewFilePage(request, fileId):
 def returnPDF(request, fileId):
     # Get the applicant's resume
     userAc = UserAccountInfo.objects.get(username=request.user)
-    resume = personalFileData.objects.filter(fileDataID=fileId, ownerAccount=userAc)
+    today = datetime.datetime.now()
+    delta = datetime.timedelta(hours=-6)
+    target_day= today+delta
+
+    resume = personalFileData.objects.filter(fileDataID=fileId, ownerAccount=userAc,exchangeDate__gte=target_day)
+
 
     if resume.count() != 1:
         return HttpResponse("error", content_type="text/plain")
@@ -504,7 +542,7 @@ def returnPDF(request, fileId):
         except:
             r = resume.first()
             r.waterCreateReady = False
-            r.exchangeDate = datetime.datetime.now()
+            r.exchangeDate = str(datetime.datetime.now())
             r.save()
             if regetPersonalFile(request, fileId):
 
@@ -520,7 +558,10 @@ def returnFileStatus(request, fileId):
     # Get the applicant's resume
     userAc = UserAccountInfo.objects.get(username=request.user)
     resume = personalFileData.objects.filter(fileDataID=fileId, ownerAccount=userAc)
-
+    today = datetime.datetime.now()
+    delta = datetime.timedelta(hours=-6)
+    target_day = today + delta
+    resume = personalFileData.objects.filter(fileDataID=fileId, ownerAccount=userAc, exchangeDate__gte=target_day)
     if resume.count() != 1:
         return HttpResponse("error", content_type="text/plain")
 
