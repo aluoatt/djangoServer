@@ -558,7 +558,6 @@ def returnPDF(request, fileId):
 def returnFileStatus(request, fileId):
     # Get the applicant's resume
     userAc = UserAccountInfo.objects.get(username=request.user)
-    resume = personalFileData.objects.filter(fileDataID=fileId, ownerAccount=userAc)
     today = datetime.datetime.now()
     delta = datetime.timedelta(hours=-6)
     target_day = today + delta
