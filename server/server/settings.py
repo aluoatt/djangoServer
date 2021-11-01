@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'managerPage.templatetags',
     'pointManage',
     'addlikes',
+    'recommendIndex',
     # plug-in
     'django_celery_results',
 ]

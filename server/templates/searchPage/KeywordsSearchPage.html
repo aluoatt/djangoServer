@@ -11,7 +11,29 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		{% load static %}
 		<link href="{%static 'favicon.ico' %}" rel="shortcut icon">
-		
+		<style type="text/css">
+
+		a{
+			color:black;
+		}
+		.classNoActivate {
+			background-color: white;
+			color: black;
+		}
+		.list-inline {
+			display: block;
+		}
+
+		.list-inline li {
+			display: inline-block;
+		}
+
+		.list-inline li:after {
+			content: '|';
+			margin: 0 10px;
+			color:white;
+		}
+	</style>
 
 	</head>
 	<body class="is-preload">
@@ -53,11 +75,15 @@
 										    <details style="margin-bottom: 30px;color:#CE0000">
 												<summary>查看更多...</summary>
 											<p>{{fileData.describe}}</p>
-											<p>
+											<ul class="list-inline">
 											{% for keywords in fileData.filedatakeywords_set.all %}
-												#{{keywords.keyword}}
+												<li>
+
+													<a style="background-color: transparent;" class="classNoActivate" href="/keywordSearchPage?keywords={{keywords.keyword}}&timelim=99" class="" >#{{keywords.keyword}}</a>
+
+												</li>
 											{% endfor %}
-											</p>
+											</ul>
 <!--											<div class="like">-->
 <!--												<span class="glyphicon glyphicon-thumbs-up"></span>-->
 <!--												<span class="liked-num">{{fileData.likes}}</span>-->

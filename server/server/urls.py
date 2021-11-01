@@ -28,6 +28,8 @@ from managerPage.views import managerPointManagerPage, getAccountModifyHistory, 
     managerStatisticManagerPage, managerArticleReportManagerPage
 from django.conf.urls import url
 from addlikes.views import like_change,putStars
+from recommendIndex.views import recommendIndexHome
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
@@ -82,6 +84,8 @@ urlpatterns += [
     path('putStars',putStars,name='putStars'),
     path('checkRegDD', checkRegDD, name='checkRegDD'),
 
+    # 推薦索引
+    path('recommendIndexHome', recommendIndexHome, name='recommendIndexHome'),
     path('', login_required(home), name='home'),
 ]
 
