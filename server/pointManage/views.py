@@ -123,14 +123,23 @@ def addReducePointByUser(request):
 def addPointByAmwayAward(request):
     res = HttpResponse()
     try:
-        amwayAward = ""
-        if "amwayAward" in request.POST:
-            amwayAward = request.POST['amwayAward']
-        if amwayAward:
+        amwayAwardStart = ""
+        if "amwayAwardStart" in request.POST:
+            amwayAwardStart = request.POST['amwayAwardStart']
+        amwayAwardEnd   = ""
+        if "amwayAwardEnd" in request.POST:
+            amwayAwardEnd = request.POST['amwayAwardEnd']
+        
+        if amwayAwardStart:
             try:
-                amwayAward = amwayAwardInfo.objects.get(amwayAward=amwayAward)
+                amwayAwardStart = amwayAwardInfo.objects.get(amwayAward=amwayAwardStart)
             except:
-                amwayAward = ""
+                amwayAwardStart = ""
+        if amwayAwardEnd:
+            try:
+                amwayAwardEnd = amwayAwardInfo.objects.get(amwayAward=amwayAwardEnd)
+            except:
+                amwayAwardEnd = ""
         point = 0
         try:
             point = int(request.POST["point"])
@@ -139,10 +148,9 @@ def addPointByAmwayAward(request):
         if point == 0:
             res.status_code = 200
             return res
-
-        if amwayAward:
-            accountIDList = UserAccountAmwayInfo.objects.filter(amwayAward = amwayAward).values('UserAccountInfo')
-            accountInfoList = UserAccountInfo.objects.filter(id__in=accountIDList).exclude(username = request.user.username)
+        if amwayAwardEnd and amwayAwardStart:
+            accountIDList = UserAccountAmwayInfo.objects.filter(amwayAward__rank__range = [amwayAwardStart.rank, amwayAwardEnd.rank]).values('UserAccountInfo')
+            accountInfoList = UserAccountInfo.objects.filter(id__in=accountIDList)
             userAccountChainyenList = UserAccountChainYenInfo.objects.filter(UserAccountInfo__in=accountInfoList)
             userAccountChainyenList.update(point=F('point') + point)
         else:

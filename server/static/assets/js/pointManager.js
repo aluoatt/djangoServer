@@ -271,10 +271,15 @@ $(document).ready(() => {
                 formInput.append(pointDiv);
             } else if (action === "addPointByAmwayAward") {
                 pointDiv = $("<div>", { class: "form-group" });
-                pointDiv.append($("<label>", { text: "請選擇獎銜", for: "amwayAward" }));
-                pointDiv.append($("<select>", { name: "amwayAward", class: "form-control custom-select", id: "amwayAward" }));
+                pointDiv.append($("<label>", { text: "請選擇獎銜區間起點", for: "amwayAwardStart" }));
+                pointDiv.append($("<select>", { name: "amwayAwardStart", class: "form-control custom-select", id: "amwayAwardStart" }));
                 amwayAwardList.forEach((element, index) => {
-                    $(pointDiv).find("select").append($("<option>", { text: element }))
+                    $(pointDiv).find("#amwayAwardStart").append($("<option>", { text: element }))
+                });
+                pointDiv.append($("<label>", { text: "請選擇獎銜區間終點", for: "amwayAwardEnd" }));
+                pointDiv.append($("<select>", { name: "amwayAwardEnd", class: "form-control custom-select", id: "amwayAwardEnd" }));
+                amwayAwardList.forEach((element, index) => {
+                    $(pointDiv).find("#amwayAwardEnd").append($("<option>", { text: element }))
                 });
                 formInput.append(pointDiv);
             } else if (id === "addPointByExcel") {
