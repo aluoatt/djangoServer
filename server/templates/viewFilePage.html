@@ -14,6 +14,29 @@
 	{% load static %}
 	<link href="{%static 'favicon.ico' %}" rel="shortcut icon">
 	<link rel="stylesheet" href="{% static 'assets/css/loadingimg.css' %}" />
+	<style type="text/css">
+
+		a{
+			color:black;
+		}
+		.classNoActivate {
+			background-color: white;
+			color: black;
+		}
+		.list-inline {
+			display: block;
+		}
+
+		.list-inline li {
+			display: inline-block;
+		}
+
+		.list-inline li:after {
+			content: '|';
+			margin: 0 10px;
+			color:white;
+		}
+	</style>
 </head>
 	<body class="is-preload" style="background-size: Cover;background:url('{%static 'images/login底圖.png' %}');">
 
@@ -53,11 +76,17 @@
 									</header>
 									<p>{{targetFile.describe}}</p>
 									<input type="hidden" id="fileID" value = "{{targetFile.id}}">
-									<p>關鍵字:
+<!--									<p>關鍵字:-->
+										<ul class="list-inline">
 										{% for keywords in targetFile.filedatakeywords_set.all %}
-												#{{keywords.keyword}}
+										<li>
+
+										<a style="background-color: transparent;" class="classNoActivate" href="/keywordSearchPage?keywords={{keywords.keyword}}&timelim=100" class="" >#{{keywords.keyword}}</a>
+
+										</li>
 										{% endfor %}
-									</p>
+										</ul>
+<!--									</p>-->
 									{% if alreadyExchange is False %}
 									<ul class="actions">
 										<li>
