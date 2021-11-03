@@ -111,11 +111,15 @@
                         <details style="margin-bottom: 30px;color:#CE0000">
                                             <summary>查看更多...</summary>
                         <p>{{fileData.fileDataID.describe}}</p>
-                        <p>
+                        <ul class="list-inline">
                         {% for keywords in fileData.fileDataID.filedatakeywords_set.all %}
-                        #{{keywords.keyword}}
+                        <li>
+
+                        <a style="background-color: transparent;" class="classNoActivate" href="/keywordSearchPage?keywords={{keywords.keyword}}&timelim=100" class="" >#{{keywords.keyword}}</a>
+
+                        </li>
                         {% endfor %}
-                        </p>
+                        </ul>
 <!--                        <div class="like">-->
 <!--                            <span class="glyphicon glyphicon-thumbs-up"></span>-->
 <!--                            <span class="liked-num">{{fileData.fileDataID.likes}}</span>-->

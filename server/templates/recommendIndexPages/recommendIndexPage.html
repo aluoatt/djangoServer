@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<!--
+	Forty by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+
+<html>
+<head>
+	<title>ChainYen System</title>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+
+	{% load static %}
+	<link href="{%static 'favicon.ico' %}" rel="shortcut icon">
+	<link rel="stylesheet" href="{% static 'assets/css/loadingimg.css' %}" />
+	<style type="text/css">
+
+		a{
+			color:black;
+		}
+		.classNoActivate {
+			background-color: white;
+			color: black;
+		}
+		.list-inline {
+			display: block;
+		}
+
+		.list-inline li {
+			display: inline-block;
+		}
+
+		.list-inline li:after {
+			content: '|';
+			margin: 0 10px;
+			color:black;
+		}
+	</style>
+</head>
+	<body class="is-preload" style="background-size: Cover;background:url('{%static 'images/login底圖.png' %}');">
+
+		<!-- Wrapper -->
+			<div id="wrapper" class="container" >
+
+				<!-- Header -->
+					{% include 'baseHeader.html' %}
+
+				<!-- Menu -->
+					{% include 'baseMenu.html' %}
+
+				<!-- Main -->
+
+}
+					<div id="main" class="alt">
+
+						<!-- One -->
+							<section id="one">
+								<div class="inner">
+									<header class="">
+										<h2><b style="color:black">推薦索引</b></h2>
+									</header>
+
+									{% for mainClass in mainClassAll%}
+										<h3 style="color:black"><u>{{mainClass.mainClassName}}</u></h3>
+										<ul class="list-inline">
+										{% for recommendIndex in recommendIndexs%}
+
+											{% if recommendIndex.mainClass.mainClassName ==  mainClass.mainClassName %}
+
+											<li>
+
+													<a class="classNoActivate" href="/keywordSearchPage?keywords={{recommendIndex.keywords}}&timelim=100" class="primary" >{{recommendIndex.keywords}}</a>
+
+											</li>
+											{% endif %}
+
+
+										{% endfor %}
+										</ul>
+									<br>
+									{% endfor %}
+
+								</div>
+
+							</section>
+
+					</div>
+
+
+			</div>
+
+
+
+		<!-- Scripts -->
+		<script src="{% static 'assets/js/viewPage.js' %}"></script>
+		<script type="text/javascript" src="{%static 'assets/js/pdfobject.min.js'%}"></script>
+		<script type="text/javascript" src="{%static 'pdfjs-2.0/build/pdf.js'%}"></script>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+
+	</body>
+
+</html>
