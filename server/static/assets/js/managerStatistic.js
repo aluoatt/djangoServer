@@ -81,7 +81,7 @@ $(document).ready(() => {
             'headers': { 'X-CSRFToken': getCookie('csrftoken') },
             'success': (res) => {
                 allData = JSON.parse(res)
-                allData.sort((a, b) => Number(a['total']) > Number(b['total']))
+                allData.sort((a, b) => Number(a['total']) > Number(b['total']) ? 1:-1 )
                 d3Data = [];
                 for (i in allData) {
                     data = allData[i];
@@ -129,7 +129,7 @@ $(document).ready(() => {
                                 "value": Number(currentData[i][3])
                             })
                         }
-                        d3Data.sort((a, b) => a.value > b.value);
+                        d3Data.sort((a, b) => a.value > b.value  ? 1:-1 );
                         drawHorizontalBarChart("rankBarChart", d3Data);
                     });
 
