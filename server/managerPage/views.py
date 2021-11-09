@@ -934,6 +934,8 @@ def updateFileDataInfo(request, reportID = None):
             fDataKeyword = fileDataKeywords(fileDataInfoID = fileDataID, keyword = keyword)
             fDataKeyword.save()
 
+        point = fileDataID.point
+
         fHistory = articleModifyHistory(fileDataID=fileDataID,modifier=modifier, title=title,
                                         secClass=secClass,keyword=keywordString,describe=describe,point=point,
                                         mainClass=mainClass,visible=visible, recordDate=lastModify)

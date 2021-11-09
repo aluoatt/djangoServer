@@ -118,7 +118,7 @@ $(document).ready(() => {
             formInput=""
             formInput = $("<form>", { id: "article_modify" });
 
-            title = $(`#${articleID}_title`).html();
+            title = $(`#${articleID}_title`).find("a").html();
             DBClass = $(`#${articleID}_DBClass`).html();
             mainClass = $(`#${articleID}_mainClass`).html();
             secClass = $(`#${articleID}_secClass`).html();

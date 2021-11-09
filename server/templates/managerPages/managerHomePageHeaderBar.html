@@ -66,7 +66,7 @@
             {% endif %}
         {% endif %}
 
-        {% if perms.userlogin.seeManagerStaticManagerPage %}
+        {% if perms.userlogin.seeManagerStatisticPage %}
             {% if tag == "StatisticsManagerPage" %}
             <form action="#" method="get">{% csrf_token %}
                 <input class="rounded" type="submit" value="統計分析">
