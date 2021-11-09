@@ -366,10 +366,9 @@ def transferPoint(request):
         toUserAccount = UserAccountInfo.objects.get(username = toUser)
         toUserAmwayAccountInfo = UserAccountAmwayInfo.objects.get(UserAccountInfo=toUserAccount)
         toUserDDInfo = toUserAmwayAccountInfo.amwayDD
-
         #Do not hack me
         if not (toUserDDInfo.amwayNumber  == fromUserAmwayNumber or 
-                int(toUserDDInfo.amwayDiamond) == fromUserAmwayNumber):
+                int(toUserDDInfo.amwayDiamond) == int(fromUserAmwayNumber)):
             res.status_code = 404
             res.content = "do not try to hack me <3"
             return res
