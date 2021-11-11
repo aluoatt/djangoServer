@@ -228,7 +228,7 @@ $(document).ready(() => {
                 d3Data.sort((a, b) => Number(a['name']) < Number(b['name']) ? 1:-1 )
                 
                 pointOwnTable.columns().every(function (index) {
-                    if (pointOwnTableHeadChinese[index] !== "上手鑽石" || 
+                    if (pointOwnTableHeadChinese[index] !== "上手鑽石" && 
                         pointOwnTableHeadChinese[index] !== "所屬教室") {
                         return;
                     }
@@ -275,7 +275,7 @@ $(document).ready(() => {
                             x: "點數",
                             y: "人數"
                         }
-                        drawBarChart("pointOwnBarChart", d3Data, title, 350, 500);
+                        drawBarChart("pointOwnBarChart", d3Data, title, 300, 500);
                     });
 
                     column.data().unique().sort().each(function (d, j) {
@@ -286,7 +286,7 @@ $(document).ready(() => {
                     x: "點數",
                     y: "人數"
                 }
-                drawBarChart("pointOwnBarChart", d3Data, title,  350, 500);
+                drawBarChart("pointOwnBarChart", d3Data, title,  300, 600);
                 setTimeout(function () {
                     pointOwnTable.draw(true);
                     pointOwnTable.columns.adjust().draw();
@@ -387,7 +387,6 @@ $(document).ready(() => {
 
     function drawBarChart(chartID, data, title, height, width) {
         d3.select("#" + chartID).selectAll("svg > *").remove();
-
         
         margin = ({ top: 20, right: 20, bottom: 30, left: 40 });
         color = "steelblue";
