@@ -125,7 +125,7 @@ $(document).ready(() => {
 
                         // Update bar chart
 
-                        currentData = rankTable.rows().data().filter((d) => { return d[1] == val || val == ""; })
+                        currentData = rankTable.rows({ search: 'applied' }).data()
                         d3Data = []
                         for (i = 0; i < currentData.length; i++) {
                             d3Data.push({
@@ -253,10 +253,10 @@ $(document).ready(() => {
 
                         // Update bar chart
 
-                        currentData = pointOwnTable.rows().data().filter((d) => { return d[1] == val || val == ""; })
+                        currentData = pointOwnTable.rows({ search: 'applied' }).data()
                         temp = {}
                         for (i = 0; i < currentData.length; i++) {
-                            keyName = String(Math.floor(Number(currentData[i][2])/10) * 10);
+                            keyName = String(Math.floor(Number(currentData[i][3])/10) * 10);
                             if(temp[keyName]!== undefined){
                                 temp[keyName] += 1;
                             } else {
@@ -275,7 +275,7 @@ $(document).ready(() => {
                             x: "點數",
                             y: "人數"
                         }
-                        drawBarChart("pointOwnBarChart", d3Data, title, 300, 500);
+                        drawBarChart("pointOwnBarChart", d3Data, title, 300, 600);
                     });
 
                     column.data().unique().sort().each(function (d, j) {
