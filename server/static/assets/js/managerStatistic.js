@@ -34,7 +34,11 @@ $(document).ready(() => {
                     "value": data[i]
                 })
             }
-            drawBarChart("articleBarChart", d3Data, 300, 300);
+            title = {
+                x: "Article",
+                y: "sum"
+            }
+            drawBarChart("articleBarChart", d3Data, title, 300, 300);
             drawPieChart("articlePieChart", d3Data, 300, 300);
             setTimeout(function () {
                 myTable.draw(true);
@@ -151,7 +155,7 @@ $(document).ready(() => {
     })
 
     pointOwnTableHeadChinese = [
-        "姓名", "上手鑽石", "點數"
+        "姓名", "所屬教室", "上手鑽石", "點數"
     ]
     $("#pointOwnNav").on("click", () => {
         if ($.fn.DataTable.isDataTable("#pointOwnTable")) {
@@ -202,6 +206,7 @@ $(document).ready(() => {
                     data = allData[i];
                     pointOwnTable.row.add([
                         data['user'],
+                        data['classRoom'],
                         data['amwayDiamond'],
                         Number(data['point']),
                     ])
@@ -223,7 +228,8 @@ $(document).ready(() => {
                 d3Data.sort((a, b) => Number(a['name']) < Number(b['name']) ? 1:-1 )
                 
                 pointOwnTable.columns().every(function (index) {
-                    if (pointOwnTableHeadChinese[index] !== "上手鑽石") {
+                    if (pointOwnTableHeadChinese[index] !== "上手鑽石" || 
+                        pointOwnTableHeadChinese[index] !== "所屬教室") {
                         return;
                     }
                     var column = this;
@@ -265,14 +271,22 @@ $(document).ready(() => {
                             })
                         })
                         d3Data.sort((a, b) => Number(a['name']) < Number(b['name']) ? 1:-1 )
-                        drawBarChart("pointOwnBarChart", d3Data, 350, 500);
+                        title = {
+                            x: "點數",
+                            y: "人數"
+                        }
+                        drawBarChart("pointOwnBarChart", d3Data, title, 350, 500);
                     });
 
                     column.data().unique().sort().each(function (d, j) {
                         select.find("select").append('<option value="' + d + '">' + d + '</option>')
                     });
                 });
-                drawBarChart("pointOwnBarChart", d3Data, 350, 500);
+                title = {
+                    x: "點數",
+                    y: "人數"
+                }
+                drawBarChart("pointOwnBarChart", d3Data, title,  350, 500);
                 setTimeout(function () {
                     pointOwnTable.draw(true);
                     pointOwnTable.columns.adjust().draw();
@@ -371,13 +385,10 @@ $(document).ready(() => {
             })
     }
 
-    function drawBarChart(chartID, data, height, width) {
+    function drawBarChart(chartID, data, title, height, width) {
         d3.select("#" + chartID).selectAll("svg > *").remove();
 
-        title = {
-            x: "Article",
-            y: "sum"
-        }
+        
         margin = ({ top: 20, right: 20, bottom: 30, left: 40 });
         color = "steelblue";
         yAxis = g => g

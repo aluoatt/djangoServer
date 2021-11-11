@@ -817,6 +817,7 @@ def getPointOwnAll(request):
             temp = {
                 "user"  : account.UserAccountInfo.user,
                 "amwayDiamond" : amwayDiamond.main,
+                "classRoom" : account.classRoom.ClassRoomName,
                 "point" : account.point,
             }
             result.append(temp)
