@@ -805,6 +805,25 @@ def getArticleWatchRank(request):
     res.status_code = 200
     return res
 
+@permission_required('userlogin.seeManagerStatisticPage', login_url='/accounts/userlogin/')
+def getPointOwnAll(request):
+    res = HttpResponse()
+    accountChainyen = UserAccountChainYenInfo.objects.all()
+    result = []
+    for account in accountChainyen:
+        if account.accountStatus == "正常":
+            accountAmway = UserAccountAmwayInfo.objects.get(UserAccountInfo=account.UserAccountInfo)
+            amwayDiamond = registerDDandDimInfo.objects.get(amwayNumber = accountAmway.amwayDD.amwayDiamond)
+            temp = {
+                "user"  : account.UserAccountInfo.user,
+                "amwayDiamond" : amwayDiamond.main,
+                "point" : account.point,
+            }
+            result.append(temp)
+    res.content = json.dumps(result)
+    res.status_code = 200
+    return res
+
 @permission_required('userlogin.seeManagerArticlePage', login_url='/accounts/userlogin/')
 def getFileDataInfo(request):
     res = HttpResponse()
