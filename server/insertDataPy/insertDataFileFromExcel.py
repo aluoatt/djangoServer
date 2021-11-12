@@ -76,7 +76,7 @@ for i in range(2,sheet.max_row):
     permissionsLevel  = 1
     DBClass          = str(sheet['B'+rowIndex].value or '')
     downloadAble     = True
-    if DBClass == "（A）公司資源（包含安麗公司；YouTube；行動大學；培訓資料.....）" or sourceFrom == "行動大學" or sourceFrom == "公司資料" or sourceFrom == "YouTube": 
+    if DBClass == "（A）公司資源（包含安麗公司；YouTube；行動大學；培訓資料.....）" or sourceFrom == "行動大學" or sourceFrom == "公司資料" or sourceFrom == "YouTube":
         point = 2
         needWaterMark = False
     elif sourceFrom == "個人製作" or sourceFrom == "教室製作":
@@ -144,5 +144,3 @@ for i in range(2,sheet.max_row):
         print("describe: " + describe)
         print("keyword: " + oKeyword)
         print("===============================")
-        if not oMain:
-            break
