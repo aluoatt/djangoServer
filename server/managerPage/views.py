@@ -768,21 +768,18 @@ def getFileDataSummary(request):
 @permission_required('userlogin.seeManagerStatisticPage', login_url='/accounts/userlogin/')
 def getArticleOwnRank(request):
     res = HttpResponse()
-    fileDatas = personalFileData.objects.all()
+    fileDatas = fileDataInfo.objects.filter(exchangeCount__gte=1)
     ownDataSummary = {}
     for data in fileDatas:
-        fileID = data.fileDataID.id
-        if fileID in ownDataSummary:
-            ownDataSummary[fileID]["total"] = ownDataSummary[fileID]["total"] + 1
-        else:
-            ownDataSummary[fileID] = {
-                "fileID":      fileID,
-                "title":       data.fileDataID.title,
-                "mainClass":   data.fileDataID.mainClass.mainClassName,
-                "costPoint":   data.costPoint,
-                "total":       1, 
-                "totalStars":  data.fileDataID.stars,
-            }
+        fileID = data.id
+        ownDataSummary[fileID] = {
+            "fileID":      fileID,
+            "title":       data.title,
+            "mainClass":   data.mainClass.mainClassName,
+            "costPoint":   data.point,
+            "total":       data.exchangeCount, 
+            "totalStars":  data.stars,
+        }
     ownDataSummaryList = []
     for key in ownDataSummary:
         ownDataSummaryList.append(ownDataSummary[key])
