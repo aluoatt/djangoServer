@@ -39,13 +39,14 @@ $(document).ready(() => {
                 fields = data[i]
                 reportID = fields['id']
                 articleID = fields['articleID']
+                //需要取得的資料最好都埋在自己的ID裡，因為datatable的響應式會破壞既有的 dom 結構
                 tempRow = reportTable.row.add([
                     fields['reporter'],
                     `<a target="_blank" href="${location.origin}/viewFilePage/${articleID}">${fields['title']}</a>`,
                     fields['mainClass'],
                     fields['reason'],
                     fields['recordDate'],
-                    `<a id="${articleID}_editArticle" class="button_editArticle h4 btn btn-outline-success btn-sm">
+                    `<a id="${reportID}_${articleID}_editArticle" class="button_editArticle h4 btn btn-outline-success btn-sm">
                         編輯
                     </a>`,
                     `<a id="${reportID}_deleteReport" class="button_deleteReport h4 btn btn-outline-success btn-sm">
@@ -216,12 +217,10 @@ $(document).ready(() => {
     });
 
     $("#reportTable").on("click", ".button_editArticle", (event) => {
-
         id = $(event.target)[0].id;
-        articleID = id.split("_")[0];
-        action = id.split("_")[1];
-        parentID = $(event.target).parent()[0].id;
-        reportID = parentID.split("_")[0];
+        reportID = id.split("_")[0];
+        articleID = id.split("_")[1];
+        action = id.split("_")[2];
         if (action === "editArticle") {
             $.ajax({
                 'url': location.origin + "/managerPages/getFileDataInfoByID/" + articleID,
