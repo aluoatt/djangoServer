@@ -174,7 +174,7 @@ def addPointByAmwayAward(request):
             userAccount = userAccountChainyen.UserAccountInfo
             resultPoint = userAccountChainyen.point
             pHistory = pointHistory(UserAccountInfo = userAccount, modifier = modifier,
-                                    recordDate = str(datetime.datetime.now()), reason = '管理者加點',
+                                    recordDate = str(datetime.datetime.now()), reason = '按獎銜加點',
                                     addPoint = "+" + str(point), reducePoint = "", transferPoint = "",
                                     resultPoint = resultPoint)
             pHistory.save()
@@ -221,7 +221,7 @@ def addPointByJobTitle(request):
             userAccount = userAccountChainyen.UserAccountInfo
             resultPoint = userAccountChainyen.point
             pHistory = pointHistory(UserAccountInfo = userAccount, modifier = modifier,
-                                    recordDate = str(datetime.datetime.now()), reason = '管理者加點',
+                                    recordDate = str(datetime.datetime.now()), reason = '按照職務加點',
                                     addPoint = "+" + str(point), reducePoint = "", transferPoint = "",
                                     resultPoint = resultPoint)
             pHistory.save()
@@ -257,8 +257,9 @@ def addPointByExcel(request):
             try:
                 userAccountInfo = UserAccountInfo.objects.get(username = username)
                 if not userAccountInfo.is_active:
-                    resTmp["resultPoint"] = "帳號凍結"
-                    resTmp["point"] = "帳號凍結"
+                    resTmp["resultPoint"] = "帳號凍結中"
+                    resTmp["point"] = "帳號凍結中"
+                    resContent.append(resTmp)
                     continue
                 userAccountChainyen = UserAccountChainYenInfo.objects.filter(UserAccountInfo=userAccountInfo)
                 userAccountChainyen.update(point=F('point') + point)
