@@ -15,5 +15,6 @@ urlpatterns = [
     path('removeArticleReport/<str:reportID>', views.removeArticleReport, name='removeArticleReport'),
     path('getArticleOwnRank', views.getArticleOwnRank, name='getArticleOwnRank'),
     path('getPointOwnAll', views.getPointOwnAll, name='getPointOwnAll'),
+    path('changeStatusByExcel', views.changeStatusByExcel, name='changeStatusByExcel'),
 ]
 
