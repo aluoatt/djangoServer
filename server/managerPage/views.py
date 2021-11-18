@@ -17,6 +17,7 @@ from django.contrib.auth.decorators import permission_required
 from userlogin.models import TempUserAccountInfo, AccountModifyHistory, TempUserAccountChainYenInfo, TempUserAccountAmwayInfo
 from NutriliteSearchPage.models import DBClassInfo, fileDataInfo, mainClassInfo, secClassInfo, articleModifyHistory, articleReport
 from NutriliteSearchPage.models import fileDataKeywords, personalFileData, personalWatchFileLog
+from openpyxl import load_workbook
 
 # Create your views here.
 import hashlib
@@ -445,6 +446,91 @@ def modalAccountModifyPOST(request):
     response_data["status"] = True
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
+@permission_required('userlogin.seeManagerAccountManagerPage', login_url='/accounts/userlogin/')
+def changeStatusByExcel(request):
+    res = HttpResponse()
+    try:
+        excelFile = ""
+        if "excelFile" in request.FILES:
+            excelFile = request.FILES['excelFile']
+        
+        is_active = ""
+        if "is_active" in request.POST:
+            is_active = int(request.POST['is_active'])
+        
+        point = 0
+        if "point" in request.POST:
+            point = int(request.POST["point"])
+        
+        if excelFile == "" or is_active == "" or \
+            (is_active == True and is_active == False):
+            res.content = "No info provide"
+            res.status_code = 400
+            return res
+
+        if not request.user.has_perm('userlogin.can_freeze_account'):
+            res.content = "Permission not enough"
+            res.status_code = 400
+            return res
+
+        wb = load_workbook(excelFile)
+        sheet = wb.active
+        resContent = []
+        modifier = request.user.user
+        for i in range(2,sheet.max_row+1):
+            if not sheet['B' + str(i)].value:
+                break
+            resTmp = {}
+            resTmp["user"] = str(sheet["A" + str(i)].value)
+            amwayNumber = str(sheet['B' + str(i)].value)
+            id4 = str(sheet['C' + str(i)].value)
+            username = amwayNumber + id4
+            resTmp["amwayNumber"] = amwayNumber
+            r = UserAccountInfo.objects.get(username=int(username))
+            if r.is_active != is_active:
+                if is_active:
+                    AccountModifyHistory(UserAccountInfo=r,
+                                            modifier=modifier,
+                                            recordDate=str(datetime.datetime.now()),
+                                            modifyFielddName="帳號狀態",
+                                            originFieldData="凍結",
+                                            RevisedData="正常").save()
+                    rChainyen = UserAccountChainYenInfo.objects.get(UserAccountInfo=r)
+                    rChainyen.point = point
+                    rChainyen.save()
+                    resTmp['point'] = point
+                else:
+                    AccountModifyHistory(UserAccountInfo=r,
+                                        modifier=modifier,
+                                        recordDate=str(datetime.datetime.now()),
+                                        modifyFielddName="帳號狀態",
+                                        originFieldData="正常",
+                                        RevisedData="凍結").save()
+                    rChainyen = UserAccountChainYenInfo.objects.get(UserAccountInfo=r)
+                    rChainyen.point = 0
+                    rChainyen.save()
+                    resTmp['point'] = 0
+
+                r.is_active = is_active
+                r.save()
+                if is_active:
+                    resTmp['status'] = "啟用"
+                else:
+                    resTmp['status'] = "凍結"
+            else:
+                if is_active:
+                    resTmp['status'] = "原本就為啟用"
+                else:
+                    resTmp['status'] = "原本就為凍結"
+                resTmp["point"] = "不變"
+
+            resContent.append(resTmp)
+        res.status_code = 200
+        res.content = json.dumps(resContent)
+    except:
+        res.status_code = 503
+    return res
+
 
 @permission_required('userlogin.seeManagerAuditAccountPage', login_url='/accounts/userlogin/')
 def managerAuditAccountPage(request):
@@ -768,21 +854,18 @@ def getFileDataSummary(request):
 @permission_required('userlogin.seeManagerStatisticPage', login_url='/accounts/userlogin/')
 def getArticleOwnRank(request):
     res = HttpResponse()
-    fileDatas = personalFileData.objects.all()
+    fileDatas = fileDataInfo.objects.filter(exchangeCount__gte=1)
     ownDataSummary = {}
     for data in fileDatas:
-        fileID = data.fileDataID.id
-        if fileID in ownDataSummary:
-            ownDataSummary[fileID]["total"] = ownDataSummary[fileID]["total"] + 1
-        else:
-            ownDataSummary[fileID] = {
-                "fileID":      fileID,
-                "title":       data.fileDataID.title,
-                "mainClass":   data.fileDataID.mainClass.mainClassName,
-                "costPoint":   data.costPoint,
-                "total":       1, 
-                "totalStars":  data.fileDataID.stars,
-            }
+        fileID = data.id
+        ownDataSummary[fileID] = {
+            "fileID":      fileID,
+            "title":       data.title,
+            "mainClass":   data.mainClass.mainClassName,
+            "costPoint":   data.point,
+            "total":       data.exchangeCount, 
+            "totalStars":  data.stars,
+        }
     ownDataSummaryList = []
     for key in ownDataSummary:
         ownDataSummaryList.append(ownDataSummary[key])
@@ -802,6 +885,26 @@ def getArticleWatchRank(request):
         else:
             mainClassSummary[mainClass] = 1
     res.content = json.dumps(mainClassSummary)
+    res.status_code = 200
+    return res
+
+@permission_required('userlogin.seeManagerStatisticPage', login_url='/accounts/userlogin/')
+def getPointOwnAll(request):
+    res = HttpResponse()
+    accountChainyen = UserAccountChainYenInfo.objects.all()
+    result = []
+    for account in accountChainyen:
+        if account.accountStatus == "正常":
+            accountAmway = UserAccountAmwayInfo.objects.get(UserAccountInfo=account.UserAccountInfo)
+            amwayDiamond = registerDDandDimInfo.objects.get(amwayNumber = accountAmway.amwayDD.amwayDiamond)
+            temp = {
+                "user"  : account.UserAccountInfo.user,
+                "amwayDiamond" : amwayDiamond.main,
+                "classRoom" : account.classRoom.ClassRoomName,
+                "point" : account.point,
+            }
+            result.append(temp)
+    res.content = json.dumps(result)
     res.status_code = 200
     return res
 

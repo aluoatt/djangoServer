@@ -15,6 +15,10 @@ def addPoint(request):
     res = HttpResponse()
     try:
         userAccountInfo = UserAccountInfo.objects.get(username = request.POST['username'])
+        if not userAccountInfo.is_active:
+            res.content = "帳號凍結中"
+            res.status_code = 400
+            return res
         accountChainyen = UserAccountChainYenInfo.objects.get(UserAccountInfo = userAccountInfo)
         point = accountChainyen.point + 10
         accountChainyen.point = F('point') + 10
@@ -47,7 +51,7 @@ def addPointByAll(request):
             res.status_code = 200
             return res
 
-        userAccountChainyenList = UserAccountChainYenInfo.objects.all()
+        userAccountChainyenList = UserAccountChainYenInfo.objects.filter(UserAccountInfo__is_active=True)
         userAccountChainyenList.update(point=F('point') + point)
 
         res.status_code = 200
@@ -90,6 +94,10 @@ def addReducePointByUser(request):
             return res
 
         userAccountInfo = UserAccountInfo.objects.get(username = username)
+        if not userAccountInfo.is_active:
+            res.content = "帳號凍結中"
+            res.status_code = 400
+            return res
         userAccountChainyenList = UserAccountChainYenInfo.objects.filter(UserAccountInfo=userAccountInfo)
         userAccountChainyenList.update(point=F('point') + point)
 
@@ -151,10 +159,12 @@ def addPointByAmwayAward(request):
         if amwayAwardEnd and amwayAwardStart:
             accountIDList = UserAccountAmwayInfo.objects.filter(amwayAward__rank__range = [amwayAwardStart.rank, amwayAwardEnd.rank]).values('UserAccountInfo')
             accountInfoList = UserAccountInfo.objects.filter(id__in=accountIDList)
+            accountInfoList = accountInfoList.filter(is_active = True)
             userAccountChainyenList = UserAccountChainYenInfo.objects.filter(UserAccountInfo__in=accountInfoList)
             userAccountChainyenList.update(point=F('point') + point)
         else:
-            res.status_code = 404
+            res.status_code = 400
+            res.content = "獎銜區間錯誤"
             return res
 
         res.status_code = 200
@@ -164,7 +174,7 @@ def addPointByAmwayAward(request):
             userAccount = userAccountChainyen.UserAccountInfo
             resultPoint = userAccountChainyen.point
             pHistory = pointHistory(UserAccountInfo = userAccount, modifier = modifier,
-                                    recordDate = str(datetime.datetime.now()), reason = '管理者加點',
+                                    recordDate = str(datetime.datetime.now()), reason = '按獎銜加點',
                                     addPoint = "+" + str(point), reducePoint = "", transferPoint = "",
                                     resultPoint = resultPoint)
             pHistory.save()
@@ -198,6 +208,7 @@ def addPointByJobTitle(request):
 
         if jobTitle:
             userAccountChainyenList = UserAccountChainYenInfo.objects.filter(jobTitle=jobTitle)
+            userAccountChainyenList = userAccountChainyenList.filter(UserAccountInfo__is_active=True)
             userAccountChainyenList.update(point=F('point') + point)
         else:
             res.status_code = 404
@@ -210,7 +221,7 @@ def addPointByJobTitle(request):
             userAccount = userAccountChainyen.UserAccountInfo
             resultPoint = userAccountChainyen.point
             pHistory = pointHistory(UserAccountInfo = userAccount, modifier = modifier,
-                                    recordDate = str(datetime.datetime.now()), reason = '管理者加點',
+                                    recordDate = str(datetime.datetime.now()), reason = '按照職務加點',
                                     addPoint = "+" + str(point), reducePoint = "", transferPoint = "",
                                     resultPoint = resultPoint)
             pHistory.save()
@@ -245,6 +256,11 @@ def addPointByExcel(request):
             point = int(sheet['D' + str(i)].value)
             try:
                 userAccountInfo = UserAccountInfo.objects.get(username = username)
+                if not userAccountInfo.is_active:
+                    resTmp["resultPoint"] = "帳號凍結中"
+                    resTmp["point"] = "帳號凍結中"
+                    resContent.append(resTmp)
+                    continue
                 userAccountChainyen = UserAccountChainYenInfo.objects.filter(UserAccountInfo=userAccountInfo)
                 userAccountChainyen.update(point=F('point') + point)
                 resultPoint = userAccountChainyen.first().point

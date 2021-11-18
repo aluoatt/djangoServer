@@ -34,8 +34,12 @@ $(document).ready(() => {
                     "value": data[i]
                 })
             }
-            drawBarChart("articleBarChart", d3Data);
-            drawPieChart("articlePieChart", d3Data);
+            title = {
+                x: "Article",
+                y: "sum"
+            }
+            drawBarChart("articleBarChart", d3Data, title, 300, 300);
+            drawPieChart("articlePieChart", d3Data, 300, 300);
             setTimeout(function () {
                 myTable.draw(true);
                 myTable.columns.adjust().draw();
@@ -43,7 +47,7 @@ $(document).ready(() => {
             }, 10);
         },
         'error': (res) => {
-            alert("伺服器出狀況,請聯繫系統人員")
+            alert("此功能異常,請聯繫系統人員")
         }
     });
 
@@ -121,7 +125,7 @@ $(document).ready(() => {
 
                         // Update bar chart
 
-                        currentData = rankTable.rows().data().filter((d) => { return d[1] == val || val == ""; })
+                        currentData = rankTable.rows({ search: 'applied' }).data()
                         d3Data = []
                         for (i = 0; i < currentData.length; i++) {
                             d3Data.push({
@@ -130,14 +134,14 @@ $(document).ready(() => {
                             })
                         }
                         d3Data.sort((a, b) => a.value > b.value  ? 1:-1 );
-                        drawHorizontalBarChart("rankBarChart", d3Data);
+                        drawHorizontalBarChart("rankBarChart", d3Data, 350, 700);
                     });
 
                     column.data().unique().sort().each(function (d, j) {
                         select.find("select").append('<option value="' + d + '">' + d + '</option>')
                     });
                 });
-                drawHorizontalBarChart("rankBarChart", d3Data);
+                drawHorizontalBarChart("rankBarChart", d3Data, 350, 700);
                 setTimeout(function () {
                     rankTable.draw(true);
                     rankTable.columns.adjust().draw();
@@ -145,18 +149,162 @@ $(document).ready(() => {
                 }, 10);
             },
             'error': (res) => {
-                alert("伺服器出狀況,請聯繫系統人員")
+                alert("此功能異常,請聯繫系統人員")
             }
         });
     })
 
-    function drawPieChart(chartID, data) {
+    pointOwnTableHeadChinese = [
+        "姓名", "所屬教室", "上手鑽石", "點數"
+    ]
+    $("#pointOwnNav").on("click", () => {
+        if ($.fn.DataTable.isDataTable("#pointOwnTable")) {
+            return;
+        } else {
+            pointOwnTable = $('#pointOwnTable').DataTable({
+                dom: '<"row"lfBr>tip',
+                buttons: [
+                    {
+                        extend: 'excel',
+                        title: "點數使用情形",
+                        className: 'btn btn-sm btn-warning'
+                    },
+                    {
+                        extend: 'print',
+                        title: "點數使用情形",
+                        className: 'btn btn-sm btn-warning'
+                    }
+                ],
+                "orderClasses": false,
+                "order": [[2, "desc"]],
+                "responsive": true,
+                "fixedHeader": true,
+                "language": {
+                    url: location.origin + '/static/assets/i18n/datatable/zh_Hant.json'
+                },
+                "createdRow": function (row, data, dataIndex) {
+                    $(row).addClass('table-primary');
+                    $(row).addClass('text-dark');
+                    $(row).addClass('font-weight-bold');
+                }
+            });
+        }
+
+        pointOwnTable.clear().draw();
+        $(".dataTables_empty").addClass("table-warning text-dark font-weight-bold");
+        $(".dataTables_empty").text("資料載入中");
+        $.ajax({
+            'url': location.origin + "/managerPages/getPointOwnAll",
+            'method': 'GET',
+            'processData': false,
+            'contentType': false,
+            'headers': { 'X-CSRFToken': getCookie('csrftoken') },
+            'success': (res) => {
+                allData = JSON.parse(res)
+                temp = {};
+                for (i in allData) {
+                    data = allData[i];
+                    pointOwnTable.row.add([
+                        data['user'],
+                        data['classRoom'],
+                        data['amwayDiamond'],
+                        Number(data['point']),
+                    ])
+                    keyName = String(Math.floor(Number(data['point'])/10) * 10);
+                    if(temp[keyName]!== undefined){
+                        temp[keyName] += 1;
+                    } else {
+                        temp[keyName] = 1;
+                    }
+                    
+                }
+                d3Data = []
+                Object.keys(temp).forEach((key) => {
+                    d3Data.push({
+                        "name": key,
+                        "value": temp[key]
+                    })
+                })
+                d3Data.sort((a, b) => Number(a['name']) < Number(b['name']) ? 1:-1 )
+                
+                pointOwnTable.columns().every(function (index) {
+                    if (pointOwnTableHeadChinese[index] !== "上手鑽石" && 
+                        pointOwnTableHeadChinese[index] !== "所屬教室") {
+                        return;
+                    }
+                    var column = this;
+                    selectHTML = `
+                    <div class="col-auto">
+                        <label>${pointOwnTableHeadChinese[index]}</label>
+                        <select class="custom-select custom-select-md"><option value=""></option></select>
+                    </div>
+                    `
+                    var select = $(selectHTML)
+                        .appendTo($("#pointOwnColSearch"));
+
+                    select.find("select").on('change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+
+                        column
+                            .search(val ? '^' + val + '$' : '', true, false)
+                            .draw();
+
+                        // Update bar chart
+
+                        currentData = pointOwnTable.rows({ search: 'applied' }).data()
+                        temp = {}
+                        for (i = 0; i < currentData.length; i++) {
+                            keyName = String(Math.floor(Number(currentData[i][3])/10) * 10);
+                            if(temp[keyName]!== undefined){
+                                temp[keyName] += 1;
+                            } else {
+                                temp[keyName] = 1;
+                            }
+                        }
+                        d3Data = []
+                        Object.keys(temp).forEach((key) => {
+                            d3Data.push({
+                                "name": key,
+                                "value": temp[key]
+                            })
+                        })
+                        d3Data.sort((a, b) => Number(a['name']) < Number(b['name']) ? 1:-1 )
+                        title = {
+                            x: "點數",
+                            y: "人數"
+                        }
+                        drawBarChart("pointOwnBarChart", d3Data, title, 300, 600);
+                    });
+
+                    column.data().unique().sort().each(function (d, j) {
+                        select.find("select").append('<option value="' + d + '">' + d + '</option>')
+                    });
+                });
+                title = {
+                    x: "點數",
+                    y: "人數"
+                }
+                drawBarChart("pointOwnBarChart", d3Data, title,  300, 600);
+                setTimeout(function () {
+                    pointOwnTable.draw(true);
+                    pointOwnTable.columns.adjust().draw();
+                    pointOwnTable.responsive.recalc().columns.adjust();
+                }, 10);
+            },
+            'error': (res) => {
+                alert("此功能異常,請聯繫系統人員")
+            }
+        });
+    })
+
+    function drawPieChart(chartID, data, height, width) {
+        d3.select("#" + chartID).selectAll("svg > *").remove();
         var colors = [
             "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd",
             "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"
         ];
-        height = 300;
-        width = 300;
         radius = width / 2;
         svg = d3.select("#" + chartID)
             .attr("viewBox", [0, 0, width, height])
@@ -237,15 +385,10 @@ $(document).ready(() => {
             })
     }
 
-    function drawBarChart(chartID, data) {
-
-        title = {
-            x: "Article",
-            y: "sum"
-        }
+    function drawBarChart(chartID, data, title, height, width) {
+        d3.select("#" + chartID).selectAll("svg > *").remove();
+        
         margin = ({ top: 20, right: 20, bottom: 30, left: 40 });
-        height = 300;
-        width = 300;
         color = "steelblue";
         yAxis = g => g
             .attr("transform", `translate(${margin.left},0)`)
@@ -315,7 +458,7 @@ $(document).ready(() => {
             .call(yAxis);
     }
 
-    function drawHorizontalBarChart(chartID, data) {
+    function drawHorizontalBarChart(chartID, data, height, width) {
         d3.select("#" + chartID).selectAll("svg > *").remove();
         data = data.slice(-10)
         title = {
@@ -323,8 +466,6 @@ $(document).ready(() => {
             x: ""
         }
         margin = ({ top: 20, right: 20, bottom: 30, left: 40 });
-        height = 350;
-        width = 700;
         color = "steelblue";
         yAxis = g => g
             .attr("transform", `translate(${margin.left},0)`)

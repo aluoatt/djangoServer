@@ -1,5 +1,5 @@
-$(document).ready(()=>{
-    
+$(document).ready(() => {
+
     myTable = $('#myTable').DataTable({
         "orderClasses": false,
         "responsive": true,
@@ -14,12 +14,12 @@ $(document).ready(()=>{
         }
     });
     myTableHead = [
-        'user','amwayNumber' ,'ClassRoomName','amwayDD',
-        'point','accountStatus','modify', 'modify_history'
+        'user', 'amwayNumber', 'ClassRoomName', 'amwayDD',
+        'point', 'accountStatus', 'modify', 'modify_history'
     ]
     myTableHeadChinese = [
-        '姓名','會員編號','教室','上手白金',
-        '點數','狀態','修改','修改紀錄'
+        '姓名', '會員編號', '教室', '上手白金',
+        '點數', '狀態', '修改', '修改紀錄'
     ]
     $.ajax({
         'url': location.origin + "/managerPages/allUserAccount",
@@ -38,7 +38,7 @@ $(document).ready(()=>{
                     fields['ClassRoomName'],
                     fields['amwayDD'],
                     fields['point'],
-                    fields['accountStatus'] === true ?"正常":"凍結",
+                    fields['accountStatus'] === true ? "正常" : "凍結",
                     `<a id="${userid}_modify" data-toggle="modal"
                         data-target="#accountModifyConfirm"
                         class="button_modified h4 btn btn-outline-success btn-sm">
@@ -49,10 +49,10 @@ $(document).ready(()=>{
                         查看
                     </a>`
                 ]).nodes().to$()
-                .find('td')
-                .each(function(index) {
-                    $(this).attr('id', userid +"_" + myTableHead[index] );
-                });
+                    .find('td')
+                    .each(function (index) {
+                        $(this).attr('id', userid + "_" + myTableHead[index]);
+                    });
 
                 amwayDiamond = fields['amwayDiamond']
                 gender = fields['gender']
@@ -89,8 +89,8 @@ $(document).ready(()=>{
                 `
                 $(moHTML).appendTo($("#hiddenData"));
             }
-            myTable.columns().every( function (index) {
-                if(index > 5){
+            myTable.columns().every(function (index) {
+                if (index > 5) {
                     return;
                 }
                 var column = this;
@@ -101,54 +101,54 @@ $(document).ready(()=>{
                 </div>
                 `
                 var select = $(selectHTML)
-                    .appendTo( $("#colSearch") );
+                    .appendTo($("#colSearch"));
 
-                select.find("select").on( 'change', function () {
+                select.find("select").on('change', function () {
                     var val = $.fn.dataTable.util.escapeRegex(
                         $(this).val()
                     );
 
                     column
-                        .search( val ? '^'+val+'$' : '', true, false )
+                        .search(val ? '^' + val + '$' : '', true, false)
                         .draw();
-                } );
- 
-                column.data().unique().sort().each( function ( d, j ) {
-                    select.find("select").append( '<option value="'+d+'">'+d+'</option>' )
-                } );
-            } );
-            
-            setTimeout(function(){
+                });
+
+                column.data().unique().sort().each(function (d, j) {
+                    select.find("select").append('<option value="' + d + '">' + d + '</option>')
+                });
+            });
+
+            setTimeout(function () {
                 myTable.draw(true);
                 myTable.columns.adjust().draw();
                 myTable.responsive.recalc().columns.adjust();
-                if (data.length == 0 ){
+                if (data.length == 0) {
 
-                $(".dataTables_empty").text("目前沒有資料");
+                    $(".dataTables_empty").text("目前沒有資料");
 
-             }
+                }
 
             }, 10);
         },
         'error': (res) => {
-            $(".dataTables_empty").text("伺服器出狀況,請聯繫系統人員");
+            $(".dataTables_empty").text("此功能異常,請聯繫系統人員");
         }
     });
-    
+
     var t = $('#example').DataTable({
         "orderClasses": false,
         "responsive": true,
         "language": {
             url: location.origin + '/static/assets/i18n/datatable/zh_Hant.json'
         },
-        "createdRow": function( row, data, dataIndex ){
+        "createdRow": function (row, data, dataIndex) {
             $(row).addClass('table-warning');
             $(row).addClass('text-dark');
             $(row).addClass('font-weight-bold');
         }
     });
-    
-    $("#myTable").on("click", ".button_history", (event)=>{
+
+    $("#myTable").on("click", ".button_history", (event) => {
         var counter = 1;
         t.clear().draw();
         $(".dataTables_empty").addClass("table-warning text-dark font-weight-bold");
@@ -156,7 +156,7 @@ $(document).ready(()=>{
         id = $(event.target)[0].id;
         username = id.split("_")[0];
 
-        action   = "getAccountModifyHistory";
+        action = "getAccountModifyHistory";
         formData = new FormData();
         formData.append("username", username)
         $.ajax({
@@ -165,28 +165,169 @@ $(document).ready(()=>{
             'processData': false,
             'contentType': false,
             'data': formData,
-            'headers': {'X-CSRFToken': getCookie('csrftoken')},
+            'headers': { 'X-CSRFToken': getCookie('csrftoken') },
             'success': (res) => {
                 console.log(res)
                 data = JSON.parse(res)
-                for(i in data){
+                for (i in data) {
                     fields = data[i]['fields']
-                    t.row.add( [
+                    t.row.add([
                         fields['modifier'],
                         fields['recordDate'],
                         fields['modifyFielddName'],
                         fields['originFieldData'],
                         fields['RevisedData'],
 
-                    ]  ).draw( false  );
+                    ]).draw(false);
                 }
             },
             'error': (res) => {
-                alert("伺服器出狀況,請聯繫系統人員")
+                alert("此功能異常,請聯繫系統人員")
             }
         });
 
     });
+
+    $(".accountStatusBtn").on("click", (e) => {
+        action = $(e.target)[0].id;
+        if (action === "activateByExcel") {
+            title = "請輸入要啟用的帳號清單"
+        } else if (action === "freezeByExcel") {
+            title = "請輸入要凍結的帳號清單"
+        }
+        formInput = "";
+        formInput = $("<form>", { id: "accountStatusForm" });
+        pointDiv = $("<div>", { class: "form-group" });
+        pointDiv.append($("<label>", { text: "報表檔案" }));
+        pointDiv.append($("<input>", { type: "file", name: "excelFile", class: "form-control", placeholder: "Select file" }));
+        formInput.append(pointDiv);
+
+        if (action === "activateByExcel") {
+            pointDiv = $("<div>", { class: "form-group" });
+            pointDiv.append($("<label>", { text: "點數" }));
+            pointDiv.append($("<input>", { type: "number", name: "point", class: "form-control", placeholder: "Enter point" }));
+            formInput.append(pointDiv);
+        }
+        bootbox.confirm({
+            closeButton: false,
+            backdrop: true,
+            scrollable: true,
+            title: title,
+            message: formInput,
+            locale: "zh_TW",
+            container: "body",
+            centerVertical: true,
+            className: "modal-dialog-centered text-dark",
+            onShow: function(e) {
+                $(e.target).find(".modal-content").addClass("bg-dark")
+            } ,
+            callback: (res) => {
+                if (!res)
+                    return;
+                formData = new FormData($("#accountStatusForm")[0]);
+                if (action === "activateByExcel") {
+                    formData.append("is_active", 1)
+                    point = formData.get("point");
+                    if (point < 0) {
+                        bootbox.alert({
+                            closeButton: false,
+                            message: "請輸入大於等於零的點數",
+                            locale: "zh_TW",
+                            centerVertical: true,
+                            onShow: function(e) {
+                                $(e.target).find(".modal-content").addClass("bg-dark")
+                            } ,
+                        });
+                        return;
+                    }
+                } else {
+                    formData.append("is_active", 0)
+                }
+                $.ajax({
+                    url: location.origin + "/managerPages/changeStatusByExcel",
+                    'method': 'POST',
+                    'processData': false,
+                    'contentType': false,
+                    'data': formData,
+                    'headers': { 'X-CSRFToken': getCookie('csrftoken') },
+                    'success': (res) => {
+
+                        result = JSON.parse(res);
+                        message = $("<table>", {
+                            "id": "excelTable",
+                            class: "display table-bordered ",
+                            style: "width:100%; white-space: nowrap;"
+                        });
+                        excelTable = $(message).DataTable({
+                            dom: '<"row"lfBr>tip',
+                            buttons: [
+                                {
+                                    extend: 'excel',
+                                    title: "帳號異動結果",
+                                    className: 'btn btn-sm btn-warning'
+                                },
+                                {
+                                    extend: 'print',
+                                    title: "帳號異動結果",
+
+                                    className: 'btn btn-sm btn-warning'
+                                }
+                            ],
+                            "orderClasses": false,
+                            "responsive": true,
+                            "fixedHeader": true,
+                            "language": {
+                                url: location.origin + '/static/assets/i18n/datatable/zh_Hant.json'
+                            },
+                            "createdRow": function (row, data, dataIndex) {
+                                $(row).addClass('table-primary');
+                                $(row).addClass('text-dark');
+                                $(row).addClass('font-weight-bold');
+                            },
+                            "columns": [{ title: "姓名" }, { title: "編號" }, { title: "點數" }, { title: "狀態" }]
+                        });
+                        result.forEach((ele, index) => {
+                            excelTable.row.add([
+                                ele["user"],
+                                ele["amwayNumber"],
+                                ele["point"],
+                                ele["status"],
+                            ])
+                        });
+
+
+                        bootbox.alert({
+                            closeButton: false,
+                            scrollable: true,
+                            className: "modal-dialog-centered",
+                            container: "body",
+                            title: "帳號異動清單",
+                            message: message,
+                            locale: "zh_TW",
+                            centerVertical: true,
+                            onShow: function(e) {
+                                $(e.target).find(".modal-content").addClass("bg-dark")
+                            } ,
+                        });
+
+                    },
+                    'error': (res) => {
+                        bootbox.alert({
+                            closeButton: false,
+                            message: "此功能異常,請聯繫系統人員",
+                            locale: "zh_TW",
+                            centerVertical: true,
+                            onShow: function(e) {
+                                $(e.target).find(".modal-content").addClass("bg-dark")
+                            } ,
+                        });
+                    }
+                });
+
+            }
+        });
+    });
+
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -202,4 +343,6 @@ $(document).ready(()=>{
         }
         return cookieValue;
     }
+
+
 });

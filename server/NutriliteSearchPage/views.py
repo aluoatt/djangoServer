@@ -231,6 +231,7 @@ def exchangeOption(request, fileId):
             else:
                 UserAccountChainYen.point = UserAccountChainYen.point - targetFile.point
                 UserAccountChainYen.save()
+                targetFile.exchangeCount += 1
                 pf.exchangeDate = str(datetime.datetime.now())
                 pf.save()
 

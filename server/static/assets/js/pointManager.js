@@ -93,7 +93,7 @@ $(document).ready(() => {
             }, 10);
         },
         'error': (res) => {
-             $(".dataTables_empty").text("伺服器出狀況,請聯繫系統人員");
+             $(".dataTables_empty").text("此功能異常,請聯繫系統人員");
         }
     });
 
@@ -163,7 +163,16 @@ $(document).ready(() => {
                             });
                         },
                         'error': (res) => {
-                            alert("伺服器出狀況,請聯繫系統人員");
+                            msg = "此功能異常,請聯繫系統人員"
+                            if (res.status == 400) {
+                                msg = res.responseText
+                            }
+                            bootbox.alert({
+                                closeButton: false,
+                                message: msg,
+                                locale: "zh_TW",
+                                centerVertical: true,
+                            });
                         }
                     });
                 }
@@ -237,7 +246,7 @@ $(document).ready(() => {
                 }, 10);
             },
             'error': (res) => {
-                alert("伺服器出狀況,請聯繫系統人員")
+                alert("此功能異常,請聯繫系統人員")
             }
         });
 
@@ -393,9 +402,13 @@ $(document).ready(() => {
 
                         },
                         'error': (res) => {
+                            msg = "此功能異常,請聯繫系統人員"
+                            if (res.status == 400) {
+                                msg = res.responseText
+                            }
                             bootbox.alert({
                                 closeButton: false,
-                                message: "伺服器出狀況,請聯繫系統人員",
+                                message: msg,
                                 locale: "zh_TW",
                                 centerVertical: true,
                             });

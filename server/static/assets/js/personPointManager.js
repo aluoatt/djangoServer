@@ -50,7 +50,7 @@ $(document).ready(() => {
             }, 10);
         },
         'error': (res) => {
-            $(".dataTables_empty").text("伺服器出狀況,請聯繫系統人員");
+            $(".dataTables_empty").text("此功能異常,請聯繫系統人員");
         }
     });
 
@@ -105,7 +105,7 @@ $(document).ready(() => {
             }, 10);
         },
         'error': (res) => {
-            alert("伺服器出狀況,請聯繫系統人員")
+            alert("此功能異常,請聯繫系統人員")
         }
     });
 
@@ -171,7 +171,7 @@ $(document).ready(() => {
                             });
                         },
                         'error': (res) => {
-                            alert("伺服器出狀況,請聯繫系統人員");
+                            alert("此功能異常,請聯繫系統人員");
                         }
                     });
                 }
@@ -231,7 +231,7 @@ $(document).ready(() => {
                             });
                         },
                         'error': (res) => {
-                            alert("伺服器出狀況,請聯繫系統人員");
+                            alert("此功能異常,請聯繫系統人員");
                         }
                     });
                 }

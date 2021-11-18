@@ -37,6 +37,12 @@
                     <div id="hiddenData">
 
                     </div>
+                    {% if perms.can_freeze_account %}
+                        <button id="freezeByExcel"
+                                class="accountStatusBtn btn btn-sm btn-primary">批次凍結</button>
+                        <button id="activateByExcel"
+                                class="accountStatusBtn btn btn-sm btn-primary">批次啟用</button>
+                    {% endif %}
                     <div id="colSearch" class="form-row align-items-center">
 
                     </div>
@@ -388,7 +394,6 @@
         color: black;
         border-radius: 5px;
     }
-
 </style>
 </body>
 

@@ -122,7 +122,7 @@ $(document).ready(() => {
 
         'error': (res) => {
 
-            $(".dataTables_empty").text("伺服器出狀況,請聯繫系統人員");
+            $(".dataTables_empty").text("此功能異常,請聯繫系統人員");
         }
     });
 
