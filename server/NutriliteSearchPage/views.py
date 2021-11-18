@@ -478,7 +478,7 @@ def viewFilePage(request, fileId):
     today = datetime.datetime.now()
     delta = datetime.timedelta(hours=-60)
     target_day = today + delta
-    if personalWatchFileLog.objects.filter(watchAccount=UserAccount,exchangeDate__gte=target_day).count() < 1:
+    if personalWatchFileLog.objects.filter(watchAccount=UserAccount,exchangeDate__gte=target_day,fileDataID=targetFile).count() < 1:
         personalWatchFileLog(fileDataID=targetFile,
                              watchAccount=UserAccount,
                              exchangeDate=str(datetime.datetime.now())).save()
@@ -677,7 +677,7 @@ def clear_datafile_inVPS_job():
     for existDatainVPS in personalFileData.objects.filter(waterCreateReady = 1):
         # 1814400
         if os.path.isfile(backaddress + '/' + existDatainVPS.waterMarkPath):
-            if (time.time() - os.path.getctime(backaddress+'/'+existDatainVPS.waterMarkPath) ) > 1814400: #創建超過21天
+            if (time.time() - os.path.getctime(backaddress+'/'+existDatainVPS.waterMarkPath) ) > 604800: #創建超過21天
                 try:
 
                     os.remove(backaddress+'/'+existDatainVPS.waterMarkPath)
