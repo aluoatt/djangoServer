@@ -261,7 +261,7 @@ def exchangeOption(request, fileId):
             UserAccountChainYen.save()
 
             pHistory = pointHistory(UserAccountInfo=UserAccount, modifier="系統",
-                                    recordDate=str(datetime.datetime.now()), reason='兌換資料',
+                                    recordDate=str(datetime.datetime.now()), reason='兌換資料:' + targetFile.title,
                                     addPoint="", reducePoint=targetFile.point, transferPoint="",
                                     resultPoint=UserAccountChainYen.point)
             pHistory.save()
