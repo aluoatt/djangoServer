@@ -4,6 +4,14 @@ from userlogin.models import UserAccountInfo,UserAccountChainYenInfo, UserAccoun
 from NutriliteSearchPage.utils.page import Pagination
 from pointManage.models import pointHistory
 from django.contrib.auth.hashers import make_password,check_password
+from django.http import HttpResponse
+from managerPage.models import rewardReport
+from django.core import serializers
+from django.contrib.auth.decorators import permission_required
+from openpyxl import load_workbook
+import json
+import datetime
+
 # Create your views here.
 
 def personalInfoHomePage(request,selectTag):
@@ -115,3 +123,104 @@ def changePasswordOption(request):
     #
 
     return render(request, 'personalInfoPages/changePasswordOptionResult.html', locals())
+
+@permission_required('userlogin.rewardReport', login_url='/accounts/userlogin/')
+def personalRewardReport(request):
+    return render(request, 'personalInfoPages/personalInfoRewadReportPage.html', locals())
+
+
+@permission_required('userlogin.rewardReport', login_url='/accounts/userlogin/')
+def getSelfRewardReport(request):
+    res = HttpResponse()
+    rewardAll = rewardReport.objects.filter(reporter = request.user)
+    resContent = []
+    for reward in rewardAll:
+        rewardList = json.loads(reward.rewardList)
+        rewardName = ""
+        for user in rewardList:
+            if rewardName == "":
+                rewardName = user["user"]
+            else:
+                rewardName = rewardName + "," + user["user"]
+            
+        handleDate = reward.handleDate
+        if not handleDate:
+            handleDate = ""
+        resTmp = {
+            "reporter":   reward.reporter.user,
+            "reason": reward.reason,
+            "recordDate": str(reward.recordDate),
+            "rewardList": rewardName,
+            "status": reward.status,
+            "handleDate": str(handleDate)
+        }
+        resContent.append(resTmp)
+    res.status_code = 200
+    res.content =  json.dumps(resContent)
+    return res
+
+@permission_required('userlogin.rewardReport', login_url='/accounts/userlogin/')
+def rewardReportByExcel(request):
+    res = HttpResponse()
+    try:
+        excelFile = ""
+        if "excelFile" in request.FILES:
+            excelFile = request.FILES['excelFile']
+        
+        reason = ""
+        if "reason" in request.POST:
+            reason = request.POST['reason']
+        
+        if excelFile == "" or reason == "" or \
+            (reason == True and reason == False):
+            res.content = "無提供檔案或是獎賞緣由"
+            res.status_code = 400
+            return res
+
+        if not request.user.has_perm('userlogin.rewardReport'):
+            res.content = "Permission not enough"
+            res.status_code = 403
+            return res
+
+        wb = load_workbook(excelFile)
+        sheet = wb.active
+        resContent = []
+        errorList  = []
+        reporter = request.user
+        for i in range(2,sheet.max_row+1):
+            if not sheet['B' + str(i)].value:
+                break
+            errorTmp = {}
+            resTmp = {}
+            resTmp["user"] = str(sheet["A" + str(i)].value).strip(" ")
+            amwayNumber = str(sheet['B' + str(i)].value)
+            id4 = str(sheet['C' + str(i)].value)
+            username = amwayNumber + id4
+            resTmp["amwayNumber"] = amwayNumber
+            resTmp["id4"] = id4
+            resContent.append(resTmp)
+            r = UserAccountInfo.objects.filter(username =  username)
+            if not r or r.get().user != resTmp["user"]:
+                errorTmp["user"] = resTmp["user"]
+                errorTmp["amwayNumber"] = amwayNumber
+                errorTmp["id4"] = id4
+                errorList.append(errorTmp)
+        if len(errorList) > 0:
+            res.status_code = 404
+            res.content = json.dumps(errorList)
+            return res
+        if len(resContent) == 0:
+            res.status_code = 400
+            res.content = "Excel 內無名單"
+            return res
+        rReport = rewardReport(reporter = reporter, reason = reason, 
+                                recordDate = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                                rewardList = json.dumps(resContent),
+                                status = "waiting")
+        rReport.save()
+        res.status_code = 200
+        res.content = json.dumps(resContent)
+    except:
+        res.status_code = 503
+    
+    return res

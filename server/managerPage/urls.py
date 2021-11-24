@@ -16,5 +16,7 @@ urlpatterns = [
     path('getArticleOwnRank', views.getArticleOwnRank, name='getArticleOwnRank'),
     path('getPointOwnAll', views.getPointOwnAll, name='getPointOwnAll'),
     path('changeStatusByExcel', views.changeStatusByExcel, name='changeStatusByExcel'),
+    path('getRewardReport/<str:status>', views.getRewardReport, name='getRewardReport'),
+    path('discardRewardReport', views.discardRewardReport, name='discardRewardReport'),
+    path('confirmRewardReport', views.confirmRewardReport, name='confirmRewardReport'),
 ]
-
