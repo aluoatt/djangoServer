@@ -46,7 +46,7 @@ def formatedDatetime(timeString):
         result = ""
     return result
 
-wb = load_workbook('insertDataPy/fileData20210908.xlsx')
+wb = load_workbook('insertDataPy/20211125.xlsx')
 sheet = wb.active
 dataResult = []
 init = True
@@ -79,6 +79,8 @@ for i in range(2,sheet.max_row):
     if DBClass == "（A）公司資源（包含安麗公司；YouTube；行動大學；培訓資料.....）" or sourceFrom == "行動大學" or sourceFrom == "公司資料" or sourceFrom == "YouTube":
         point = 2
         needWaterMark = False
+    elif sourceFrom == "食譜":
+        point = 1
     elif sourceFrom == "個人製作" or sourceFrom == "教室製作":
         point = 4
     elif sourceFrom == "總部製作":
