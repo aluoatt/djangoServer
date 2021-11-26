@@ -24,7 +24,7 @@
     </div>
     {% if perms.userlogin.rewardReport %}
         <form action="{% url 'personalRewardReport' %}" method="get">{% csrf_token %}
-            <input class="primary rounded" type="submit" value="獎賞回報">
+            <input class="primary rounded" {% if selectPage == '獎賞回報' %} style="background-color:#c2c9d1" {% endif %} type="submit" value="獎賞回報">
         </form>
     {% endif %}
 </div>

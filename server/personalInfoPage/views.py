@@ -126,6 +126,7 @@ def changePasswordOption(request):
 
 @permission_required('userlogin.rewardReport', login_url='/accounts/userlogin/')
 def personalRewardReport(request):
+    selectPage = "獎賞回報"
     return render(request, 'personalInfoPages/personalInfoRewadReportPage.html', locals())
 
 
