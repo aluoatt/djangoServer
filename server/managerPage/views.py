@@ -1209,7 +1209,7 @@ def getRewardReport(request, status):
                 if rewardName == "":
                     rewardName = f"{user['user']}({user['amwayNumber']})" 
                 else:
-                    rewardName = rewardName + "," + f"${user['user']}({user['amwayNumber']})"
+                    rewardName = rewardName + "," + f"{user['user']}({user['amwayNumber']})"
             tmp = {
                 "id"         : data.id,
                 "reporter"   : data.reporter.user,
