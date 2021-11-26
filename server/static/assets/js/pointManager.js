@@ -327,6 +327,17 @@ $(document).ready(() => {
                             return;
                         }
                     }
+                    amwayAwardStart = formData.get("amwayAwardStart")
+                    amwayAwardEnd = formData.get("amwayAwardEnd")
+                    if (amwayAwardList.indexOf(amwayAwardStart) > amwayAwardList.indexOf(amwayAwardEnd)) {
+                        bootbox.alert({
+                            closeButton: false,
+                            message: "起始獎銜請勿大於獎銜終點",
+                            locale: "zh_TW",
+                            centerVertical: true,
+                        });
+                        return;
+                    }
                     $.ajax({
                         url: location.origin + "/pointManage/" + action,
                         'method': 'POST',
