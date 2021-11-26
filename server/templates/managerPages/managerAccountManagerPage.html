@@ -37,7 +37,7 @@
                     <div id="hiddenData">
 
                     </div>
-                    {% if perms.can_freeze_account %}
+                    {% if perms.userlogin.can_freeze_account %}
                         <button id="freezeByExcel"
                                 class="accountStatusBtn btn btn-sm btn-primary">批次凍結</button>
                         <button id="activateByExcel"
