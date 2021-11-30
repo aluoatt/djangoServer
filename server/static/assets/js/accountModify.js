@@ -61,6 +61,8 @@ $(document).ready(() => {
                 amwayAward = fields['amwayAward']
                 amwayNumber = fields['amwayNumber']
                 amwayDD_number = fields['amwayDD_number']
+                IDnumber = fields['IDnumber']
+                email = fields['email']
                 dataPermissionsLevel = fields['dataPermissionsLevel']
                 //insert data for modify perpose
                 moHTML = `
@@ -81,6 +83,12 @@ $(document).ready(() => {
                     <input type="hidden"
                         value="${amwayDD_number}"
                         id="${userid}_amwayDD_number">
+                    <input type="hidden"
+                        value="${IDnumber}"
+                        id="${userid}_IDnumber">
+                    <input type="hidden"
+                        value="${email}"
+                        id="${userid}_email">
                     <input type="hidden" value="${dataPermissionsLevel}"
                         id="${userid}_dataPermissionsLevel">
                     <td id="${userid}_amwayDiamond" style="display:none" data-th="上手鑽石">

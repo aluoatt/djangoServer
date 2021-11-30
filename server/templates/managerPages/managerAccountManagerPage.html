@@ -99,6 +99,15 @@
                     <label style="color: black"><mark style="color: red">會員編號:</mark>
                         <input id="modal_amwayNumber" disabled style="font-size:12px;" type="text">
                     </label>
+                    <label style="color: black"><mark style="color: red">後四碼:</mark>
+                        <input id="modal_IDnumber" disabled style="font-size:12px;" type="text">
+                    </label>
+
+                    <label style="color: black"><mark style="color: red">email:</mark>
+                        <input id="modal_email" style="font-size:12px;border: 1px solid #ccc;" type="text" required
+                        pattern="[A-Za-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" autocomplete="none">
+                    </label>
+
                     <label id="modal_gender" style="color: black"><mark style="color: red">性別:</mark>
                         <select style="font-size:12px;border: 1px solid #ccc;" id="gender" name="gender">
                             <option id="男" value="男">男</option>
@@ -226,7 +235,8 @@
             document.getElementById("modal_user").value = document.getElementById(id + "_user").innerHTML.trim()
 
             document.getElementById("modal_amwayNumber").value = document.getElementById(id + "_amwayNumber").innerHTML.trim()
-            console.log(document.getElementById(id + "_gender").innerHTML.trim())
+            document.getElementById("modal_email").value = document.getElementById(id + "_email").value.trim()
+            document.getElementById("modal_IDnumber").value = document.getElementById(id + "_IDnumber").value.trim()
             if (document.getElementById(id + "_gender").innerHTML.trim() == "男") {
 
                 document.getElementById("男").selected = true;
@@ -301,6 +311,7 @@
                 "userid": userid,
                 "modal_user": $('#modal_user').val(),
                 "modal_amwayNumber": $('#modal_amwayNumber').val(),
+                "modal_email":$('#modal_email').val(),
                 "gender": $('#gender').val(),
                 "phone": $('#modal_phone').val(),
                 "chainYenJobTitle": $('#chainYenJobTitle').val(),
@@ -335,6 +346,7 @@
                         document.getElementById(userid + "_amwayDiamond").innerHTML = $('#modal_amwayDiamond').val();
                         document.getElementById(userid + "_dataPermissionsLevel").innerHTML = $('#modal_dataPermissionsLevel').val();
                         document.getElementById(userid + "_accountStatus").innerHTML = $('#modal_accountStatus').val();
+                        document.getElementById(userid + "_email").value = $('#modal_email').val();
 
                     }
                     else {

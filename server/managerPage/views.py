@@ -265,7 +265,7 @@ def modalAccountModifyPOST(request):
     try:
         managerName = UserAccountInfo.objects.get(username=request.user).user
         userid = json.loads(request.body.decode('utf-8'))["userid"]
-
+        email = json.loads(request.body.decode('utf-8'))["modal_email"]
         user = json.loads(request.body.decode('utf-8'))["modal_user"]
         phone = json.loads(request.body.decode('utf-8'))["phone"]
         # amwayNumber = json.loads(request.body.decode('utf-8'))["modal_amwayNumber"]
@@ -300,6 +300,15 @@ def modalAccountModifyPOST(request):
                                  originFieldData = r.user,
                                  RevisedData = user).save()
             r.user = user
+
+        if r.email != email:
+            AccountModifyHistory(UserAccountInfo=r,
+                                 modifier=managerName,
+                                 recordDate=str(datetime.datetime.now()),
+                                 modifyFielddName="email",
+                                 originFieldData=r.email,
+                                 RevisedData=email).save()
+            r.email = email
 
         if r.gender != gender:
             AccountModifyHistory(UserAccountInfo=r,
@@ -744,6 +753,8 @@ def allUserAccount(request):
             temp = {
                 "id":user.id,
                 "username": user.username,
+                "email":user.email,
+                "IDnumber":user.username[-4:],
                 "user": user.user,
                 "gender": user.gender,
                 "phone": user.phone,
