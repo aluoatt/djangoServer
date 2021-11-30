@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<!--
+    Forty by HTML5 UP
+    html5up.net | @ajlkn
+    Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+
+<html>
+
+<head>
+    <title>ChainYen System</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+    {% load static %}
+</head>
+
+<body class="is-preload" style="background-size: Cover;background:url('{%static 'images/login底圖.png' %}');">
+
+
+    <!-- Wrapper -->
+    <div id="wrapper">
+
+        <!-- Header -->
+        {% include 'baseHeader.html' %}
+
+        <!-- Menu -->
+        {% include 'baseMenu.html' %}
+
+        <!-- Main -->
+
+        <div id="main" class="alt">
+            <section id="one" class="spotlights">
+                <div class="inner">
+                    {% include 'personalInfoPages/personalInfoHomePageSearchBar.html' %}
+                    <button class="rewardReportBtn btn btn-primary btn-sm copy_coupon">
+                        回報獎勵名單
+                    </button>
+                    <br>
+                    <br>
+                    <div id="colSearch" class="form-row align-items-center">
+
+                    </div>
+                    <table id="myRewardReportTable" class="display table table-light table-bordered" style="border:dark;width:100%; white-space: nowrap;">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>請求者</th>
+                                <th>獎勵原因</th>
+                                <th>獎勵名單</th>
+                                <th>請求日期</th>
+                                <th>處理日期</th>
+                                <th>狀態</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <style>
+                        .dataTables_filter input {
+                            background-color: white;
+                            border-radius: 5px;
+                        }
+                        label{
+                            color:black;
+                        }
+                    
+                        th, td {border-width:10px}
+
+                        .dataTables_info{
+                            color:black;
+                        }
+                        
+                    </style>
+                </div>
+        </div>
+
+        </section>
+    </div>
+
+    </div>
+
+
+    <!-- Scripts -->
+    <script src="{% static 'assets/js/personRewardReportManager.js' %}"></script>
+</body>
+
+</html>

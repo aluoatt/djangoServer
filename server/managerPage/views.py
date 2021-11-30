@@ -5,6 +5,8 @@ from django.contrib.auth.models import Permission
 import traceback
 from django.core import serializers
 
+from pointManage.models import pointHistory
+
 
 # Create your views here.
 from . import models
@@ -18,6 +20,7 @@ from userlogin.models import TempUserAccountInfo, AccountModifyHistory, TempUser
 from NutriliteSearchPage.models import DBClassInfo, fileDataInfo, mainClassInfo, secClassInfo, articleModifyHistory, articleReport
 from NutriliteSearchPage.models import fileDataKeywords, personalFileData, personalWatchFileLog
 from openpyxl import load_workbook
+from managerPage.models import rewardReport
 
 # Create your views here.
 import hashlib
@@ -1178,6 +1181,135 @@ def getArticleReport(request, status):
             articleDataSummary.append(tmp)
         res.content = json.dumps(articleDataSummary)
         res.status_code = 200
+    except:
+        res.status_code = 503
+    return res
+
+
+#獎勵回報機制
+
+@permission_required('userlogin.seeManagerRewardReportPage', login_url='/accounts/userlogin/')
+def managerRewardReportManagerPage(request):
+    tag = "ManagerRewardReportManagerPage"
+    return render(request, 'managerPages/managerRewardReportManagerPage.html', locals())
+
+@permission_required('userlogin.seeManagerRewardReportPage', login_url='/accounts/userlogin/')
+def getRewardReport(request, status):
+    res = HttpResponse()
+    try:
+        rewardDatas = rewardReport.objects.filter(status=status)
+        rewardDataSummary = []
+        for data in rewardDatas:
+            handler = ""
+            if data.handler:
+                handler = data.handler.user
+            rewardName = ""
+            rewardList = json.loads(data.rewardList)
+            for user in rewardList:
+                if rewardName == "":
+                    rewardName = f"{user['user']}({user['amwayNumber']})" 
+                else:
+                    rewardName = rewardName + "," + f"{user['user']}({user['amwayNumber']})"
+            tmp = {
+                "id"         : data.id,
+                "reporter"   : data.reporter.user,
+                "handler"    : handler,
+                "reason"     : data.reason,
+                "rewardList" : rewardName,
+                "status"     : data.status,
+                "discardReason" : data.discardReason,
+                "recordDate" : str(data.recordDate),
+                "handleDate"   : str(data.handleDate)
+            }
+            rewardDataSummary.append(tmp)
+        res.content = json.dumps(rewardDataSummary)
+        res.status_code = 200
+    except:
+        res.status_code = 503
+    return res
+
+@permission_required('userlogin.seeManagerRewardReportPage', login_url='/accounts/userlogin/')
+def confirmRewardReport(request):
+    res = HttpResponse()
+    try:
+        point = ""
+        if "point" in request.POST:
+            point = int(request.POST['point'])
+        
+        reportID = ""
+        if "reportID" in request.POST:
+            reportID = request.POST["reportID"]
+
+        if point == "":
+            res.status_code = 400
+            res.content = "請輸入要獎勵的點數"
+            return res
+        
+        rReport = rewardReport.objects.filter(id = reportID)
+        if not rReport:
+            res.status_code = 400
+            res.content = "獎勵申請並不存在"
+            return res
+
+        rReport = rReport.get()
+        rewardList = json.loads(rReport.rewardList)
+        modifier = request.user.user
+        for userData in rewardList:
+            username = userData['amwayNumber'] + userData['id4']
+            userAccount = UserAccountInfo.objects.get(username = username)
+            userChainyen = UserAccountChainYenInfo.objects.get(UserAccountInfo__username = username)
+            userChainyen.point = userChainyen.point + point
+            userChainyen.save()
+            pHistory = pointHistory(UserAccountInfo = userAccount, modifier = modifier,
+                                    recordDate = str(datetime.datetime.now()), reason = '獎勵加點',
+                                    addPoint = "+" + str(point), reducePoint = "", transferPoint = "",
+                                    resultPoint = userChainyen.point)
+            pHistory.save()
+        
+        rReport.handler = request.user
+        rReport.handleDate = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        rReport.status = "finish"
+        rReport.save()
+
+    except:
+        res.status_code = 503
+
+    return res
+
+@permission_required('userlogin.seeManagerRewardReportPage', login_url='/accounts/userlogin/')
+def discardRewardReport(request):
+    res = HttpResponse()
+    try:
+        reportID = ""
+        if "reportID" in request.POST:
+            reportID = request.POST['reportID']
+        
+        if reportID == "":
+            res.status_code = 400
+            res.content = "請指定獎勵回報辨識碼"
+            return res
+        
+        discardReason = ""
+        if "discardReason" in request.POST:
+            discardReason = request.POST['discardReason']
+        
+        if discardReason == "":
+            res.status_code = 400
+            res.content = "請提供無效原因"
+            return res
+
+        rReport = rewardReport.objects.filter(id = reportID)
+        if not rReport:
+            res.status_code = 404
+            res.content = "無此獎勵請求"
+            return res
+
+        rReport = rReport.get()
+        rReport.handler = request.user
+        rReport.status = "discard"
+        rReport.discardReason = discardReason
+        rReport.handleDate = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        rReport.save()
     except:
         res.status_code = 503
     return res

@@ -66,6 +66,18 @@
             {% endif %}
         {% endif %}
 
+        {% if perms.userlogin.seeManagerRewardReportPage %}
+            {% if tag == "ManagerRewardReportManagerPage" %}
+            <form action="#" method="get">{% csrf_token %}
+                <input class="rounded" type="submit" value="獎賞管理">
+            </form>
+            {% else %}
+            <form action="{% url 'managerRewardReportManagerPage' %}" method="get">{% csrf_token %}
+                <input class="primary rounded" type="submit" value="獎賞管理">
+            </form>
+            {% endif %}
+        {% endif %}
+
         {% if perms.userlogin.seeManagerStatisticPage %}
             {% if tag == "StatisticsManagerPage" %}
             <form action="#" method="get">{% csrf_token %}

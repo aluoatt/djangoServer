@@ -1,0 +1,81 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>ChainYen System</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+    {% load static %}
+</head>
+
+<body class="is-preload">
+
+    <!-- Wrapper -->
+    <div id="wrapper">
+
+        <!-- Header -->
+        {% include 'baseHeader.html' %}
+
+        <!-- Menu -->
+        {% include 'baseMenu.html' %}
+
+        <!-- Main -->
+        <section id="one">
+            <div class="inner">
+                {% include 'managerPages/managerHomePageHeaderBar.html' %}
+                <ul class="nav nav-tabs" id="myTab">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="rewardNav" data-toggle="tab" href="#report" >
+                            待處理
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="rewardRankNav" data-toggle="tab" href="#finish">
+                            完成
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="rewardRankNav" data-toggle="tab" href="#discard">
+                            無效回報
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="reportContent">
+                    <div class="tab-pane fade show active" id="report">
+                        {% include 'managerPages/managerRewardReportManagerPageReport.html' %}
+                    </div>
+                    <div class="tab-pane fade" id="finish">
+                        {% include 'managerPages/managerRewardReportManagerPageFinish.html' %}
+                    </div>
+                    <div class="tab-pane fade" id="discard">
+                        {% include 'managerPages/managerRewardReportManagerPageDiscard.html' %}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <style>
+        table {
+            margin: 0 auto;
+            width: 100%;
+            clear: both;
+            border-collapse: collapse;
+            table-layout: fixed;
+            word-wrap: break-word;
+        }
+
+        .modal-content {
+            background-color: #2a2f4a;
+        }
+
+        .dataTables_filter input {
+            background-color: white;
+            border-radius: 5px;
+            color: black;
+        }
+    </style>
+    <script src="{% static 'assets/js/rewardReportManager.js' %}"></script>
+</body>
+
+</html>

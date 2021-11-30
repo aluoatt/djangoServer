@@ -402,7 +402,7 @@ def transferPoint(request):
 
         modifier = request.user.user
         pHistory = pointHistory(UserAccountInfo = userAccountInfo, modifier = modifier,
-                                recordDate = str(datetime.datetime.now()), reason = '轉讓點數',
+                                recordDate = str(datetime.datetime.now()), reason = '轉讓點數給' + toUserAccount.user,
                                 addPoint = "", reducePoint = "", transferPoint = "-" + str(pointTransfer),
                                 resultPoint = fromResultPoint)
         pHistory.save()
