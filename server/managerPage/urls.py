@@ -19,4 +19,9 @@ urlpatterns = [
     path('getRewardReport/<str:status>', views.getRewardReport, name='getRewardReport'),
     path('discardRewardReport', views.discardRewardReport, name='discardRewardReport'),
     path('confirmRewardReport', views.confirmRewardReport, name='confirmRewardReport'),
+    path('addBlackInfo', views.addBlackInfo, name='addBlackInfo'),
+    path('deleteBlackInfo/<str:blackID>', views.deleteBlackInfo, name='deleteBlackInfo'),
+    path('updateBlackInfo/<str:blackID>', views.updateBlackInfo, name='updateBlackInfo'),
+    path('getBlackRequestList', views.getBlackRequestList, name='getBlackRequestList'),
+    path('getBlackList', views.getBlackList, name='getBlackList'),
 ]

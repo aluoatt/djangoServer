@@ -16,6 +16,7 @@ class Server(models.Model):
             ("seeManagerArticleReportPage", "允許操作文章回報管理"),
             ("seeManagerStatisticPage", "允許操作統計管理"),
             ("seeManagerRewardReportPage", "允許操作獎賞管理"),
+            ("seeManagerBlackListPage", "允許操作黑名單"),
             ("ALLAuditManager", "全教室審查管理權限"),
             ("CYPManager", "台北教室管理權限"),
             ("CYLManager", "中壢教室管理權限"),
