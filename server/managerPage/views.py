@@ -1390,7 +1390,7 @@ def addBlackInfo(request):
         if "id4" in request.POST:
             id4 = request.POST["id4"]
         
-        if name == "" or phone=="" or gender=="":
+        if name == "" or gender=="":
             res.status_code = 400
             res.content = "請填寫姓名/性別/電話"
             return res

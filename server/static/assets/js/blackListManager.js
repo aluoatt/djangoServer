@@ -332,16 +332,6 @@ $(document).ready(() => {
                             });
                             return;
                         }
-                        infoPhone = formData.get("phone");
-                        if (infoPhone === "") {
-                            bootbox.alert({
-                                closeButton: false,
-                                message: "請輸入手機",
-                                locale: "zh_TW",
-                                centerVertical: true,
-                            });
-                            return;
-                        }
                         infoGender = formData.get("gender");
                         if (infoGender === "") {
                             bootbox.alert({
