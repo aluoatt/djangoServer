@@ -1,6 +1,25 @@
 $(document).ready(() => {
 
     myTable = $('#myTable').DataTable({
+        dom: '<"row"lfBr>tip',
+        buttons: [
+            {
+                extend: 'excel',
+                title: "資料庫帳號",
+                className: 'btn btn-sm btn-warning',
+                exportOptions: {
+                    columns: [ 0, 1, 2,3,4,5 ]
+                }
+            },
+            {
+                extend: 'print',
+                title: "資料庫帳號",
+                className: 'btn btn-sm btn-warning',
+                exportOptions: {
+                    columns: [ 0, 1, 2,3,4,5 ]
+                }
+            }
+        ],
         "orderClasses": false,
         "responsive": true,
         "fixedHeader": true,
