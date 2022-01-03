@@ -257,7 +257,8 @@ $(document).ready(() => {
     function addPointByOption (event) {
         id = $(event.target)[0].id;
         if (id === "addPointByAll" || id === "addPointByJobTitle" ||
-            id === "addPointByAmwayAward" || id === "addPointByExcel") {
+            id === "addPointByAmwayAward" || id === "addPointByExcel" ||
+            id === "addPointByCondition") {
             action = id;
             formInput = "";
             formInput = $("<form>", { id: "addPointForm" });
@@ -299,6 +300,28 @@ $(document).ready(() => {
                 pointDiv.append($("<label>", { text: "報表檔案" }));
                 pointDiv.append($("<input>", { type: "file", name: "excelFile", class: "form-control", placeholder: "Select file" }));
                 formInput.append(pointDiv);
+            } else if (id === "addPointByCondition") {
+                //僅先實作小於某點數重置到特定點數的功能
+                title = "請確認要給予的點數規則"
+                formInput = "";
+                formInput = $("<form>", { id: "addPointForm" });
+                pointDiv = $("<div>", { class: "form-group" });
+                pointDiv.append($("<label>", { text: "請妥善選擇條件", for: "conditionType" }));
+                pointDiv.append($("<select>", { name: "condition", class: "form-control custom-select", id: "conditionType" }));
+                $(pointDiv).find("#conditionType").append($("<option>", { text: "大於" }))
+                $(pointDiv).find("#conditionType").append($("<option>", { text: "小於" }))
+                $(pointDiv).find("#conditionType").append($("<option>", { text: "等於" }))
+                $(pointDiv).find("#conditionType").append($("<option>", { text: "大於或等於" }))
+                $(pointDiv).find("#conditionType").append($("<option>", { text: "小於或等於" }))
+                formInput.append(pointDiv);
+                pointDiv = $("<div>", { class: "form-group" });
+                pointDiv.append($("<label>", { text: "目標點數" }));
+                pointDiv.append($("<input>", { type: "number", name: "conditionPoint", class: "form-control", placeholder: "目標點數" }));
+                formInput.append(pointDiv);
+                pointDiv = $("<div>", { class: "form-group" });
+                pointDiv.append($("<label>", { text: "重置後的點數" }));
+                pointDiv.append($("<input>", { type: "number", name: "resultPoint", class: "form-control", placeholder: "重置後的點數" }));
+                formInput.append(pointDiv);
             }
 
             bootbox.confirm({
@@ -315,7 +338,8 @@ $(document).ready(() => {
                     if (!res)
                         return;
                     formData = new FormData($("#addPointForm")[0]);
-                    if (action !== "addPointByExcel") {
+                    if (action !== "addPointByExcel" && 
+                        action !== "addPointByCondition") {
                         point = formData.get("point");
                         if (point <= 0) {
                             bootbox.alert({
@@ -327,16 +351,37 @@ $(document).ready(() => {
                             return;
                         }
                     }
-                    amwayAwardStart = formData.get("amwayAwardStart")
-                    amwayAwardEnd = formData.get("amwayAwardEnd")
-                    if (amwayAwardList.indexOf(amwayAwardStart) > amwayAwardList.indexOf(amwayAwardEnd)) {
-                        bootbox.alert({
-                            closeButton: false,
-                            message: "起始獎銜請勿大於獎銜終點",
-                            locale: "zh_TW",
-                            centerVertical: true,
-                        });
-                        return;
+                    if(action === "addPointByAmwayAward"){
+                        amwayAwardStart = formData.get("amwayAwardStart")
+                        amwayAwardEnd = formData.get("amwayAwardEnd")
+                        if (amwayAwardList.indexOf(amwayAwardStart) > amwayAwardList.indexOf(amwayAwardEnd)) {
+                            bootbox.alert({
+                                closeButton: false,
+                                message: "起始獎銜請勿大於獎銜終點",
+                                locale: "zh_TW",
+                                centerVertical: true,
+                            });
+                            return;
+                        }
+                    }
+
+                    if (action === "addPointByCondition") {
+                        conditionPoint = formData.get("conditionPoint");
+                        resultPoint = formData.get("resultPoint");
+                        warningMessage = "";
+                        if (conditionPoint <= 0 ||
+                            resultPoint <= 0) {
+                            warningMessage = "請輸入大於零的點數"
+                        }
+                        if(warningMessage !== ""){
+                            bootbox.alert({
+                                closeButton: false,
+                                message: warningMessage,
+                                locale: "zh_TW",
+                                centerVertical: true,
+                            });
+                            return;
+                        }
                     }
                     $.ajax({
                         url: location.origin + "/pointManage/" + action,

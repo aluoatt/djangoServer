@@ -282,6 +282,41 @@ def addPointByExcel(request):
     return res
 
 @permission_required('userlogin.seeManagerPointPage', login_url='/accounts/userlogin/')
+def addPointByCondition(request):
+    res = HttpResponse()
+    try:
+        condition = request.POST.get("condition", "")
+        conditionPoint = int(request.POST.get("conditionPoint", ""))
+        resultPoint = int(request.POST.get("resultPoint", ""))
+        userChainyenList = ""
+        if condition == "大於":
+            userChainyenList = UserAccountChainYenInfo.objects.filter(point__gt=conditionPoint)
+        elif condition == "小於":
+            userChainyenList = UserAccountChainYenInfo.objects.filter(point__lt=conditionPoint)
+        elif condition == "等於":
+            userChainyenList = UserAccountChainYenInfo.objects.filter(point = conditionPoint)
+        elif condition == "大於或等於":
+            userChainyenList = UserAccountChainYenInfo.objects.filter(point__gte=conditionPoint)
+        elif condition == "小於或等於":
+            userChainyenList = UserAccountChainYenInfo.objects.filter(point__lte=conditionPoint)
+        else:
+            res.status_code = 404
+            res.content = "不支援的比較邏輯"
+            return res
+        userChainyenList.update(point = resultPoint)
+        modifier = request.user.user
+        for userChainyen in userChainyenList:
+            pHistory = pointHistory(UserAccountInfo = userChainyen.UserAccountInfo, modifier = modifier,
+                                    recordDate = str(datetime.datetime.now()), reason = '管理者重置點數',
+                                    addPoint = "", reducePoint = "", transferPoint = "",
+                                    resultPoint = resultPoint)
+            pHistory.save()
+    except:
+        res.status_code = 400
+        res.content = "error"
+    return res
+
+@permission_required('userlogin.seeManagerPointPage', login_url='/accounts/userlogin/')
 def reducePoint(request):
     res = HttpResponse()
     try:
