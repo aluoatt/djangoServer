@@ -5,7 +5,7 @@ from django.contrib.auth.models import Permission
 import traceback
 from django.core import serializers
 
-from pointManage.models import pointHistory
+from pointManage.models import pointHistory, monthList
 
 
 # Create your views here.
@@ -620,6 +620,13 @@ def managerPointManagerPage(request):
         amwayAwardList.append(amAward.amwayAward)
     amwayAwardList = json.dumps(amwayAwardList)
 
+    #每月特殊點數會員
+    months = monthList.objects.all()
+    monthResult = []
+    if months:
+        months = months.get()
+        monthResult = months.monthResult
+    
     searchUserAccountInfo = UserAccountInfo.objects.all()
     return render(request, 'managerPages/managerPointManagerPage.html', locals())
 

@@ -16,3 +16,7 @@ class pointHistory(models.Model):
     class Meta:
         verbose_name = "點數歷史紀錄"
         verbose_name_plural = "點數歷史紀錄"
+
+# 月初重置點數的名單
+class monthList(models.Model):
+    monthResult = models.CharField(verbose_name="每月名單", max_length=1000)

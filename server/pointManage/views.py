@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import permission_required
 from userlogin.models import UserAccountInfo, UserAccountChainYenInfo, UserAccountAmwayInfo, chainYenJobTitleInfo
 from django.db.models import F, Value
 from django.http import HttpResponse
-from pointManage.models import pointHistory
+from pointManage.models import pointHistory, monthList
 from django.core import serializers
 import datetime, json
 from openpyxl import load_workbook
@@ -315,6 +315,90 @@ def addPointByCondition(request):
         res.status_code = 400
         res.content = "error"
     return res
+
+@permission_required('userlogin.seeManagerPointPage', login_url='/accounts/userlogin/')
+def addPointByMonth(request):
+    res = HttpResponse()
+    try:
+        peopleList = request.POST.getlist("people[]")
+        peoplePointList = request.POST.getlist("peoplePoint[]")
+        awardStartList = request.POST.getlist("amwayAwardStart[]")
+        awardEndList = request.POST.getlist("amwayAwardEnd[]")
+        awardPointList = request.POST.getlist("awardPoint[]")
+        monthResult = {
+            "peopleList":[],
+            "awardList":[]
+        }
+        specialList = []
+        for index in range(len(peopleList)):
+            people = peopleList[index]
+            peoplePoint = peoplePointList[index]
+            user = people.split(' ')[0]
+            username = people.split(' ')[1]
+            monthResult["peopleList"].append({
+                "user": user,
+                "username": username,
+                "point": peoplePoint
+            })
+            specialList.append(username)
+        for index in range(len(awardStartList)):
+            awardStart = awardStartList[index]
+            awardEnd = awardEndList[index]
+            awardPoint = awardPointList[index]
+            monthResult["awardList"].append({
+                "awardStart": awardStart,
+                "awardEnd": awardEnd,
+                "point": awardPoint
+            })
+
+        for item in monthResult['awardList']:
+            amwayAwardStart = item['awardStart']
+            amwayAwardEnd = item['awardEnd']
+            point = item['point']
+            amwayAwardStart = amwayAwardInfo.objects.get(amwayAward=amwayAwardStart)
+            amwayAwardEnd = amwayAwardInfo.objects.get(amwayAward=amwayAwardEnd)
+            accountIDList = UserAccountAmwayInfo.objects.filter(amwayAward__rank__range = [amwayAwardStart.rank, amwayAwardEnd.rank]).values('UserAccountInfo')
+            accountInfoList = UserAccountInfo.objects.filter(id__in=accountIDList)
+            accountInfoList = accountInfoList.filter(is_active = True)
+            accountInfoList = accountInfoList.exclude(username__in = specialList)
+            userAccountChainyenList = UserAccountChainYenInfo.objects.filter(UserAccountInfo__in=accountInfoList)
+            userAccountChainyenList.update(point = point)
+            
+            #紀錄
+            modifier = request.user.user
+            for userAccountChainyen in userAccountChainyenList:
+                userAccount = userAccountChainyen.UserAccountInfo
+                pHistory = pointHistory(UserAccountInfo = userAccount, modifier = modifier,
+                                        recordDate = str(datetime.datetime.now()), reason = '月初重置點數',
+                                        addPoint = str(point), reducePoint = "", transferPoint = "",
+                                        resultPoint = point)
+                pHistory.save()
+        for item in monthResult['peopleList']:
+            username = item['username']
+            point = item['point']
+            userAccountChainyen = UserAccountChainYenInfo.objects.get(UserAccountInfo__username=username)
+            userAccountChainyen.point = point
+            userAccountChainyen.save()
+            userAccount = userAccountChainyen.UserAccountInfo
+            pHistory = pointHistory(UserAccountInfo = userAccount, modifier = modifier,
+                                        recordDate = str(datetime.datetime.now()), reason = '月初重置點數',
+                                        addPoint = str(point), reducePoint = "", transferPoint = "",
+                                        resultPoint = point)
+            pHistory.save()
+
+        monthList.objects.all().delete()
+        
+        if len(monthResult['peopleList']) == 0 and len(monthResult['awardList']) == 0:
+            monthResult = {}
+        monthResult = json.dumps(monthResult)
+        rMonthList = monthList(monthResult = monthResult)
+        rMonthList.save()
+
+    except:
+        res.status_code = 400
+        res.content = "error"
+    return res
+
 
 @permission_required('userlogin.seeManagerPointPage', login_url='/accounts/userlogin/')
 def reducePoint(request):
