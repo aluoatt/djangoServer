@@ -351,6 +351,8 @@ def addPointByMonth(request):
                 "point": awardPoint
             })
 
+        modifier = request.user.user
+
         for item in monthResult['awardList']:
             amwayAwardStart = item['awardStart']
             amwayAwardEnd = item['awardEnd']
@@ -365,7 +367,6 @@ def addPointByMonth(request):
             userAccountChainyenList.update(point = point)
             
             #紀錄
-            modifier = request.user.user
             for userAccountChainyen in userAccountChainyenList:
                 userAccount = userAccountChainyen.UserAccountInfo
                 pHistory = pointHistory(UserAccountInfo = userAccount, modifier = modifier,
