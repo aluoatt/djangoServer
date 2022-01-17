@@ -92,7 +92,7 @@ $(document).ready(() => {
                     rankTable.row.add([
                         `<a target="_blank" href="${location.origin}/viewFilePage/${data['fileID']}">${data['title']}</a>`,
                         data['mainClass'],
-                        Number(data['totalStars']),
+                        Number(data['totalStars']).toFixed(1),
                         data['total'],
                     ])
                     d3Data.push({
