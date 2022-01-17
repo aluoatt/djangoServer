@@ -66,7 +66,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'userlogin.middleware.IpBlockMiddleware',
+    #目前我們阻擋的方式是直接設定 nginx
+    #'userlogin.middleware.IpBlockMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -215,4 +216,4 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 3000
 
 BACK_ADDRESS = "/home/tommy/work/backEndWaterMark"
 
-GEOIP_PATH = os.path.join(BASE_DIR, 'GeoDB')
+#GEOIP_PATH = os.path.join(BASE_DIR, 'GeoDB')
