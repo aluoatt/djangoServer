@@ -91,6 +91,10 @@ class UserAccountChainYenInfo(models.Model):
     UserAccountInfo = models.ForeignKey("UserAccountInfo", on_delete=models.CASCADE, verbose_name='帳號')
     jobTitle = models.ForeignKey("chainYenJobTitleInfo", on_delete=models.CASCADE, verbose_name='職務')
     classRoom = models.ForeignKey("chainYenClassInfo", on_delete=models.CASCADE, verbose_name='教室')
+    studyPlan = models.CharField(max_length=20,verbose_name='學習方案', null=True,blank=True,default='A')
+    #方案
+
+
     # babysitter = models.CharField(max_length=20, verbose_name='保母')
 
     accountStatus = models.CharField(max_length=4, verbose_name='狀態')  # 停權
