@@ -351,7 +351,7 @@ def addPointByMonth(request):
                 "point": awardPoint
             })
 
-        modifier = request.user.user
+        modifier = "總部"
 
         for item in monthResult['awardList']:
             amwayAwardStart = item['awardStart']
