@@ -1,0 +1,317 @@
+<!DOCTYPE HTML>
+<!--
+	Forty by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+
+<html>
+
+<head>
+	<title>ChainYen System</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+	{% load static %}
+	<link href="{%static 'favicon.ico' %}" rel="shortcut icon">
+	<link rel="stylesheet" href="{% static 'assets/css/loadingimg.css' %}" />
+	<style type="text/css">
+		a {
+			color: black;
+		}
+
+		.classNoActivate {
+			background-color: white;
+			color: black;
+		}
+
+		.list-inline {
+			display: block;
+		}
+
+		.list-inline li {
+			display: inline-block;
+		}
+
+		.list-inline li:after {
+			content: '|';
+			margin: 0 10px;
+			color: white;
+		}
+	</style>
+</head>
+
+<body class="is-preload" style="background-size: Cover;background:url('{%static 'images/login底圖.png' %}');">
+
+	<!-- Wrapper -->
+	<div id="wrapper" class="container">
+
+		<!-- Header -->
+		{% include 'baseHeader.html' %}
+
+		<!-- Menu -->
+		{% include 'baseMenu.html' %}
+
+		<!-- Main -->
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a style="color:black" data-toggle="modal" data-target="#QA">
+			常見問題
+		</a>
+		{% if permission is False %}
+			<p>權限不足</p>
+		{% else %}
+			<div id="main" class="alt">
+				<!-- One -->
+				<section id="one">
+					<div class="inner">
+						<header class="">
+							<h3><b>{{targetFile.title}}</b></h3>
+						</header>
+						<input type="hidden" id="fileID" value="{{targetFile.id}}">
+						{% if alreadyReady %}
+						<p id="videoWait">影片載入中請稍候....</p>
+						{% else %}
+						<p id="videoWait">影片處理中請稍候....可離開觀看其他資料謝謝</p>
+
+						<div id="floatingCirclesG">
+							<div class="f_circleG" id="frotateG_01"></div>
+							<div class="f_circleG" id="frotateG_02"></div>
+							<div class="f_circleG" id="frotateG_03"></div>
+							<div class="f_circleG" id="frotateG_04"></div>
+							<div class="f_circleG" id="frotateG_05"></div>
+							<div class="f_circleG" id="frotateG_06"></div>
+							<div class="f_circleG" id="frotateG_07"></div>
+							<div class="f_circleG" id="frotateG_08"></div>
+						</div>
+						<video id="demo" preload="media" playsinline controls width='100%' style="display:none;"
+							height='100%' src='' type='video/mp4' controlsList="nodownload" oncontextmenu="return false;">
+							<source id=fileVideo type="video/mp4">
+							</source>
+						</video>
+
+						{% endif %}
+					</div>
+
+				</section>
+
+			</div>
+		{% endif %}
+
+	</div>
+	<div class="modal fade" id="confirmViewFile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content exchangeModal">
+				<div class="modal-header">
+					<h3 style="color: black" class="modal-title" id="fileCheckTitle"></h3>
+				</div>
+				<div class="modal-body" id="modal-boyd">
+					<p style="color: black" id="userpoint"></p>
+					<label style="color: red" for="demo-copy">*繼續觀看即同意不截圖、不錄音、不錄影、不外流</label>
+				</div>
+				<div class="modal-footer">
+					<form action="22" id="fileIDModal" name="fileIDModal" method="post">
+						{% csrf_token %}
+						<input type="hidden" id="fileViewID">
+					</form>
+
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">取消
+					</button>
+					<button type="button" class="btn btn-primary" onclick="confirmViewFileSubmit()">我同意
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Modal 常見問題-->
+	<div class="modal fade" id="QA" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+		aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 style="color: white" class="modal-title" id="staticBackdropLabel">常見問題</h3>
+				</div>
+				<div class="modal-body">
+					<p style="color: white">****下載影片****</p>
+					<p style="color: white">1.如果網路不穩，下載影片中斷，將不影響</p>
+					<p style="color: white">2.下載中也可跳至其他頁面，等載完再回來看也是可以的</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Scripts -->
+	<script src="{% static 'assets/js/replay.js' %}"></script>
+	<script>
+		function startChange(rat) {
+			let csrftoken = '{{ csrf_token }}';
+			var requestURL = "{% url 'putStars' %}";
+			var fileid = {{ targetFile.id }
+		};
+		$.ajax({
+			url: requestURL,
+			headers: { 'X-CSRFToken': csrftoken },
+			type: "GET",
+			data: {
+				fileid: fileid,
+				stars: rat
+
+			},
+
+			success: function (returnData) {
+
+
+			},
+			error: function (xhr, ajaxOptions, thrownError) {
+
+
+
+			}
+		});
+	</script>
+	<script>
+		$('.loading').animate({ 'width': '33%' }, 50);
+		var width = 1;
+		var t = 2000
+		ajpdf()
+		var my_refresh // the "1000"
+		var successgetvideo = 0
+
+		function ajpdf() {
+			let csrftoken = '{{ csrf_token }}'
+			var requestURL = "/returnPDF/" + document.getElementById("fileID").value;
+			var requestStatus = "/returnFileStatus/" + document.getElementById("fileID").value;
+			// var dataJSON = {};
+			clearInterval(my_refresh)
+			$.ajax({
+				url: requestStatus,
+				// data: JSON.stringify(dataJSON),
+				headers: { 'X-CSRFToken': csrftoken },
+				type: "GET",
+				// dataType: "json",
+				// contentType: "application/json;charset=utf-8",
+
+				success: function (returnData) {
+
+					if (returnData != "error" && returnData != "not ready") {
+						successgetvideo = 1
+						clearInterval(my_refresh)
+						clearInterval(my_refresh)
+						clearInterval(my_refresh)
+						clearInterval(my_refresh)
+						width = 100
+
+
+						document.getElementById("floatingCirclesG").style.display = "none";
+						document.getElementById("frotateG_01").style.display = "none";
+						document.getElementById("frotateG_02").style.display = "none";
+						document.getElementById("frotateG_03").style.display = "none";
+						document.getElementById("frotateG_04").style.display = "none";
+						document.getElementById("frotateG_05").style.display = "none";
+						document.getElementById("frotateG_06").style.display = "none";
+						document.getElementById("frotateG_07").style.display = "none";
+						document.getElementById("frotateG_08").style.display = "none";
+
+
+						document.getElementById("videoWait").style.display = "none";
+						document.getElementById("demo").style.display = "";
+						$('#demo').attr('src', requestURL + "#t=0.1");
+					} else {
+
+
+						clearInterval(my_refresh)
+						if (returnData == "error") {
+							document.getElementById('videoWait').innerHTML = "發生錯誤或影片兌換期限已過，請重新整理";
+						} else {
+							my_refresh = setInterval(ajpdf, t);
+						}
+
+					}
+				},
+				error: function (xhr, ajaxOptions, thrownError) {
+					clearInterval(my_refresh)
+					clearInterval(my_refresh)
+					clearInterval(my_refresh)
+					clearInterval(my_refresh)
+					my_refresh = setInterval(ajpdf, t);
+
+
+				}
+			});
+		}
+
+	</script>
+	<style type="text/css">
+		html,
+		body,
+		#pdf_viewer {
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
+
+		#myProgress {
+			position: relative;
+			width: 100%;
+			height: 30px;
+			background-color: #ddd;
+		}
+
+		#myBar {
+			position: absolute;
+			width: 1%;
+			height: 100%;
+			background-color: #4CAF50;
+		}
+
+		p {
+			color: black;
+		}
+
+		b {
+			color: black;
+		}
+
+		.button {
+			border: 1px solid black;
+			color: black;
+		}
+
+		@font-face {
+			font-family: 'Glyphicons Halflings';
+			src: url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.eot');
+			src: url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.woff') format('woff'), url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');
+		}
+
+		.glyphicon {
+			position: relative;
+			top: 1px;
+			display: inline-block;
+			font-family: 'Glyphicons Halflings';
+			font-style: normal;
+			font-weight: normal;
+			line-height: 1;
+			-webkit-font-smoothing: antialiased;
+		}
+
+		.glyphicon-thumbs-up:before {
+			content: "\e125";
+		}
+
+		.modal-content {
+			background-color: #2a2f4a;
+		}
+
+		.exchangeModal {
+			background-color: white;
+
+		}
+	</style>
+</body>
+
+</html>

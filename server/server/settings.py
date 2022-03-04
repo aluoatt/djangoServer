@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'pointManage',
     'addlikes',
     'recommendIndex',
+    'courseReplay',
     # plug-in
     'django_celery_results',
 ]
