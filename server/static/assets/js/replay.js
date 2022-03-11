@@ -26,21 +26,26 @@ $(document).ready(() => {
             $(row).addClass('font-weight-bold');
         }
     });
-    classRoomList = ["台北", "中壢", "台中", "嘉義 135",
-        "嘉義 245", "永康 135", "永康 245",
-        "高雄"]
-    weekVideo  = window.weekVideo
+    classRoomList = ["CYP", "CYL", "CYZ", "CYJ1",
+        "CYJ2", "CYN1", "CYN2",
+        "CYK"]
     
     classRoomList.forEach((classRoom, index) => {
-        if(weekVideo[classRoom] == undefined){
-            tmp = []
+        tmp = []
+        if(window.weekVideo[classRoom] == undefined){
             for(i=0;i<5;i=i+1){
                 tmp[i] = ""
             } 
         } else {
             //TODO: set date to relative
             for(i=0;i<5;i=i+1){
-                tmp[i] = weekVideo[classRoom][i]
+                if(window.weekVideo[classRoom][i] != ""){
+                    title = window.weekVideo[classRoom][i]['title'].split("_")[2]
+                    fileid = window.weekVideo[classRoom][i]['id']
+                    tmp[i] = `<a target="_blank" href="${location.origin}/courseReplay/viewFilePage/${fileid}">${title}</a>`
+                } else {
+                    tmp[i] = ""
+                }
             }
         }
         
@@ -61,7 +66,7 @@ function confirmViewFile(id, title, costpoint, userpoint) {
     // document.getElementById("needPoint").innerHTML = "需點數" + costpoint + "點";
     document.getElementById("userpoint").innerHTML = "目前剩餘點數:" + userpoint;
     document.getElementById("fileViewID").value = id;
-    document.getElementById("fileIDModal").action = "/exchangeOption/" + id;
+    document.getElementById("fileIDModal").action = "/acceptRecord/" + id;
 }
 
 function confirmViewFileSubmit() {

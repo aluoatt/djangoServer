@@ -99,6 +99,7 @@ urlpatterns += [
     path('pointManage/', include('pointManage.urls')),
     path('managerPages/', include('managerPage.urls')),
     path('personalInfoPage/', include('personalInfoPage.urls')),
+    path('courseReplay/', include('courseReplay.urls')),
 ]
 
 

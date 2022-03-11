@@ -58,43 +58,44 @@
 			常見問題
 		</a>
 		{% if permission is False %}
-			<p>權限不足</p>
+		<p>權限不足</p>
 		{% else %}
-			<div id="main" class="alt">
-				<!-- One -->
-				<section id="one">
-					<div class="inner">
-						<header class="">
-							<h3><b>{{targetFile.title}}</b></h3>
-						</header>
-						<input type="hidden" id="fileID" value="{{targetFile.id}}">
-						{% if alreadyReady %}
-						<p id="videoWait">影片載入中請稍候....</p>
-						{% else %}
-						<p id="videoWait">影片處理中請稍候....可離開觀看其他資料謝謝</p>
+		<div id="main" class="alt">
+			<!-- One -->
+			<section id="one">
+				<div class="inner">
+					<header class="">
+						<h3><b>{{targetFile.title}} 重播</b></h3>
+					</header>
+					<input type="hidden" id="fileID" value="{{targetFile.id}}">
+					{% if alreadyReady %}
+					<p id="videoWait">影片載入中請稍候....</p>
+					{% else %}
+					<p id="videoWait">影片處理中請稍候....可離開觀看其他資料謝謝</p>
 
-						<div id="floatingCirclesG">
-							<div class="f_circleG" id="frotateG_01"></div>
-							<div class="f_circleG" id="frotateG_02"></div>
-							<div class="f_circleG" id="frotateG_03"></div>
-							<div class="f_circleG" id="frotateG_04"></div>
-							<div class="f_circleG" id="frotateG_05"></div>
-							<div class="f_circleG" id="frotateG_06"></div>
-							<div class="f_circleG" id="frotateG_07"></div>
-							<div class="f_circleG" id="frotateG_08"></div>
-						</div>
-						<video id="demo" preload="media" playsinline controls width='100%' style="display:none;"
-							height='100%' src='' type='video/mp4' controlsList="nodownload" oncontextmenu="return false;">
-							<source id=fileVideo type="video/mp4">
-							</source>
-						</video>
-
-						{% endif %}
+					<div id="floatingCirclesG">
+						<div class="f_circleG" id="frotateG_01"></div>
+						<div class="f_circleG" id="frotateG_02"></div>
+						<div class="f_circleG" id="frotateG_03"></div>
+						<div class="f_circleG" id="frotateG_04"></div>
+						<div class="f_circleG" id="frotateG_05"></div>
+						<div class="f_circleG" id="frotateG_06"></div>
+						<div class="f_circleG" id="frotateG_07"></div>
+						<div class="f_circleG" id="frotateG_08"></div>
 					</div>
+					<video id="demo" preload="media" class="video-js vjs-default-skin"  disablePictureInPicture  playsinline controls width='100%' style="display:none;"
+						height='100%' src='' type='video/mp4' controlsList="nodownload" oncontextmenu="return false;">
+						<track kind="captions" src="/courseReplay/webvtt" srclang="en" label="English" default>
+						<source id=fileVideo type="video/mp4">
+						</source>
+					</video>
 
-				</section>
+					{% endif %}
+				</div>
 
-			</div>
+			</section>
+
+		</div>
 		{% endif %}
 
 	</div>
@@ -144,35 +145,8 @@
 		</div>
 	</div>
 
-	<!-- Scripts -->
-	<script src="{% static 'assets/js/replay.js' %}"></script>
-	<script>
-		function startChange(rat) {
-			let csrftoken = '{{ csrf_token }}';
-			var requestURL = "{% url 'putStars' %}";
-			var fileid = {{ targetFile.id }
-		};
-		$.ajax({
-			url: requestURL,
-			headers: { 'X-CSRFToken': csrftoken },
-			type: "GET",
-			data: {
-				fileid: fileid,
-				stars: rat
-
-			},
-
-			success: function (returnData) {
-
-
-			},
-			error: function (xhr, ajaxOptions, thrownError) {
-
-
-
-			}
-		});
-	</script>
+	<link href="https://vjs.zencdn.net/7.17.0/video-js.css" rel="stylesheet" />
+    <script src="https://vjs.zencdn.net/7.17.0/video.min.js"></script>
 	<script>
 		$('.loading').animate({ 'width': '33%' }, 50);
 		var width = 1;
@@ -183,8 +157,8 @@
 
 		function ajpdf() {
 			let csrftoken = '{{ csrf_token }}'
-			var requestURL = "/returnPDF/" + document.getElementById("fileID").value;
-			var requestStatus = "/returnFileStatus/" + document.getElementById("fileID").value;
+			var requestURL = "/courseReplay/returnVideo/" + document.getElementById("fileID").value;
+			var requestStatus = "/courseReplay/returnFileStatus/" + document.getElementById("fileID").value;
 			// var dataJSON = {};
 			clearInterval(my_refresh)
 			$.ajax({
@@ -220,12 +194,40 @@
 						document.getElementById("videoWait").style.display = "none";
 						document.getElementById("demo").style.display = "";
 						$('#demo').attr('src', requestURL + "#t=0.1");
+						window.player = videojs('demo', {
+							sources: [{
+								src: requestURL + "#t=0.1",
+								type: "video/mp4"
+							}],
+							loop: true,
+							muted: false,
+							width: "100%",
+							height: "100%",
+							controls: true,
+							fluid: true,
+							controlBar: {
+								subsCapsButton: false,
+								pictureInPictureToggle: false
+							},
+
+						});
+						player.textTrackSettings.setValues({
+							backgroundColor: "#FFF",
+							backgroundOpacity: "0",
+							color: "#00F",
+							textOpacity: "0.5",
+							fontFamily: "monospaceSansSerif",
+							fontPercent: 1.5,
+							windowColor: "#808080",
+							windowOpacity: "0"
+						})
+						player.disablePictureInPicture(true)
+						vid=document.getElementById("demo")
+						vid.disablePictureInPicture = true
 					} else {
-
-
 						clearInterval(my_refresh)
-						if (returnData == "error") {
-							document.getElementById('videoWait').innerHTML = "發生錯誤或影片兌換期限已過，請重新整理";
+						if (returnData == "error" || returnData == "not ready") {
+							document.getElementById('videoWait').innerHTML = "發生錯誤或影片觀賞期限已過";
 						} else {
 							my_refresh = setInterval(ajpdf, t);
 						}

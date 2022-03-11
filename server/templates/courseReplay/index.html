@@ -53,14 +53,17 @@
 
     </div>
     <!-- Scripts -->
+    <script>
+        weekVideoStr = '{{ weekVideo | safe }}'
+        window.weekVideo = JSON.parse(weekVideoStr)
+        window.weekVideoOriginal = JSON.parse(weekVideoStr)
+    </script>
+
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/zh-tw.min.js" integrity="sha512-teZ6dd0iHPCs4aUqFGC1OSUiT+pY6eqk5Jaa2sE7wqExKu3Tscsn1RYbEJWPWsqKYroeJ6jlkR2YdY3Em8eVRQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="{% static 'assets/js/replay.js' %}"></script>
 
-    <script>
-        weekVideo = '{{ weekVideo | safe }}'
-        window.weekVideo = JSON.parse(weekVideo)
-    </script>
+    
 </body>
 
 </html>
