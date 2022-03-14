@@ -48,6 +48,7 @@ class Server(models.Model):
             # ("articleReportManage", "文章回報管理"),
             ("can_freeze_account", "允許管理帳號凍結"),
             ("classRoomAccount", "教室法人帳號"),
+            ("seeCourseReplay", "允許觀看課程重播"),
         )
 
 

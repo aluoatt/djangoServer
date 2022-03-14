@@ -685,7 +685,6 @@ def clear_datafile_inVPS_job():
         if os.path.isfile(backaddress + '/' + existDatainVPS.waterMarkPath):
             if (time.time() - os.path.getctime(backaddress+'/'+existDatainVPS.waterMarkPath) ) > 604800: #創建超過21天
                 try:
-
                     os.remove(backaddress+'/'+existDatainVPS.waterMarkPath)
                 except:
                     logging.error(traceback.print_exc())

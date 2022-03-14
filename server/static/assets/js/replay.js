@@ -4,7 +4,7 @@ $(document).ready(() => {
     monDay = today.subtract(today.day()-1, "days")
     for(i = 0; i< 5; i=i+1){
         dateString = monDay.format("l")
-        newHead = $("<th>", { text: dateString });
+        newHead = $("<th>", { text: `${dateString}(${monDay.format('dddd')})` });
         rThead.after(newHead);
         rThead =  newHead;
         monDay.add(1, "days")
@@ -29,6 +29,16 @@ $(document).ready(() => {
     classRoomList = ["CYP", "CYL", "CYZ", "CYJ1",
         "CYJ2", "CYN1", "CYN2",
         "CYK"]
+    classRoomChinese = {
+        "CYP": "台北教室", 
+        "CYL": "中壢教室", 
+        "CYZ": "台中教室", 
+        "CYJ1":"嘉義135",
+        "CYJ2":"嘉義245", 
+        "CYN1":"永康135", 
+        "CYN2":"永康245",
+        "CYK": "高雄教室"
+    }
     
     classRoomList.forEach((classRoom, index) => {
         tmp = []
@@ -50,7 +60,7 @@ $(document).ready(() => {
         }
         
         replayTable.row.add([
-            classRoom,
+            classRoomChinese[classRoom],
             tmp[0],
             tmp[1],
             tmp[2],
