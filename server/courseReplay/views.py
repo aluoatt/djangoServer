@@ -80,13 +80,21 @@ def webvtt(request):
     classRoom = UserAccountChainYenInfo.objects.get(UserAccountInfo = request.user).classRoom.ClassRoomCode
     x = f"""WEBVTT
 
-            00:00:00.000 --> 00:10:07.080 align:left line:50%
-            {classRoom}_{request.user.user}_{amwayNumber} {classRoom}_{request.user.user}_{amwayNumber} 
+            00:00:00.000 --> 10:10:07.080 align:left line:0%
 
-            00:00:00.000 --> 00:10:07.080 align:left line:0%
-            {classRoom}_{request.user.user}_{amwayNumber} {classRoom}_{request.user.user}_{amwayNumber} 
+            00:00:00.000 --> 10:10:07.080 align:left line:0%
+            {classRoom}_{request.user.user}_{amwayNumber}
 
-            00:00:00.000 --> 00:10:07.080 align:middle line:90%
+            00:00:00.000 --> 10:10:07.080 align:middle line:25%
+            {classRoom}_{request.user.user}_{amwayNumber} 
+
+            00:00:00.000 --> 10:10:07.080 align:left line:50%
+            {classRoom}_{request.user.user}_{amwayNumber}
+
+            00:00:00.000 --> 10:10:07.080 align:middle line:75%
+            {classRoom}_{request.user.user}_{amwayNumber} 
+
+            00:00:00.000 --> 99:10:07.080 align:middle line:90%
             僅供內部使用, 請勿外流!
             """
     return HttpResponse(x, content_type="text/plain")
