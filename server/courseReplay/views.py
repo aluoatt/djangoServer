@@ -166,7 +166,7 @@ import requests
 scheduler = BackgroundScheduler()
 scheduler.add_jobstore(DjangoJobStore(),"default")
 
-@register_job(scheduler, "cron", hour="23-23",minute="*/10", id="sync_replay_data_job", replace_existing=True)
+@register_job(scheduler, "cron", hour="21-23",minute="*/10", id="sync_replay_data_job", replace_existing=True)
 def sync_replay_data_job():
     try:
         currentDate = datetime.now().replace(minute=0, hour=0, second=0, microsecond=0)
