@@ -10,7 +10,7 @@ from django.http import HttpResponse, FileResponse
 
 from .models import replayVideoInfo
 from datetime import datetime, timedelta
-import json
+import json, hashlib
 from io import StringIO
 from django.contrib.auth.decorators import permission_required
 from userlogin.models import UserAccountAmwayInfo, UserAccountChainYenInfo
@@ -59,9 +59,11 @@ def returnVideo(request, fileId):
 @permission_required('userlogin.seeCourseReplay', login_url='/accounts/userlogin/')
 def returnFileStatus(request, fileId):
     videoInfo = replayVideoInfo.objects.filter(id = fileId).get()
-    
-    if os.path.isfile(backaddress + '/coursereplay/' + videoInfo.title + ".mp4"):
-        if videoInfo.recordDate < datetime.now().replace(minute=0, hour=0, second=0, microsecond=0):
+    filePath = backaddress + '/coursereplay/' + videoInfo.title + ".mp4"
+    if os.path.isfile(filePath):
+        #TODO 補上下架時間
+        #if videoInfo.recordDate > datetime.now().replace(minute=0, hour=0, second=0, microsecond=0):
+        if md5(filePath) != videoInfo.md5Checksum:
             response = HttpResponse("not ready", content_type="text/plain")
         else:
             response = HttpResponse("success", content_type="text/plain")
@@ -69,6 +71,14 @@ def returnFileStatus(request, fileId):
         response = HttpResponse("not ready", content_type="text/plain")
 
     return response
+
+def md5(fname):
+    hash_md5 = hashlib.md5()
+    with open(fname, "rb") as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            hash_md5.update(chunk)
+        f.close()
+    return hash_md5.hexdigest()
 
 @permission_required('userlogin.seeCourseReplay', login_url='/accounts/userlogin/')
 def confirmViewFileSubmit(request):
@@ -79,22 +89,10 @@ def webvtt(request):
     amwayNumber = UserAccountAmwayInfo.objects.get(UserAccountInfo = request.user).amwayNumber
     classRoom = UserAccountChainYenInfo.objects.get(UserAccountInfo = request.user).classRoom.ClassRoomCode
     x = f"""WEBVTT
-
-            00:00:00.000 --> 10:10:07.080 align:left line:0%
-
-            00:00:00.000 --> 10:10:07.080 align:left line:0%
+            00:00:00.000 --> 10:00:00.000 align:left line:0%
             {classRoom}_{request.user.user}_{amwayNumber}
 
-            00:00:00.000 --> 10:10:07.080 align:middle line:25%
-            {classRoom}_{request.user.user}_{amwayNumber} 
-
-            00:00:00.000 --> 10:10:07.080 align:left line:50%
-            {classRoom}_{request.user.user}_{amwayNumber}
-
-            00:00:00.000 --> 10:10:07.080 align:middle line:75%
-            {classRoom}_{request.user.user}_{amwayNumber} 
-
-            00:00:00.000 --> 99:10:07.080 align:middle line:90%
+            00:00:00.000 --> 10:00:00.000 align:middle line:90%
             僅供內部使用, 請勿外流!
             """
     return HttpResponse(x, content_type="text/plain")
@@ -166,7 +164,7 @@ import requests
 scheduler = BackgroundScheduler()
 scheduler.add_jobstore(DjangoJobStore(),"default")
 
-@register_job(scheduler, "cron", hour="21-23",minute="*/10", id="sync_replay_data_job", replace_existing=True)
+@register_job(scheduler, "cron", hour="21-23",minute="*/3", id="sync_replay_data_job", replace_existing=True)
 def sync_replay_data_job():
     try:
         currentDate = datetime.now().replace(minute=0, hour=0, second=0, microsecond=0)
@@ -187,7 +185,7 @@ def sync_replay_data_job():
     except Exception as e:
         pass
 
-@register_job(scheduler, "cron", hour="21-23",minute="*/10", id="sync_replay_info_job",replace_existing=True)
+@register_job(scheduler, "cron", hour="21-23",minute="*/3", id="sync_replay_info_job",replace_existing=True)
 def sync_replay_info_job():
     try:
         r = requests.get('http://127.0.0.1:9104/v1/getReplayList').text
