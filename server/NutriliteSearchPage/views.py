@@ -237,6 +237,7 @@ def exchangeOption(request, fileId):
                                         resultPoint=UserAccountChainYen.point)
                 pHistory.save()
                 targetFile.exchangeCount += 1
+                targetFile.save()
                 pf.exchangeDate = str(datetime.datetime.now())
                 pf.save()
 
