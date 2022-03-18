@@ -13,5 +13,5 @@ class replayVideoInfo(models.Model):
 
 class confirmReplay(models.Model):
     videoSource = models.ForeignKey("replayVideoInfo",verbose_name='重播的影片',on_delete=models.PROTECT)
-    userInfo    = models.CharField(max_length=300, verbose_name='簽署者的資訊',null=False)
+    username    = models.CharField(max_length=300, verbose_name='簽署者的帳號ID',null=False)
     confirmDate = models.DateTimeField(verbose_name='簽署日期')

@@ -9,4 +9,5 @@ urlpatterns = [
     path('returnFileStatus/<str:fileId>', login_required(views.returnFileStatus), name='returnFileStatus'),
     path('confirmViewFileSubmit/<str:fileId>', login_required(views.confirmViewFileSubmit), name='confirmViewFileSubmit'),
     path('webvtt', login_required(views.webvtt), name='webvtt'),
+    path('confirmReplayVideo/<str:fileId>', login_required(views.confirmReplayVideo), name='confirmReplayVideo'),
 ]

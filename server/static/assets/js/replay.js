@@ -26,18 +26,21 @@ $(document).ready(() => {
             $(row).addClass('font-weight-bold');
         }
     });
-    classRoomList = ["CYP", "CYL", "CYZ", "CYJ1",
-        "CYJ2", "CYN1", "CYN2",
-        "CYK"]
+    classRoomList = ["CYP", "CYS","CYL", "CYZ", "CYJ1",
+        "CYJ2", "CYM", "CYN1", "CYN2",
+        "CYK", "CYD"]
     classRoomChinese = {
         "CYP": "台北教室", 
+        "CYS": "新竹教室", 
         "CYL": "中壢教室", 
         "CYZ": "台中教室", 
         "CYJ1":"嘉義135",
         "CYJ2":"嘉義245", 
+        "CYM":"良美", 
         "CYN1":"永康135", 
         "CYN2":"永康245",
-        "CYK": "高雄教室"
+        "CYK": "高雄教室",
+        "CYD": "屏東教室"
     }
     
     classRoomList.forEach((classRoom, index) => {
@@ -70,27 +73,3 @@ $(document).ready(() => {
     });
 
 })
-
-function confirmViewFile(id, title, costpoint, userpoint) {
-    document.getElementById("fileCheckTitle").innerHTML = "兌換【" + title + "】" + "需點數" + costpoint + "點";
-    // document.getElementById("needPoint").innerHTML = "需點數" + costpoint + "點";
-    document.getElementById("userpoint").innerHTML = "目前剩餘點數:" + userpoint;
-    document.getElementById("fileViewID").value = id;
-    document.getElementById("fileIDModal").action = "/acceptRecord/" + id;
-}
-
-function confirmViewFileSubmit() {
-    document.fileIDModal.submit();
-}
-
-function searPageViewFileSubmit(id) {
-    document.getElementById("fileIDModal").action = "/viewFilePage/" + id;
-    document.getElementById("fileIDModal").submit();
-}
-
-
-function ViewFileSubmit(id) {
-    document.getElementById("fileIDview").action = "/viewFilePage/" + id;
-    document.getElementById("fileIDview").submit();
-}
-

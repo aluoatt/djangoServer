@@ -66,11 +66,18 @@
 				<div class="inner">
 					<header class="">
 						<h3><b>{{targetFile.title}} 重播</b></h3>
+						<input type="hidden" id="fileID" value="{{targetFile.id}}">
+
 					</header>
-					<input type="hidden" id="fileID" value="{{targetFile.id}}">
-					{% if alreadyReady %}
-					<p id="videoWait">影片載入中請稍候....</p>
+					{% if licenseCheck is False%}
+					<button id="confirmLicense" class="btn btn-info">請先同意觀看規則(點我)</button>
+					<script>
+						$(document).ready(() => {
+							$("#confirmViewFile").modal("show");
+						})
+					</script>
 					{% else %}
+
 					<p id="videoWait">影片處理中請稍候....可離開觀看其他資料謝謝</p>
 
 					<div id="floatingCirclesG">
@@ -89,7 +96,6 @@
 						<track kind="captions" label="English captions" src="/courseReplay/webvtt" srclang="en" />
 
 					</video>
-
 					{% endif %}
 				</div>
 
@@ -104,7 +110,7 @@
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content exchangeModal">
 				<div class="modal-header">
-					<h3 style="color: black" class="modal-title" id="fileCheckTitle"></h3>
+					<h3 style="color: black" class="modal-title" id="fileCheckTitle">同意觀看課程重播聲明</h3>
 				</div>
 				<div class="modal-body" id="modal-boyd">
 					<p style="color: black" id="userpoint"></p>
@@ -116,9 +122,9 @@
 						<input type="hidden" id="fileViewID">
 					</form>
 
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">取消
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">不同意
 					</button>
-					<button type="button" class="btn btn-primary" onclick="confirmViewFileSubmit()">我同意
+					<button type="button" class="btn btn-primary" onclick="confirmReplayVideoSubmit()">我同意
 					</button>
 				</div>
 			</div>
@@ -148,12 +154,17 @@
 	<script src="https://cdn.plyr.io/3.6.12/plyr.js"></script>
 	<link rel="stylesheet" href="https://cdn.plyr.io/3.6.12/plyr.css" />
 	<script>
+		$("#confirmLicense").on("click", () => {
+			$("#confirmViewFile").modal("show");
+		})
 		$('.loading').animate({ 'width': '33%' }, 50);
 		var width = 1;
 		var t = 2000
-		ajpdf()
+		ajReplayVideo()
 		var my_refresh // the "1000"
 		var successgetvideo = 0
+
+		// 初始化 video 元件介面
 		document.addEventListener('DOMContentLoaded', () => {
 
 			window.player = new Plyr('#demo', {
@@ -169,56 +180,43 @@
 			player.on('ready', (event) => {
 				const instance = event.detail.plyr;
 				instance.currentTrack = 0;
-				console.log(instance.currentTrack);
 			});
 		});
-		function ajpdf() {
+
+		function ajReplayVideo() {
 			let csrftoken = '{{ csrf_token }}'
 			var requestURL = "/courseReplay/returnVideo/" + document.getElementById("fileID").value;
 			var requestStatus = "/courseReplay/returnFileStatus/" + document.getElementById("fileID").value;
-			// var dataJSON = {};
 
 			clearInterval(my_refresh)
 			$.ajax({
 				url: requestStatus,
-				// data: JSON.stringify(dataJSON),
 				headers: { 'X-CSRFToken': csrftoken },
 				type: "GET",
-				// dataType: "json",
-				// contentType: "application/json;charset=utf-8",
 
 				success: function (returnData) {
 
-					if (returnData != "error" && returnData != "not ready") {
+					if (returnData != "error" && returnData != "not ready"
+						&& returnData != "expired") {
 						successgetvideo = 1
 						clearInterval(my_refresh)
-						clearInterval(my_refresh)
-						clearInterval(my_refresh)
-						clearInterval(my_refresh)
 						width = 100
-
-
-						document.getElementById("floatingCirclesG").style.display = "none";
-						document.getElementById("frotateG_01").style.display = "none";
-						document.getElementById("frotateG_02").style.display = "none";
-						document.getElementById("frotateG_03").style.display = "none";
-						document.getElementById("frotateG_04").style.display = "none";
-						document.getElementById("frotateG_05").style.display = "none";
-						document.getElementById("frotateG_06").style.display = "none";
-						document.getElementById("frotateG_07").style.display = "none";
-						document.getElementById("frotateG_08").style.display = "none";
-
+						$("#floatingCirclesG").remove();
 
 						document.getElementById("videoWait").style.display = "none";
 						document.getElementById("demo").style.display = "";
 						$('#demo').attr('src', requestURL + "#t=0.1");
-
-					} else {
+					}
+					else {
 						clearInterval(my_refresh)
 						if (returnData == "error" || returnData == "not ready") {
-							document.getElementById('videoWait').innerHTML = "發生錯誤或影片觀賞期限已過";
-						} else {
-							my_refresh = setInterval(ajpdf, t);
+							document.getElementById('videoWait').innerHTML = "發生錯誤或影片還在同步中";
+						} else if (returnData == "expired") {
+							document.getElementById('videoWait').innerHTML = "重播觀賞期限已過";
+							$("#floatingCirclesG").remove();
+						}
+						else {
+							my_refresh = setInterval(ajReplayVideo, t);
 						}
 
 					}
@@ -228,13 +226,17 @@
 					clearInterval(my_refresh)
 					clearInterval(my_refresh)
 					clearInterval(my_refresh)
-					my_refresh = setInterval(ajpdf, t);
+					my_refresh = setInterval(ajReplayVideo, t);
 
 
 				}
 			});
 		}
-
+		function confirmReplayVideoSubmit() {
+			document.getElementById("fileViewID").value = document.getElementById("fileID").value;
+    		document.getElementById("fileIDModal").action = "/courseReplay/confirmReplayVideo/"+document.getElementById("fileID").value;
+			document.fileIDModal.submit();
+		}
 	</script>
 	<style type="text/css">
 		html,
@@ -308,8 +310,9 @@
 			--plyr-captions-background: rgba(0, 0, 0, 0);
 			--plyr-captions-text-color: #808080;
 		}
-		.plyr__captions{
-			bottom:40%;
+
+		.plyr__captions {
+			bottom: 40%;
 		}
 	</style>
 </body>
