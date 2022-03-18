@@ -25,7 +25,8 @@ from personalInfoPage.views import personalInfoHomePage, personalInfoPointPage,c
 from managerPage.views import managerAccountManagerPage,managerAuditAccountPage,removeAuditAccount,AcceptAuditAccount
 from managerPage.views import userAccountConfirm,managerAccountModify,modalAccountModifyPOST
 from managerPage.views import managerPointManagerPage, getAccountModifyHistory, managerArticleManagerPage, \
-    managerStatisticManagerPage, managerArticleReportManagerPage, managerRewardReportManagerPage
+    managerStatisticManagerPage, managerArticleReportManagerPage, managerRewardReportManagerPage, \
+    managerBlackListManagerPage
 from django.conf.urls import url
 from addlikes.views import like_change,putStars
 from recommendIndex.views import recommendIndexHome
@@ -69,6 +70,7 @@ urlpatterns += [
     path('personalInfoPage/changePasswordOption', login_required(changePasswordOption), name='changePasswordOption'),
 
     path('managerPages/home/accountManger', login_required(managerAccountManagerPage), name='managerAccountManagerPage'),
+    path('managerPages/home/blackList', login_required(managerBlackListManagerPage), name='managerBlackListManagerPage'),
     path('managerPages/home/AuditManger', login_required(managerAuditAccountPage),name='managerAuditAccountPage'),
     path('managerPages/home/PointManager', login_required(managerPointManagerPage),name='managerPointManagerPage'),
     path('managerPages/home/ArticleManager', login_required(managerArticleManagerPage),name='managerArticleManagerPage'),
@@ -97,6 +99,7 @@ urlpatterns += [
     path('pointManage/', include('pointManage.urls')),
     path('managerPages/', include('managerPage.urls')),
     path('personalInfoPage/', include('personalInfoPage.urls')),
+    path('courseReplay/', include('courseReplay.urls')),
 ]
 
 

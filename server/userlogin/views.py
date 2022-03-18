@@ -14,6 +14,7 @@ from pointManage.models import pointHistory
 from django.contrib.auth.hashers import make_password
 import datetime
 from django.contrib.sessions.models import Session
+from managerPage.models import blackList, blackRegisterRequest
 key = "Ja8asdfnjQnasdfd72D"
 
 # def set_session_key(self, key):
@@ -67,7 +68,7 @@ def register(request,token):
             accountName = ''
             username = ''
             IDnumber = ''
-            gander = ''
+            gender = ''
             phone = ''
             chainYenJobTitle = ''
             amwayAward = ''
@@ -86,7 +87,7 @@ def register(request,token):
                 accountName = request.POST.get('accountName', '')
                 username = request.POST.get('username', '')
                 IDnumber = request.POST.get('IDnumber', '')
-                gander = request.POST.get('gander', '')
+                gender = request.POST.get('gender', '')
                 phone = request.POST.get('phone', '')
                 chainYenJobTitle = request.POST.get('chainYenJobTitle', '')
                 amwayAward = request.POST.get('amwayAward','')
@@ -116,9 +117,21 @@ def register(request,token):
                         or UserAccountInfo.objects.filter(username=accountName + IDnumber).count() > 0):
                     return redirect('/accounts/registerSuccessStatus/exist')
                 else:
+                    # 確認黑名單
+                    bInfo = blackList.objects.filter(name=username, phone=phone)
+                    if bInfo:
+                        bRR = blackRegisterRequest(name=username, phone=phone,
+                                                    gender=gender, email=e_mail,
+                                                    amwayNumber=accountName, id4= IDnumber,
+                                                    ChainYenClass=chainYenClassInfo.objects.get(id=ChainYenClass).ClassRoomName,
+                                                    amwayDD = registerDDandDimInfo.objects.get(amwayNumber = amwayDD).main,
+                                                    amwayDiamond = amwayDiamond)
+                        bRR.save()
+                        return redirect('/accounts/registerSuccessStatus/success')
+
                     r = TempUserAccountInfo(username = accountName+IDnumber,
                                             user=username,
-                                            gender = gander,
+                                            gender = gender,
                                             phone = phone,
                                             password = make_password(id_password1),
                                             # is_superuser = 0,

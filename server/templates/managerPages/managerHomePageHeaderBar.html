@@ -29,7 +29,20 @@
                 <input class="primary rounded" type="submit" value="帳號管理">
             </form>
             {% endif %}
+        {% endif %} 
+
+        {% if perms.userlogin.seeManagerBlackListPage %}
+            {% if tag == "ManagerBlackListManagerPage" %}
+            <form action="#" method="get">{% csrf_token %}
+                <input class="rounded" type="submit" value="黑名單管理">
+            </form>
+            {% else %}
+            <form action="{% url 'managerBlackListManagerPage' %}" method="get">{% csrf_token %}
+                <input class="primary rounded" type="submit" value="黑名單管理">
+            </form>
+            {% endif %}
         {% endif %}
+
         {% if perms.userlogin.seeManagerArticlePage %}
             {% if tag == "ManagerArticleManagerPage" %}
             <form action="#" method="get">{% csrf_token %}

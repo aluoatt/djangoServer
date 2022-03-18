@@ -5,7 +5,7 @@ from django.contrib.auth.models import Permission
 import traceback
 from django.core import serializers
 
-from pointManage.models import pointHistory
+from pointManage.models import pointHistory, monthList
 
 
 # Create your views here.
@@ -20,7 +20,7 @@ from userlogin.models import TempUserAccountInfo, AccountModifyHistory, TempUser
 from NutriliteSearchPage.models import DBClassInfo, fileDataInfo, mainClassInfo, secClassInfo, articleModifyHistory, articleReport
 from NutriliteSearchPage.models import fileDataKeywords, personalFileData, personalWatchFileLog
 from openpyxl import load_workbook
-from managerPage.models import rewardReport
+from managerPage.models import rewardReport,blackList,blackRegisterRequest
 
 # Create your views here.
 import hashlib
@@ -620,6 +620,13 @@ def managerPointManagerPage(request):
         amwayAwardList.append(amAward.amwayAward)
     amwayAwardList = json.dumps(amwayAwardList)
 
+    #每月特殊點數會員
+    months = monthList.objects.all()
+    monthResult = []
+    if months:
+        months = months.get()
+        monthResult = months.monthResult
+    
     searchUserAccountInfo = UserAccountInfo.objects.all()
     return render(request, 'managerPages/managerPointManagerPage.html', locals())
 
@@ -1321,6 +1328,120 @@ def discardRewardReport(request):
         rReport.discardReason = discardReason
         rReport.handleDate = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         rReport.save()
+    except:
+        res.status_code = 503
+    return res
+
+@permission_required('userlogin.seeManagerBlackListPage', login_url='/accounts/userlogin/')
+def managerBlackListManagerPage(request):
+    tag = "ManagerBlackListManagerPage"
+
+    return render(request, 'managerPages/managerBlackListManagerPage.html', locals())
+
+
+@permission_required('userlogin.seeManagerBlackListPage', login_url='/accounts/userlogin/')
+def getBlackInfo(request, id):
+    res = HttpResponse()
+    try:
+        bInfo = blackList.objects.get(id = id)
+        bInfo.delete()        
+
+        res.status_code = 200
+    except:
+        res.status_code = 503
+    return res
+
+@permission_required('userlogin.seeManagerBlackListPage', login_url='/accounts/userlogin/')
+def getBlackRequestList(request):
+    res = HttpResponse()
+    try:
+        bInfo = blackRegisterRequest.objects.all()
+        res.status_code = 200
+        res.content =  serializers.serialize("json", bInfo)
+    except:
+        res.status_code = 503
+    return res
+
+@permission_required('userlogin.seeManagerBlackListPage', login_url='/accounts/userlogin/')
+def getBlackList(request):
+    res = HttpResponse()
+    try:
+        bInfo = blackList.objects.all()
+        res.status_code = 200
+        res.content =  serializers.serialize("json", bInfo)
+    except:
+        res.status_code = 503
+    return res
+
+@permission_required('userlogin.seeManagerBlackListPage', login_url='/accounts/userlogin/')
+def addBlackInfo(request):
+    res = HttpResponse()
+    try:
+        name = ""
+        if "name" in request.POST:
+            name = request.POST["name"]
+        
+        phone = ""
+        if "phone" in request.POST:
+            phone = request.POST["phone"]
+
+        gender = ""
+        if "gender" in request.POST:
+            gender = request.POST["gender"]
+        
+        amwayNumber = ""
+        if "amwayNumber" in request.POST:
+            amwayNumber = request.POST["amwayNumber"]
+        
+        id4 = ""
+        if "id4" in request.POST:
+            id4 = request.POST["id4"]
+        
+        if name == "" or gender=="":
+            res.status_code = 400
+            res.content = "請填寫姓名/性別/電話"
+            return res
+
+        bInfo = blackList(name=name, phone=phone, 
+                    amwayNumber=amwayNumber, id4=id4,
+                    gender=gender)
+
+        bInfo.save()        
+
+        res.status_code = 200
+        res.content = ""
+    except:
+        res.status_code = 503
+    return res
+    
+@permission_required('userlogin.seeManagerBlackListPage', login_url='/accounts/userlogin/')
+def deleteBlackInfo(request, blackID):
+    res = HttpResponse()
+    try:
+        bInfo = blackList.objects.get(id = blackID)
+        bInfo.delete()        
+
+        res.status_code = 200
+    except:
+        res.status_code = 503
+    return res
+
+@permission_required('userlogin.seeManagerBlackListPage', login_url='/accounts/userlogin/')
+def updateBlackInfo(request, blackID):
+    res = HttpResponse()
+    try:
+        name = request.POST["name"]
+        gender = request.POST["gender"]
+        phone = request.POST["phone"]
+        amwayNumber = request.POST["amwayNumber"]
+        id4 = request.POST["id4"]
+
+        bInfo = blackList.objects.filter(id = blackID)
+        bInfo.update(name=name, phone=phone, 
+                    amwayNumber=amwayNumber, id4=id4,
+                    gender=gender)    
+
+        res.status_code = 200
     except:
         res.status_code = 503
     return res

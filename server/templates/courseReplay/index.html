@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<!--
+    Forty by HTML5 UP
+    html5up.net | @ajlkn
+    Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+
+<html>
+
+<head>
+    <title>ChainYen System</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+    {% load static %}
+    <link href="{%static 'favicon.ico' %}" rel="shortcut icon">
+
+
+</head>
+
+<body class="is-preload" style="background-size: Cover;background:url('{%static 'images/login底圖.png' %}');">
+
+    <!-- Wrapper -->
+    <div id="wrapper">
+
+        <!-- Header -->
+        {% include 'baseHeader.html' %}
+
+        <!-- Menu -->
+        {% include 'baseMenu.html' %}
+
+        <!-- Main -->
+
+        <div id="main" class="alt">
+            <div class="inner" style=" border-bottom: 1px solid black;">
+                <h2 class="text-dark">課程重播列表</h2>
+                <p class="text-dark">
+                    如果沒看到教室的重播課程，有可能是各教室家人正在處理，
+                    請稍候重新整理頁面看看!
+                </p>
+                <table id="replayCalendar" class="display table table-light table-bordered"
+                    style="border:dark;width:100%; white-space: nowrap;">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>教室</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+                
+
+        </div>
+
+    </div>
+    <!-- Scripts -->
+    <script>
+        weekVideoStr = '{{ weekVideo | safe }}'
+        window.weekVideo = JSON.parse(weekVideoStr)
+        window.weekVideoOriginal = JSON.parse(weekVideoStr)
+    </script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/zh-tw.min.js" integrity="sha512-teZ6dd0iHPCs4aUqFGC1OSUiT+pY6eqk5Jaa2sE7wqExKu3Tscsn1RYbEJWPWsqKYroeJ6jlkR2YdY3Em8eVRQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{% static 'assets/js/replay.js' %}"></script>
+
+    
+</body>
+
+</html>
+<style>
+    .dataTables_filter input {
+        background-color: white;
+        color: black;
+        border-radius: 5px;
+    }
+
+    label {
+        color: black;
+    }
+
+    .dataTables_info {
+        color: black;
+    }
+
+    th,
+    td {
+        border-width: 10px
+    }
+</style>

@@ -61,11 +61,14 @@ INSTALLED_APPS = [
     'pointManage',
     'addlikes',
     'recommendIndex',
+    'courseReplay',
     # plug-in
     'django_celery_results',
 ]
 
 MIDDLEWARE = [
+    #目前我們阻擋的方式是直接設定 nginx
+    #'userlogin.middleware.IpBlockMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -213,3 +216,5 @@ CLASS_CHARIMAN_MANAGER_DICT = {
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 3000
 
 BACK_ADDRESS = "/home/tommy/work/backEndWaterMark"
+
+#GEOIP_PATH = os.path.join(BASE_DIR, 'GeoDB')
